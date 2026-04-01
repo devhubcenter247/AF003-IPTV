@@ -42,12 +42,12 @@ import com.dongbv.alf_03_iptv.style._11Ssp
 import com.dongbv.alf_03_iptv.style._12Sdp
 import com.dongbv.alf_03_iptv.style._18Ssp
 import com.dongbv.alf_03_iptv.style.getScreenWidthInDp
-import com.dongbv.alf_03_iptv.style.IptvAccent
-import com.dongbv.alf_03_iptv.style.IptvBgPrimary
-import com.dongbv.alf_03_iptv.style.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.IptvAccent
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.ui.language.LanguageActivity
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
+import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

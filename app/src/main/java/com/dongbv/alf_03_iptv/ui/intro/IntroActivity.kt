@@ -54,15 +54,15 @@ import com.dongbv.alf_03_iptv.style._24Sdp
 import com.dongbv.alf_03_iptv.style._48Sdp
 import com.dongbv.alf_03_iptv.style._6Sdp
 import com.dongbv.alf_03_iptv.style._8Sdp
-import com.dongbv.alf_03_iptv.style.IptvAccent
-import com.dongbv.alf_03_iptv.style.IptvBgPrimary
-import com.dongbv.alf_03_iptv.style.IptvBgSecondary
-import com.dongbv.alf_03_iptv.style.IptvTextPrimary
-import com.dongbv.alf_03_iptv.style.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.IptvAccent
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.style.heightPercentDp
 import com.dongbv.alf_03_iptv.style.paddingHorizontal
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
+import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
+import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
+import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
 import kotlinx.coroutines.launch
 
 class IntroActivity : BaseActivity() {

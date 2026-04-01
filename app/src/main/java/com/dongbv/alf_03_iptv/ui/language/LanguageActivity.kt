@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.language
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.rounded.Done
@@ -35,6 +40,7 @@ import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.base.InnerPadding
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.IconView
+import com.dongbv.alf_03_iptv.style.ResponsivePreview
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.ViewParentContent
 import com.dongbv.alf_03_iptv.style._12Sdp
@@ -42,9 +48,9 @@ import com.dongbv.alf_03_iptv.style._18Ssp
 import com.dongbv.alf_03_iptv.style._6Sdp
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.white
-import com.dongbv.alf_03_iptv.ui.component.ColorTheme
 import com.dongbv.alf_03_iptv.ui.component.LanguageItem
 import com.dongbv.alf_03_iptv.ui.intro.IntroActivity
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.mainColor
 
 class LanguageActivity : BaseActivity() {
@@ -54,15 +60,13 @@ class LanguageActivity : BaseActivity() {
     override fun BoxScope.ContentView(innerPadding: InnerPadding, context: Context) {
         val languages = remember { getLanguageArray().toList() } // List bất biến
         var selected by rememberSaveable { mutableStateOf<LanguageItem?>(null) }
-        val theme by PreferenceData.themeApp.flow.collectAsStateWithLifecycle(ColorTheme.BLUE)
         ViewParentContent(onBack = { finish() }) {
             Column(Modifier.fillMaxSize()) {
                 LanguageScreen(
                     languages = languages,
                     selected = selected,
-                    theme = theme,
                     modifier = Modifier
-                        .background(theme.bgColor)
+                        .background(IptvBgPrimary)
                         .fillMaxWidth()
                         .padding(top = innerPadding.top + _6Sdp)
                         .weight(1f),
@@ -78,7 +82,7 @@ class LanguageActivity : BaseActivity() {
     }
 }
 
-@Preview(name = "PIXEL_4_XL", device = Devices.PIXEL_4_XL, showBackground = true)
+@ResponsivePreview
 @Composable
 fun GreetingPreview() {
     val listLanguages = getLanguageArray()
@@ -86,7 +90,6 @@ fun GreetingPreview() {
         LanguageScreen(
             languages = listLanguages,
             selected = listLanguages[0],
-            theme = ColorTheme.BLUE,
             modifier =
                 Modifier
                     .paddingTop(_6Sdp)
@@ -96,17 +99,18 @@ fun GreetingPreview() {
     }
 }
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun LanguageScreen(
     languages: List<LanguageItem>,
     selected: LanguageItem?,
-    theme: ColorTheme = ColorTheme.BLUE,
     modifier: Modifier = Modifier,
     onSelect: (LanguageItem) -> Unit,
     onConfirm: () -> Unit
 ) {
     val listState = rememberLazyListState()
-    Column(modifier.background(theme.bgColor)) {
+    val isTablet = LocalConfiguration.current.screenWidthDp >= 600
+    Column(modifier.background(IptvBgPrimary)) {
         Row(
             Modifier.padding(horizontal = _12Sdp),
             verticalAlignment = Alignment.CenterVertically
@@ -127,21 +131,43 @@ fun LanguageScreen(
             }
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(horizontal = _12Sdp)
-                .paddingTop(_12Sdp),
-            state = listState,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            this.items(
-                items = languages,
-                key = { it.code }
-            ) { item ->
-                LanguageItem(currentLanguage = selected, theme = theme, item = item) { chosen ->
-                    onSelect(chosen)
+        if (isTablet) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = _12Sdp)
+                    .paddingTop(_12Sdp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(
+                    items = languages,
+                    key = { it.code }
+                ) { item ->
+                    LanguageItem(currentLanguage = selected, item = item) { chosen ->
+                        onSelect(chosen)
+                    }
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = _12Sdp)
+                    .paddingTop(_12Sdp),
+                state = listState,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                this.items(
+                    items = languages,
+                    key = { it.code }
+                ) { item ->
+                    LanguageItem(currentLanguage = selected, item = item) { chosen ->
+                        onSelect(chosen)
+                    }
                 }
             }
         }

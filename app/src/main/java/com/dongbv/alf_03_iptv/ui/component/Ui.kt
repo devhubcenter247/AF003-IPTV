@@ -68,6 +68,7 @@ import com.dongbv.alf_03_iptv.style.paddingEnd
 import com.dongbv.alf_03_iptv.style.paddingStart
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.language.LanguageItem
+import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.grdStart
 
 @Preview(device = PIXEL_4_XL, showBackground = true, backgroundColor = 0xFFF5F5F5)
@@ -87,18 +88,18 @@ fun PreviewUnit() {
 
 @Composable
 fun LanguageItem(
-      currentLanguage: LanguageItem? = null,
-      theme: ColorTheme = ColorTheme.BLUE,
-      item: LanguageItem,
-      @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-      callback: (LanguageItem) -> Unit
+    currentLanguage: LanguageItem? = null,
+    item: LanguageItem,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+    callback: (LanguageItem) -> Unit
 ) {
     Box(
         modifier
             .fillMaxWidth()
             .border(
                 width = _1Sdp,
-                color = if (item != currentLanguage) Color_f2f2f7.opacity(0.5f) else theme.buttonColor,
+
+                color = if (item != currentLanguage) Color_f2f2f7.opacity(0.5f) else IptvAccent,
                 shape = RoundedCornerShape(_8Sdp)
             )
             .background(white.opacity(0.6f), shape = RoundedCornerShape(_12Sdp))
@@ -129,7 +130,7 @@ fun LanguageItem(
                 painter = painterResource(if (currentLanguage == item) R.drawable.ic_language_selected else R.drawable.ic_language_unselected),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = if (currentLanguage == item) theme.buttonColor else LocalContentColor.current
+                tint = if (currentLanguage == item) IptvAccent else LocalContentColor.current
             )
         }
         Box(
@@ -158,10 +159,9 @@ fun BoxScope.BlurView() {
 
 @Composable
 fun ButtonCreate(
-      isEnable: Boolean = false,
-      theme: ColorTheme = ColorTheme.DENIM,
-      modifier: Modifier = Modifier,
-      onClick: () -> Unit = {}
+    isEnable: Boolean = false,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     TextView(
         text = stringResource(R.string.create),
@@ -169,14 +169,14 @@ fun ButtonCreate(
             Modifier
                 .wrapContentHeight()
                 .background(
-                    if (isEnable) theme.buttonColor else disabled, CircleShape
+                    if (isEnable) IptvAccent else disabled, CircleShape
                 )
                 .padding(_12Sdp)
         ),
         textAlign = TextAlign.Center,
         textSize = _12Ssp,
         font = R.font.rb_600,
-        color = if (isEnable) theme.colorText else darkGray,
+        color = if (isEnable) IptvAccent else darkGray,
         singleLine = true,
         txtStyle = TextStyle.Default.fontPadding(false)
     ) {
@@ -186,44 +186,15 @@ fun ButtonCreate(
     }
 }
 
-@Composable
-fun ButtonSave(
-      isEnable: Boolean = false,
-      theme: ColorTheme = ColorTheme.DENIM,
-      modifier: Modifier = Modifier,
-      onClick: () -> Unit = {}
-) {
-    TextView(
-        text = stringResource(R.string.save),
-        modifier = modifier.then(
-            Modifier
-                .wrapContentHeight()
-                .background(
-                    if (isEnable) theme.buttonColor else disabled, CircleShape
-                )
-                .padding(_12Sdp)
-        ),
-        textAlign = TextAlign.Center,
-        textSize = _12Ssp,
-        font = R.font.rb_600,
-        color = if (isEnable) theme.colorText else darkGray,
-        singleLine = true,
-        txtStyle = TextStyle.Default.fontPadding(false)
-    ) {
-        if (isEnable) {
-            onClick.invoke()
-        }
-    }
-}
 
 @Composable
 fun HeaderCreate(
-      header: String,
-      @DrawableRes lefIcon: Int,
-      @DrawableRes rightIcon: Int? = null,
-      modifier: Modifier = Modifier,
-      rightAction: (() -> Unit)? = null,
-      leftClick: () -> Unit = {},
+    header: String,
+    @DrawableRes lefIcon: Int,
+    @DrawableRes rightIcon: Int? = null,
+    modifier: Modifier = Modifier,
+    rightAction: (() -> Unit)? = null,
+    leftClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -259,12 +230,12 @@ fun HeaderCreate(
 
 @Composable
 fun HeaderCreateResult(
-      header: String,
-      @DrawableRes lefIcon: Int,
-      modifier: Modifier = Modifier,
-      onEdit: () -> Unit = {},
-      onDelete: () -> Unit = {},
-      leftClick: () -> Unit = {},
+    header: String,
+    @DrawableRes lefIcon: Int,
+    modifier: Modifier = Modifier,
+    onEdit: () -> Unit = {},
+    onDelete: () -> Unit = {},
+    leftClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -305,13 +276,13 @@ fun HeaderCreateResult(
 
 @Composable
 fun HeaderScanResult(
-      header: String,
-      @DrawableRes lefIcon: Int,
-      isFavorite: Boolean = false,
-      modifier: Modifier = Modifier,
-      onFavorite: () -> Unit = {},
-      onDelete: () -> Unit = {},
-      leftClick: () -> Unit = {},
+    header: String,
+    @DrawableRes lefIcon: Int,
+    isFavorite: Boolean = false,
+    modifier: Modifier = Modifier,
+    onFavorite: () -> Unit = {},
+    onDelete: () -> Unit = {},
+    leftClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -354,7 +325,7 @@ fun HeaderScanResult(
 @SuppressLint("ResourceType")
 @Composable
 fun MonthYearSelect(
-      modifier: Modifier = Modifier, isMonth: Boolean = true, isMonthSelect: (Boolean) -> Unit = {}
+    modifier: Modifier = Modifier, isMonth: Boolean = true, isMonthSelect: (Boolean) -> Unit = {}
 ) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Box(modifier = Modifier.weight(0.45f))

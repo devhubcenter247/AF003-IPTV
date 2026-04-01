@@ -10,7 +10,8 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(./gradlew :app:compileDevDebugKotlin)",
-      "Bash(bash gradlew:*)"
+      "Bash(bash gradlew:*)",
+      "Bash(grep -v \"^$\")"
     ],
     "deny": [],
     "ask": []

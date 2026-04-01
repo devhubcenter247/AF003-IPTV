@@ -3,6 +3,7 @@ package com.dongbv.alf_03_iptv.ui.component
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.rateApp
 import com.dongbv.alf_03_iptv.base.AppDialog
 import com.dongbv.alf_03_iptv.style.AppViewTheme
+import com.dongbv.alf_03_iptv.style.IptvTypography
 import com.dongbv.alf_03_iptv.style.RatingBar
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
@@ -67,6 +69,7 @@ import com.dongbv.alf_03_iptv.style.lightGrey
 import com.dongbv.alf_03_iptv.style.paddingEnd
 import com.dongbv.alf_03_iptv.style.paddingStart
 import com.dongbv.alf_03_iptv.style.white
+import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
 import com.dongbv.alf_03_iptv.widget.grdEnd
 import com.dongbv.alf_03_iptv.widget.grdStart
 import java.time.Instant
@@ -82,7 +85,7 @@ import java.time.format.DateTimeFormatter
 fun PreviewDialog() {
     AppViewTheme {
         Column {
-            DialogQuitApp(true, ColorTheme.BLUE,{}) {
+            DialogQuitApp(true,{}) {
             }
 //            SpaceH(_18Sdp)
 //            DatePickerDialog(
@@ -191,13 +194,12 @@ fun DateTimePickerButton(
 @SuppressLint("AutoboxingStateCreation")
 @Composable
 fun RatingDialog(
-      activity: Activity,
-      theme: ColorTheme = ColorTheme.BLUE,
       isShowRate: Boolean = false,
       onDismiss: () -> Unit = {},
       rateApp: () -> Unit,
       sendEmailFeedback: () -> Unit
 ) {
+    val activity = LocalActivity.current
     var rating by remember { mutableIntStateOf(0) }
     val titleRate by remember(rating) {
         mutableIntStateOf(
@@ -275,21 +277,21 @@ fun RatingDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = theme.buttonColor, CircleShape
+                                color = white, CircleShape
                             )
                             .padding(_12Sdp),
-                        color = theme.colorText,
+                        color = black,
                     ) {
                         when {
                             rating == 0 -> {
                                 Toast.makeText(
                                     activity,
-                                    activity.getString(R.string.please_rate_us),
+                                    activity?.getString(R.string.please_rate_us),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                             rating >= 4 -> {
-                                activity.rateApp {
+                                activity?.rateApp {
                                     rateApp()
                                 }
                                 onDismiss()
@@ -307,7 +309,7 @@ fun RatingDialog(
 }
 
 @Composable
-fun DialogQuitApp(isShowDialog: Boolean,theme: ColorTheme, onDismiss: () -> Unit, onQuit: () -> Unit) {
+fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Unit) {
     if (isShowDialog) {
         AppDialog(onDismiss) {
             Column(
@@ -355,82 +357,16 @@ fun DialogQuitApp(isShowDialog: Boolean,theme: ColorTheme, onDismiss: () -> Unit
                     SpaceW(_16Sdp)
                     TextView(
                         stringResource(R.string.ok),
-                        color = theme.colorText,
+                        color = IptvTextPrimary,
                         font = R.font.rb_500,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .background(theme.buttonColor, CircleShape)
+                            .background(IptvTextPrimary, CircleShape)
                             .paddingStart(_8Sdp)
                             .weight(1f)
                             .padding(_12Sdp)
                     ) {
                         onQuit.invoke()
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun DialogDeleteConfirm(
-      isShowDialog: Boolean,
-      theme: ColorTheme = ColorTheme.BLUE,
-      onDismiss: () -> Unit,
-      onConfirm: () -> Unit
-) {
-    if (isShowDialog) {
-        AppDialog(onDismiss) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(_8Sdp))
-                    .background(white)
-                    .padding(_12Sdp)
-            ) {
-                TextView(
-                    stringResource(R.string.delete),
-                    font = R.font.rb_600,
-                    textSize = _14Ssp,
-                    color = black,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                SpaceH(_12Sdp)
-                TextView(
-                    stringResource(R.string.are_you_sure_want_to_delete),
-                    font = R.font.rb_500,
-                    textSize = _12Ssp,
-                    color = gray,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                SpaceH(_12Sdp)
-
-                Row(Modifier.fillMaxWidth()) {
-                    TextView(
-                        stringResource(R.string.cancel),
-                        color = lightGrey,
-                        font = R.font.rb_500,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .border(1.dp, lightGrey, CircleShape)
-                            .weight(1f)
-                            .padding(_12Sdp)
-                    ) {
-                        onDismiss.invoke()
-                    }
-                    SpaceW(_10Sdp)
-                    TextView(
-                        stringResource(R.string.delete),
-                        color = white,
-                        font = R.font.rb_500,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .background(Color(0xFFE53935), CircleShape)
-                            .weight(1f)
-                            .padding(_12Sdp)
-                    ) {
-                        onConfirm.invoke()
-                        onDismiss.invoke()
                     }
                 }
             }

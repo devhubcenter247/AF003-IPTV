@@ -44,11 +44,11 @@ import com.dongbv.alf_03_iptv.style._4Sdp
 import com.dongbv.alf_03_iptv.style._6Sdp
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.white
-import com.dongbv.alf_03_iptv.ui.component.ColorTheme
 import com.dongbv.alf_03_iptv.ui.component.LanguageItem
 import com.dongbv.alf_03_iptv.ui.language.LanguageItem
 import com.dongbv.alf_03_iptv.ui.language.getLanguageArray
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.mainColor
 
 class LanguageSettingActivity : BaseActivity() {
@@ -58,19 +58,17 @@ class LanguageSettingActivity : BaseActivity() {
     override fun BoxScope.ContentView(innerPadding: InnerPadding, context: Context) {
         val languages = remember { getLanguageArray().toList() }
         var selected by rememberSaveable {
-            mutableStateOf((getLanguageArray().find { it ->
+            mutableStateOf(getLanguageArray().find { it ->
                 it.code == (PreferenceData.languageCode)
-            } as? LanguageItem) ?: getLanguageArray()[0])
+            } ?: getLanguageArray()[0])
         }
-        val theme by PreferenceData.themeApp.flow.collectAsStateWithLifecycle(ColorTheme.BLUE)
 
         ViewParentContent(onBack = { finish() }) {
             LanguageSettingScreen(
                 languages = languages,
                 selected = selected,
-                theme = theme,
                 modifier = Modifier
-                    .background(theme.bgColor)
+                    .background(IptvBgPrimary)
                     .fillMaxSize(1f)
                     .padding(top = innerPadding.top + _6Sdp),
                 onSelect = { selected = it },
@@ -104,7 +102,6 @@ fun GreetingPreview() {
 fun LanguageSettingScreen(
       languages: List<LanguageItem>,
       selected: LanguageItem?,
-      theme: ColorTheme = ColorTheme.BLUE,
       @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
       onSelect: (LanguageItem) -> Unit,
       onConfirm: () -> Unit,
@@ -155,7 +152,7 @@ fun LanguageSettingScreen(
                 items = languages,
                 key = { it.code }
             ) { item ->
-                LanguageItem(currentLanguage = selected, theme = theme, item = item) { chosen ->
+                LanguageItem(currentLanguage = selected,item = item) { chosen ->
                     onSelect(chosen)
                 }
             }

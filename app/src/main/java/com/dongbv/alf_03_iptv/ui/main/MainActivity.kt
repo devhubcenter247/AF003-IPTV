@@ -5,43 +5,53 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.R
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.app.PreferenceData
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.base.InnerPadding
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style._52Sdp
+import com.dongbv.alf_03_iptv.widget.IptvAccent
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.style._60Sdp
-import com.dongbv.alf_03_iptv.style.onClick
-import com.dongbv.alf_03_iptv.ui.component.ColorTheme
+import com.dongbv.alf_03_iptv.style.black
 import com.dongbv.alf_03_iptv.ui.component.DialogQuitApp
 import com.dongbv.alf_03_iptv.ui.component.ScreenRouter
-import com.dongbv.alf_03_iptv.ui.main.setting.AboutUsActivity
-import com.dongbv.alf_03_iptv.ui.main.setting.LanguageSettingActivity
-import com.dongbv.alf_03_iptv.ui.main.setting.SelectThemeActivity
+import com.dongbv.alf_03_iptv.ui.main.home.ChannelScreen
+import com.dongbv.alf_03_iptv.ui.main.home.FavoriteScreen
+import com.dongbv.alf_03_iptv.ui.main.home.HomeScreen
+import com.dongbv.alf_03_iptv.ui.main.home.SettingScreen
 import com.dongbv.alf_03_iptv.viewmodel.HomeViewModel
 import com.dongbv.alf_03_iptv.widget.BottomNavigationBar
+import com.dongbv.alf_03_iptv.widget.IptvAccent
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
+import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
+import com.dongbv.alf_03_iptv.widget.IptvSuccess
+import com.dongbv.alf_03_iptv.widget.IptvSurface
 import com.dongbv.alf_03_iptv.widget.animComposable
-import com.dongbv.alf_03_iptv.widget.navigationTo
 import org.koin.android.ext.android.inject
 
 class MainActivity : BaseActivity() {
@@ -80,9 +90,8 @@ class MainActivity : BaseActivity() {
         }
         var isShowQuitDialog by rememberSaveable { mutableStateOf(false) }
         val navController = rememberNavController()
-        val currentTheme by PreferenceData.themeApp.flow.collectAsStateWithLifecycle(ColorTheme.BLUE)
 
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        Box(Modifier.fillMaxSize().background(IptvBgPrimary), contentAlignment = Alignment.BottomCenter) {
             Box(
                 Modifier
                     .fillMaxSize()
@@ -92,41 +101,34 @@ class MainActivity : BaseActivity() {
                 NavHost(
                     modifier = Modifier.matchParentSize(),
                     navController = navController,
-                    startDestination = ScreenRouter.MainScreen.CreateScreen.route
+                    startDestination = ScreenRouter.MainScreen.SettingScreen.route
 
                 ) {
-
+                    animComposable(ScreenRouter.MainScreen.HomeScreen.route){
+                        HomeScreen()
+                    }
+                    animComposable(ScreenRouter.MainScreen.ChannelScreen.route){
+                        ChannelScreen()
+                    }
+                    animComposable(ScreenRouter.MainScreen.FavoriteScreen.route){
+                        FavoriteScreen()
+                    }
+                    animComposable(ScreenRouter.MainScreen.SettingScreen.route){
+                        SettingScreen { }
+                    }
                 }
 
-                Box(Modifier.size(_60Sdp), contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = painterResource(
-                            when (currentTheme) {
-                                ColorTheme.BLUE -> R.drawable.ic_scan_view_1
-                                ColorTheme.PINK -> R.drawable.ic_scan_view_2
-                                ColorTheme.GREEN -> R.drawable.ic_scan_view_3
-                                else -> R.drawable.ic_scan_view_4
-                            }
-                        ),
-                        contentDescription = stringResource(R.string.scanner),
-                        modifier = Modifier
-                            .size(_52Sdp)
-                            .onClick {
-                                navController.navigationTo(route = ScreenRouter.MainScreen.ScannerScreen.route)
-                            }
-                    )
-                }
+
             }
 
             BottomNavigationBar(
-                navHostController = navController, currentTheme, modifier = Modifier
+                navHostController = navController, modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
+                    .height(80.dp).background(IptvBgSecondary)
             )
         }
         DialogQuitApp(
             isShowDialog = isShowQuitDialog,
-            currentTheme,
             onDismiss = { isShowQuitDialog = false }
         ) {
             finishAffinity()
@@ -156,7 +158,7 @@ private fun PreviewScreenBlock(title: String, tint: Color) {
 }
 
 @Composable
-private fun MainScreenPreviewScaffold(theme: ColorTheme) {
+private fun MainScreenPreviewScaffold() {
     val navController = rememberNavController()
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Box(
@@ -168,56 +170,27 @@ private fun MainScreenPreviewScaffold(theme: ColorTheme) {
             NavHost(
                 modifier = Modifier.matchParentSize(),
                 navController = navController,
-                startDestination = ScreenRouter.MainScreen.ScannerScreen.route
+                startDestination = ScreenRouter.MainScreen.HomeScreen.route
             ) {
-                composable(ScreenRouter.MainScreen.CreateScreen.route) {
-                    PreviewScreenBlock("Create Screen", theme.buttonColor)
+                composable(ScreenRouter.MainScreen.HomeScreen.route) {
+                    PreviewScreenBlock("Create Screen", IptvAccent)
+                }
+                composable(ScreenRouter.MainScreen.ChannelScreen.route) {
+                    PreviewScreenBlock("Favorite Screen", IptvAccent)
                 }
                 composable(ScreenRouter.MainScreen.FavoriteScreen.route) {
-                    PreviewScreenBlock("Favorite Screen", theme.buttonColor)
-                }
-                composable(ScreenRouter.MainScreen.ScannerScreen.route) {
-                    PreviewScreenBlock("Scanner Screen", theme.buttonColor)
-                }
-                composable(ScreenRouter.MainScreen.HistoryScreen.route) {
-                    PreviewScreenBlock("History Screen", theme.buttonColor)
+                    PreviewScreenBlock("Scanner Screen", IptvAccent)
                 }
                 composable(ScreenRouter.MainScreen.SettingScreen.route) {
-                    PreviewScreenBlock("Setting Screen", theme.buttonColor)
+                    PreviewScreenBlock("Setting Screen", IptvAccent)
                 }
             }
 
             Box(Modifier.size(_60Sdp), contentAlignment = Alignment.Center) {
-                Image(
-                    painter = painterResource(
-                        when (theme) {
-                            ColorTheme.BLUE -> R.drawable.ic_scan_view_1
-                            ColorTheme.PINK -> R.drawable.ic_scan_view_2
-                            ColorTheme.GREEN -> R.drawable.ic_scan_view_3
-                            else -> R.drawable.ic_scan_view_4
-                        }
-                    ),
-                    contentDescription = stringResource(R.string.scanner),
-                    modifier = Modifier
-                        .size(_52Sdp)
-                        .onClick {
-                            navController.navigate(ScreenRouter.MainScreen.ScannerScreen.route) {
-                                popUpTo(ScreenRouter.MainScreen.CreateScreen.route) {
-                                    inclusive = true
-                                    saveState = true
-                                }
-                                restoreState = true
-                                launchSingleTop = true
-                            }
-                        }
-                )
+
             }
         }
-        BottomNavigationBar(
-            navHostController = navController, theme, modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-        )
+
     }
 }
 
@@ -225,7 +198,7 @@ private fun MainScreenPreviewScaffold(theme: ColorTheme) {
 @Composable
 private fun MainPreviewBlue() {
     AppViewTheme {
-        Surface { MainScreenPreviewScaffold(theme = ColorTheme.BLUE) }
+        Surface { MainScreenPreviewScaffold( )}
     }
 }
 
@@ -233,7 +206,7 @@ private fun MainPreviewBlue() {
 @Composable
 private fun MainPreviewPink() {
     AppViewTheme {
-        Surface { MainScreenPreviewScaffold(theme = ColorTheme.PINK) }
+        Surface { MainScreenPreviewScaffold() }
     }
 }
 
@@ -241,7 +214,7 @@ private fun MainPreviewPink() {
 @Composable
 private fun MainPreviewGreen() {
     AppViewTheme {
-        Surface { MainScreenPreviewScaffold(theme = ColorTheme.GREEN) }
+        Surface { MainScreenPreviewScaffold() }
     }
 }
 

@@ -83,51 +83,47 @@ fun ViewParentContent(
     content: @Composable BoxScope.() -> Unit
 ) {
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
-    val coroutineScope = rememberCoroutineScope()
-
     BackHandler(onBack = {
         softwareKeyboardController?.hide()
-        coroutineScope.launch {
-            onBack.invoke()
-        }
+        onBack()
     })
     Box(
-        modifier = modifier
-            .fillMaxSize(1f),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = contentAlignment,
         propagateMinConstraints = propagateMinConstraints,
         content = content
     )
 }
+
 @Composable
 fun HorScrollView(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
     val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
     LaunchedEffect(key1 = keyboardHeight) {
-        coroutineScope.launch {
+        if (keyboardHeight > 0) {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
     Box(
         modifier
-            .horizontalScroll(scrollState)
-            .fillMaxSize(), content = content
+            .fillMaxSize()
+            .horizontalScroll(scrollState),
+        content = content
     )
 }
+
 @Composable
-fun VerScrollView(modifier: Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun VerScrollView(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
     LaunchedEffect(key1 = keyboardHeight) {
-        coroutineScope.launch {
+        if (keyboardHeight > 0) {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
-    Column (modifier.verticalScroll(scrollState)) {
+    Column(modifier.fillMaxSize().verticalScroll(scrollState)) {
         content()
     }
 }

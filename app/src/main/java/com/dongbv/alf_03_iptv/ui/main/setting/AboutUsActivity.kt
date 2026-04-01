@@ -52,8 +52,9 @@ import com.dongbv.alf_03_iptv.style.gray
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.paddingHorizontal
 import com.dongbv.alf_03_iptv.style.white
-import com.dongbv.alf_03_iptv.ui.component.ColorTheme
 import androidx.core.net.toUri
+import com.dongbv.alf_03_iptv.widget.IptvAccent
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 
 class AboutUsActivity : BaseActivity() {
     override fun initialize() = Unit
@@ -63,17 +64,15 @@ class AboutUsActivity : BaseActivity() {
         innerPadding: InnerPadding,
         context: Context
     ) {
-        val colorTheme by PreferenceData.themeApp.flow.collectAsStateWithLifecycle(ColorTheme.BLUE)
-
+       
         ViewParentContent(
             onBack = { finish() },
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorTheme.bgColor)
+                .background(IptvBgPrimary)
                 .padding(top = innerPadding.top)
         ) {
             AboutUsScreen(
-                colorTheme = colorTheme,
                 onBack = { finish() },
                 onPrivacyPolicy = { openUrl(PRIVACY_POLICY_URL) },
                 onTermsOfService = { openUrl(TERMS_OF_SERVICE_URL) },
@@ -116,7 +115,6 @@ class AboutUsActivity : BaseActivity() {
 
 @Composable
 fun AboutUsScreen(
-    colorTheme: ColorTheme,
     onBack: () -> Unit,
     onPrivacyPolicy: () -> Unit,
     onTermsOfService: () -> Unit,
@@ -182,21 +180,18 @@ fun AboutUsScreen(
                 AboutMenuItem(
                     icon = R.drawable.ic_setting_privacy,
                     label = R.string.privacy_policy,
-                    colorTheme = colorTheme,
                     onClick = onPrivacyPolicy
                 )
 
                 AboutMenuItem(
                     icon = R.drawable.ic_setting_terms,
                     label = R.string.term_of_service,
-                    colorTheme = colorTheme,
                     onClick = onTermsOfService
                 )
 
                 AboutMenuItem(
                     icon = R.drawable.ic_setting_share,
                     label = R.string.share_app,
-                    colorTheme = colorTheme,
                     onClick = onShareApp
                 )
             }
@@ -246,7 +241,7 @@ private fun AboutTopBar(onBack: () -> Unit) {
 private fun AboutMenuItem(
     @DrawableRes icon: Int,
     @StringRes label: Int,
-    colorTheme: ColorTheme,
+
     onClick: () -> Unit
 ) {
     Box(Modifier.padding(vertical = 12.dp)) {
@@ -256,7 +251,7 @@ private fun AboutMenuItem(
         ) {
             IconView(
                 item = icon,
-                tint = colorTheme.buttonColor,
+                tint = IptvAccent,
                 modifier = Modifier
             )
             SpaceW(12)
@@ -287,10 +282,10 @@ private fun AboutUsScreenPreview() {
     Box(
         Modifier
             .fillMaxSize()
-            .background(ColorTheme.BLUE.bgColor)
+
     ) {
         AboutUsScreen(
-            colorTheme = ColorTheme.BLUE,
+
             onBack = {},
             onPrivacyPolicy = {},
             onTermsOfService = {},
