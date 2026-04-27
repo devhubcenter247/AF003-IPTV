@@ -1,69 +1,15 @@
 package com.dongbv.alf_03_iptv.viewmodel
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.dongbv.alf_03_iptv.app.PreferenceData
 import com.dongbv.alf_03_iptv.database.AppRepository
-import com.dongbv.alf_03_iptv.database.model.HistoryApp
-import kotlinx.coroutines.Dispatchers
+import com.dongbv.alf_03_iptv.model.HomeChannelItem
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.asStateFlow
 
 open class HomeViewModel(private val appRepository: AppRepository) : ViewModel() {
 
-    val listQrHistory: StateFlow<List<HistoryApp>> = appRepository.allData.stateIn(
-        viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        emptyList()
-    )
+    private val _listHomeChannel = MutableStateFlow<List<HomeChannelItem>>(emptyList())
+    val listHomeChannel = _listHomeChannel.asStateFlow()
 
-    val listQrFavorite: StateFlow<List<HistoryApp>> = appRepository.allFavoriteScan.stateIn(
-        viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        emptyList()
-    )
 
-    // Alias for history list
-    val historyList: StateFlow<List<HistoryApp>> = listQrHistory
-
-    // Flag to indicate history change
-    var isChangeHistory: Boolean = false
-
-    fun addToFavorite(item: HistoryApp) {
-        viewModelScope.launch(Dispatchers.IO) {
-            appRepository.updateFavorite(true, item.hisId)
-        }
-    }
-
-    fun removeFavorite(hisId: Int, onComplete: () -> Unit = {}) {
-        viewModelScope.launch(Dispatchers.IO) {
-            appRepository.updateFavorite(false, hisId)
-            launch(Dispatchers.Main) {
-                onComplete()
-            }
-        }
-    }
-
-    fun deleteHistory(hisId: Int, onComplete: () -> Unit = {}) {
-        viewModelScope.launch(Dispatchers.IO) {
-            appRepository.deleteHistory(hisId)
-            launch(Dispatchers.Main) {
-                onComplete()
-            }
-        }
-    }
-
-    fun updateHistoryName(name: String, hisId: Int, onComplete: () -> Unit = {}) {
-        viewModelScope.launch(Dispatchers.IO) {
-            appRepository.updateName(name, hisId)
-            launch(Dispatchers.Main) {
-                onComplete()
-            }
-        }
-    }
 }

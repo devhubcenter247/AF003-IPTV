@@ -30,19 +30,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.PreferenceData
 import com.dongbv.alf_03_iptv.base.BaseActivity
-import com.dongbv.alf_03_iptv.base.InnerPadding
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.IconView
 import com.dongbv.alf_03_iptv.style.ResponsivePreview
 import com.dongbv.alf_03_iptv.style.TextView
-import com.dongbv.alf_03_iptv.style.ViewParentContent
+import com.dongbv.alf_03_iptv.style.BoxParentContent
 import com.dongbv.alf_03_iptv.style._12Sdp
 import com.dongbv.alf_03_iptv.style._18Ssp
 import com.dongbv.alf_03_iptv.style._6Sdp
@@ -57,10 +54,10 @@ class LanguageActivity : BaseActivity() {
     override fun initialize() = Unit
     override fun isFinishFirstFlow() = false
     @Composable
-    override fun BoxScope.ContentView(innerPadding: InnerPadding, context: Context) {
-        val languages = remember { getLanguageArray().toList() } // List bất biến
+    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+        val languages = remember { getLanguageArray().toList() }
         var selected by rememberSaveable { mutableStateOf<LanguageItem?>(null) }
-        ViewParentContent(onBack = { finish() }) {
+        BoxParentContent(onBack = { finish() }) {
             Column(Modifier.fillMaxSize()) {
                 LanguageScreen(
                     languages = languages,
@@ -68,7 +65,7 @@ class LanguageActivity : BaseActivity() {
                     modifier = Modifier
                         .background(IptvBgPrimary)
                         .fillMaxWidth()
-                        .padding(top = innerPadding.top + _6Sdp)
+                        .padding(top = statusBarHeight)
                         .weight(1f),
                     onSelect = { selected = it },
                     onConfirm = {
@@ -117,7 +114,7 @@ fun LanguageScreen(
         ) {
             TextView(
                 text = R.string.language,
-                font = R.font.rb_700,
+                font = R.font.ss_700,
                 textSize = _18Ssp,
                 color = mainColor
             )

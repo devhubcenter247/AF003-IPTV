@@ -2,7 +2,6 @@ package com.dongbv.alf_03_iptv.ui.main.setting
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -20,28 +19,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dongbv.alf_03_iptv.BuildConfig
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.app.PreferenceData
 import com.dongbv.alf_03_iptv.base.BaseActivity
-import com.dongbv.alf_03_iptv.base.InnerPadding
 import com.dongbv.alf_03_iptv.style.IconView
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.VerScrollView
-import com.dongbv.alf_03_iptv.style.ViewParentContent
+import com.dongbv.alf_03_iptv.style.BoxParentContent
 import com.dongbv.alf_03_iptv.style._10Ssp
 import com.dongbv.alf_03_iptv.style._12Ssp
 import com.dongbv.alf_03_iptv.style._16Ssp
@@ -60,17 +55,13 @@ class AboutUsActivity : BaseActivity() {
     override fun initialize() = Unit
 
     @Composable
-    override fun BoxScope.ContentView(
-        innerPadding: InnerPadding,
-        context: Context
-    ) {
-       
-        ViewParentContent(
+    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+        BoxParentContent(
             onBack = { finish() },
             modifier = Modifier
                 .fillMaxSize()
                 .background(IptvBgPrimary)
-                .padding(top = innerPadding.top)
+                .padding(top = statusBarHeight)
         ) {
             AboutUsScreen(
                 onBack = { finish() },
@@ -107,8 +98,10 @@ class AboutUsActivity : BaseActivity() {
     }
 
     companion object {
-        private const val PRIVACY_POLICY_URL = "https://docs.google.com/document/d/e/2PACX-1vR4SqEYaVWrldLT2p8ExbJC_LkgBTjSYTuS818aZXRHSj80nUaz-dat0_vf_QbJqg/pub"
-        private const val TERMS_OF_SERVICE_URL = "https://docs.google.com/document/d/e/2PACX-1vTZexOUdGMrvfmr8vjNmReU_M9qQOa6TAjpAk6zwlbVg_bjdxmTw5yQGAREBZGM1g/pub"
+        private const val PRIVACY_POLICY_URL =
+            "https://docs.google.com/document/d/e/2PACX-1vR4SqEYaVWrldLT2p8ExbJC_LkgBTjSYTuS818aZXRHSj80nUaz-dat0_vf_QbJqg/pub"
+        private const val TERMS_OF_SERVICE_URL =
+            "https://docs.google.com/document/d/e/2PACX-1vTZexOUdGMrvfmr8vjNmReU_M9qQOa6TAjpAk6zwlbVg_bjdxmTw5yQGAREBZGM1g/pub"
         private const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id="
     }
 }
@@ -149,7 +142,7 @@ fun AboutUsScreen(
             // App Name
             TextView(
                 text = stringResource(R.string.app_name),
-                font = R.font.rb_700,
+                font = R.font.ss_700,
                 color = black,
                 textSize = _16Ssp,
                 modifier = Modifier.fillMaxWidth(),
@@ -161,7 +154,7 @@ fun AboutUsScreen(
             // Version
             TextView(
                 text = stringResource(R.string.version_format, BuildConfig.VERSION_NAME),
-                font = R.font.rb_400,
+                font = R.font.ss_400,
                 color = gray,
                 textSize = _12Ssp,
                 modifier = Modifier.fillMaxWidth(),
@@ -200,8 +193,11 @@ fun AboutUsScreen(
 
             // Copyright
             TextView(
-                text = stringResource(R.string.copyright).replace("%s",context.getString(R.string.app_name)),
-                font = R.font.rb_400,
+                text = stringResource(R.string.copyright).replace(
+                    "%s",
+                    context.getString(R.string.app_name)
+                ),
+                font = R.font.ss_400,
                 color = gray,
                 textSize = _10Ssp,
                 modifier = Modifier.fillMaxWidth(),
@@ -230,7 +226,7 @@ private fun AboutTopBar(onBack: () -> Unit) {
 
         TextView(
             text = R.string.about_us,
-            font = R.font.rb_700,
+            font = R.font.ss_700,
             color = black,
             textSize = _16Ssp
         )
@@ -257,7 +253,7 @@ private fun AboutMenuItem(
             SpaceW(12)
             TextView(
                 text = stringResource(label),
-                font = R.font.rb_400,
+                font = R.font.ss_400,
                 textSize = _12Ssp,
                 color = black
             )

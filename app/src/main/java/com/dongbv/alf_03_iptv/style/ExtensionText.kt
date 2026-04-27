@@ -3,6 +3,7 @@ package com.dongbv.alf_03_iptv.style
 import android.annotation.SuppressLint
 import android.util.Patterns
 import androidx.annotation.FontRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -22,7 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.LinkInteractionListener
@@ -33,6 +36,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -40,8 +44,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.style._6Sdp
-import com.dongbv.alf_03_iptv.style._12Sdp
+
 
 fun String.format(): String {
     return this.replace("\n", "").trim()
@@ -68,6 +71,7 @@ fun fontOf(@FontRes vararg fonts: Int): FontFamily =
     FontFamily(*fonts.map { resId -> Font(resId) }.toTypedArray())
 
 fun fontPadding(isPadding: Boolean) = PlatformTextStyle(includeFontPadding = isPadding)
+
 @Composable
 fun InputValue(
     value: String,
@@ -75,15 +79,21 @@ fun InputValue(
     maxLines: Int = 1000,
     color: Color = Color.Black,
     hintColor: Color = darkGray,
-    font: Font = Font(R.font.rb_400),
+    font: Font = Font(R.font.ss_400),
     textSize: TextUnit = 16.sp,
     style: TextStyle = TextStyle.Default,
     @SuppressLint("ModifierParameter") boxModifier: Modifier = Modifier,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
+        keyboardType = keyboardType,
+        imeAction = ImeAction.Done
+    ),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    showCursor: Boolean = true,
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit = {},
 ) {
     val focusRequester = remember { FocusRequester() }
     val interaction = remember { MutableInteractionSource() }
@@ -100,6 +110,7 @@ fun InputValue(
             value = value,
             onValueChange = { onValueChange(it) },
             modifier = modifier,
+            cursorBrush = SolidColor(if (showCursor) color else Color.Transparent),
             textStyle = style.copy(
                 color = color,
                 fontSize = textSize,
@@ -108,10 +119,9 @@ fun InputValue(
                     includeFontPadding = false
                 )
             ),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             maxLines = maxLines,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = keyboardType
-            ),
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
@@ -134,11 +144,12 @@ fun InputValue(
         )
     }
 }
+
 @Composable
 fun InputValue(
     value: String,
     hint: String = "",
-    font: Font = Font(R.font.rb_400),
+    font: Font = Font(R.font.ss_400),
     @SuppressLint("ModifierParameter") boxModifier: Modifier = Modifier,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     maxLines: Int = 1000,
@@ -149,6 +160,7 @@ fun InputValue(
     textSize: TextUnit = 16.sp,
     textStyle: TextStyle = TextStyle.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
+    showCursor: Boolean = true,
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
     onValueChange: (String) -> Unit
@@ -169,6 +181,7 @@ fun InputValue(
             singleLine = singleLine,
             onValueChange = { onValueChange(it) },
             modifier = modifier,
+            cursorBrush = SolidColor(if (showCursor) color else Color.Transparent),
             textStyle = textStyle.copy(
                 color = color,
                 fontSize = textSize,
@@ -178,10 +191,8 @@ fun InputValue(
                     includeFontPadding = false
                 )
             ),
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             maxLines = maxLines,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = keyboardType
-            ),
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
@@ -192,10 +203,9 @@ fun InputValue(
                     if (value.isEmpty()) {
                         Text(
                             text = hint,
-                            maxLines = maxLines,
                             style = TextStyle(
                                 color = hintColor,
-                                fontSize = 14.sp,
+                                fontSize = textSize,
                                 fontFamily = FontFamily(font), platformStyle = PlatformTextStyle(
                                     includeFontPadding = false
                                 )
@@ -208,6 +218,7 @@ fun InputValue(
         )
     }
 }
+
 @Composable
 fun TextView(
     text: String,
@@ -233,7 +244,7 @@ fun TextView(
             maxLines = maxLine,
             color = color ?: Color.Black,
             fontFamily = FontFamily(
-                font ?: Font(R.font.rb_400)
+                font ?: Font(R.font.ss_400)
             ),
             style = TextStyle(
                 platformStyle = PlatformTextStyle(
@@ -243,6 +254,7 @@ fun TextView(
         )
     }
 }
+
 @Composable
 fun TextView(
     text: String,
@@ -268,7 +280,7 @@ fun TextView(
         color = color ?: black,
         fontFamily = FontFamily(
             font ?: Font(
-                R.font.rb_400
+                R.font.ss_400
             )
         ),
         style = TextStyle(
@@ -281,13 +293,14 @@ fun TextView(
         }
     )
 }
+
 @Composable
 fun TextView(
-    text: Int,
+    @StringRes text: Int,
     modifier: Modifier = Modifier,
     textSize: TextUnit = _12Ssp,
     color: Color = Color.Black,
-    font: Int = R.font.rb_400,
+    font: Int = R.font.ss_400,
     maxLine: Int = 100,
     minLine: Int = 1,
     singleLine: Boolean = false,
@@ -295,9 +308,8 @@ fun TextView(
     onclick: () -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val context = LocalContext.current
     Text(
-        text = context.getString(text),
+        text = stringResource(text),
         fontSize = textSize,
         textAlign = textAlign,
         maxLines = maxLine,
@@ -319,49 +331,51 @@ fun TextView(
         }
     )
 }
+
 @Composable
 fun TextView(
     text: String,
     modifier: Modifier = Modifier,
     textSize: TextUnit = _12Ssp,
     color: Color = Color.Black,
-    font: Int = R.font.rb_400,
+    font: Int = R.font.ss_400,
     maxLine: Int = 100,
     minLine: Int = 1,
     singleLine: Boolean = false,
     txtStyle: TextStyle = TextStyle(),
     textAlign: TextAlign? = TextAlign.Start,
     onclick: () -> Unit = {}
-) {
-    Text(
-        text = text,
-        fontSize = textSize,
-        textAlign = textAlign,
-        maxLines = if (singleLine) 1 else maxLine,
-        overflow = if (singleLine) TextOverflow.Ellipsis else TextOverflow.Clip,
-        color = color,
-        minLines = minLine,
-        fontFamily = FontFamily(Font(font)),
-        style = txtStyle.copy(
-            platformStyle = PlatformTextStyle(
-                includeFontPadding = false
-            ),
+) = Text(
+    text = text,
+    fontSize = textSize,
+    textAlign = textAlign,
+    maxLines = if (singleLine) 1 else maxLine,
+    overflow = if (singleLine) TextOverflow.Ellipsis else TextOverflow.Clip,
+    color = color,
+    minLines = minLine,
+    fontFamily = FontFamily(Font(font)),
+    style = txtStyle.copy(
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
         ),
-        modifier = modifier.onClick { onclick.invoke() }
-    )
-}
+    ),
+    modifier = modifier.onClick { onclick.invoke() }
+)
+
 @Composable
 fun TextStyle.fontPadding(enabled: Boolean): TextStyle {
     return this.copy(
         platformStyle = PlatformTextStyle(includeFontPadding = enabled)
     )
 }
+
 @Composable
 fun TextStyle.fontFamily(@FontRes fontId: Int): TextStyle {
     return this.copy(
         fontFamily = FontFamily(Font(fontId))
     )
 }
+
 @Stable
 class ComposeTextStyle {
     private val b = AnnotatedString.Builder()

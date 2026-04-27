@@ -1,8 +1,11 @@
 package com.dongbv.alf_03_iptv.ui.language
 
+import android.content.res.Resources
+import android.os.LocaleList
 import android.os.Parcelable
 import com.dongbv.alf_03_iptv.R
 import kotlinx.android.parcel.Parcelize
+import java.util.Locale
 
 @Parcelize
 data class LanguageItem(
@@ -11,56 +14,87 @@ data class LanguageItem(
     var flagId: Int,
     var isChoose: Boolean = false,
     var isDefault: Boolean = false,
-): Parcelable
+) : Parcelable
 
 
-fun getLanguageArray(): MutableList<LanguageItem> {
-    return mutableListOf(
-        LanguageItem(flagId = R.drawable.ic_flag_uk, name = "English", code = "en"),
-        LanguageItem(flagId = R.drawable.ic_flag_india, name = "हिंदी", code = "hi"),
-        LanguageItem(flagId = R.drawable.ic_flag_france, name = "Français", code = "fr"),
-        LanguageItem(flagId = R.drawable.ic_flag_spain, name = "Español", code = "es"),
-        LanguageItem(flagId = R.drawable.ic_flag_portugal, name = "Português", code = "pt"),
-        LanguageItem(flagId = R.drawable.ic_flag_arab, name = "العربية", code = "ar"),
-        LanguageItem(flagId = R.drawable.ic_flag_bulgary, name = "Български", code = "bg"),
-        LanguageItem(flagId = R.drawable.ic_flag_czech, name = "Čeština", code = "cs"),
-        LanguageItem(flagId = R.drawable.ic_flag_denmark, name = "Dansk", code = "da"),
-        LanguageItem(flagId = R.drawable.ic_flag_germany, name = "Deutsch", code = "de"),
-        LanguageItem(flagId = R.drawable.ic_flag_greek, name = "Ελληνικά", code = "el"),
-        LanguageItem(flagId = R.drawable.ic_flag_iran, name = "فارسی", code = "fa_IR"),
-        LanguageItem(flagId = R.drawable.ic_flag_finland, name = "Suomi", code = "fi"),
-        LanguageItem(flagId = R.drawable.ic_flag_filipino, name = "Filipino", code = "fil"),
-        LanguageItem(flagId = R.drawable.ic_flag_india, name = "ગુજરાતી", code = "gu"),
-        LanguageItem(flagId = R.drawable.ic_flag_hungary, name = "Magyar", code = "hu"),
-        LanguageItem(flagId = R.drawable.ic_flag_indonesia, name = "Bahasa Indonesia", code = "in"),
-        LanguageItem(flagId = R.drawable.ic_flag_italy, name = "Italiano", code = "it"),
-        LanguageItem(flagId = R.drawable.ic_flag_israel, name = "עברית", code = "iw"),
-        LanguageItem(flagId = R.drawable.ic_flag_japan, name = "日本語", code = "ja"),
-        LanguageItem(flagId = R.drawable.ic_flag_india, name = "ಕನ್ನಡ", code = "kn"),
-        LanguageItem(flagId = R.drawable.ic_flag_south_korea, name = "한국어", code = "ko"),
-        LanguageItem(flagId = R.drawable.ic_flag_india, name = "മലയാളം", code = "ml"),
-        LanguageItem(flagId = R.drawable.ic_flag_india, name = "मराठी", code = "mr"),
-        LanguageItem(flagId = R.drawable.ic_flag_malaysia, name = "Melayu", code = "ms"),
-        LanguageItem(flagId = R.drawable.ic_flag_netherlands, name = "Nederlands", code = "nl"),
-        LanguageItem(flagId = R.drawable.ic_flag_pakistan, name = "ਪੰਜਾਬੀ", code = "pa"),
-        LanguageItem(flagId = R.drawable.ic_flag_poland, name = "Polski", code = "pl"),
-        LanguageItem(flagId = R.drawable.ic_flag_romania, name = "Română", code = "ro"),
-        LanguageItem(flagId = R.drawable.ic_flag_russia, name = "Pусский язык", code = "ru"),
-        LanguageItem(flagId = R.drawable.ic_flag_serbia, name = "Српски", code = "sr"),
-        LanguageItem(flagId = R.drawable.ic_flag_sweden, name = "Svenska", code = "sv"),
-        LanguageItem(flagId = R.drawable.ic_flag_india, name = "தமிழ்", code = "ta"),
-        LanguageItem(flagId = R.drawable.ic_flag_india, name = "తెలుగు", code = "te"),
-        LanguageItem(flagId = R.drawable.ic_flag_thailand, name = "ไทย", code = "th"),
-        LanguageItem(flagId = R.drawable.ic_flag_turkey, name = "Türkçe", code = "tr"),
-        LanguageItem(flagId = R.drawable.ic_flag_ukraine, name = "Українська", code = "uk"),
-        LanguageItem(flagId = R.drawable.ic_flag_pakistan, name = "اردو", code = "ur"),
-        LanguageItem(flagId = R.drawable.ic_flag_china, name = "简体中文", code = "zh"),
-        LanguageItem(flagId = R.drawable.ic_flag_taiwan, name = "繁體中文", code = "zh_TW"),
-        LanguageItem(flagId = R.drawable.ic_flag_vietnam, name = "Tiếng Việt", code = "vi"),
-        LanguageItem(flagId = R.drawable.ic_flag_brazil, name = "Brasil", code = "pt_BR"),
-        LanguageItem(flagId = R.drawable.ic_flag_mexico, name = "México", code = "es_MX"),
-        LanguageItem(flagId = R.drawable.ic_flag_pakistan, name = "پاکستان", code = "ur_PK"),
-        LanguageItem(flagId = R.drawable.ic_flag_uae, name = "الإمارات العربية المتحدة", code = "ar_AE"),
-        LanguageItem(flagId = R.drawable.ic_flag_arab, name = "المملكة العربية السعودية", code = "ar_SA"),
-    )
+object LocateManager {
+    private const val PREF_NAME = "data"
+    private const val KEY_LANGUAGE = "KEY_LANGUAGE"
+
+    private var cacheLocateInit = ""
+    fun initDeviceLocate() {
+        cacheLocateInit = Resources.getSystem().configuration.locales[0].language
+    }
+
+    fun getDeviceLanguageCode(): String = cacheLocateInit
 }
+
+private fun String.toLocaleOrNull(): Locale? {
+    return try {
+        val l = Locale.forLanguageTag(this)
+        if (l.language.isNullOrBlank()) null else l
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+private fun LocaleList.getOrNull(index: Int): Locale? =
+    if (index in 0 until this.size()) this.get(index) else null
+
+
+fun getLanguageArray() = mutableListOf(
+    LanguageItem(flagId = R.drawable.ic_flag_uk, name = "English", code = "en"),
+    LanguageItem(flagId = R.drawable.ic_flag_india, name = "हिंदी", code = "hi"),
+    LanguageItem(flagId = R.drawable.ic_flag_france, name = "Français", code = "fr"),
+    LanguageItem(flagId = R.drawable.ic_flag_spain, name = "Español", code = "es"),
+    LanguageItem(flagId = R.drawable.ic_flag_portugal, name = "Português", code = "pt"),
+    LanguageItem(flagId = R.drawable.ic_flag_arab, name = "العربية", code = "ar"),
+    LanguageItem(flagId = R.drawable.ic_flag_bulgary, name = "Български", code = "bg"),
+    LanguageItem(flagId = R.drawable.ic_flag_czech, name = "Čeština", code = "cs"),
+    LanguageItem(flagId = R.drawable.ic_flag_denmark, name = "Dansk", code = "da"),
+    LanguageItem(flagId = R.drawable.ic_flag_germany, name = "Deutsch", code = "de"),
+    LanguageItem(flagId = R.drawable.ic_flag_greek, name = "Ελληνικά", code = "el"),
+    LanguageItem(flagId = R.drawable.ic_flag_iran, name = "فارسی", code = "fa_IR"),
+    LanguageItem(flagId = R.drawable.ic_flag_finland, name = "Suomi", code = "fi"),
+    LanguageItem(flagId = R.drawable.ic_flag_filipino, name = "Filipino", code = "fil"),
+    LanguageItem(flagId = R.drawable.ic_flag_india, name = "ગુજરાતી", code = "gu"),
+    LanguageItem(flagId = R.drawable.ic_flag_hungary, name = "Magyar", code = "hu"),
+    LanguageItem(flagId = R.drawable.ic_flag_indonesia, name = "Bahasa Indonesia", code = "in"),
+    LanguageItem(flagId = R.drawable.ic_flag_italy, name = "Italiano", code = "it"),
+    LanguageItem(flagId = R.drawable.ic_flag_israel, name = "עברית", code = "iw"),
+    LanguageItem(flagId = R.drawable.ic_flag_japan, name = "日本語", code = "ja"),
+    LanguageItem(flagId = R.drawable.ic_flag_india, name = "ಕನ್ನಡ", code = "kn"),
+    LanguageItem(flagId = R.drawable.ic_flag_south_korea, name = "한국어", code = "ko"),
+    LanguageItem(flagId = R.drawable.ic_flag_india, name = "മലയാളം", code = "ml"),
+    LanguageItem(flagId = R.drawable.ic_flag_india, name = "मराठी", code = "mr"),
+    LanguageItem(flagId = R.drawable.ic_flag_malaysia, name = "Melayu", code = "ms"),
+    LanguageItem(flagId = R.drawable.ic_flag_netherlands, name = "Nederlands", code = "nl"),
+    LanguageItem(flagId = R.drawable.ic_flag_pakistan, name = "ਪੰਜਾਬੀ", code = "pa"),
+    LanguageItem(flagId = R.drawable.ic_flag_poland, name = "Polski", code = "pl"),
+    LanguageItem(flagId = R.drawable.ic_flag_romania, name = "Română", code = "ro"),
+    LanguageItem(flagId = R.drawable.ic_flag_russia, name = "Pусский язык", code = "ru"),
+    LanguageItem(flagId = R.drawable.ic_flag_serbia, name = "Српски", code = "sr"),
+    LanguageItem(flagId = R.drawable.ic_flag_sweden, name = "Svenska", code = "sv"),
+    LanguageItem(flagId = R.drawable.ic_flag_india, name = "தமிழ்", code = "ta"),
+    LanguageItem(flagId = R.drawable.ic_flag_india, name = "తెలుగు", code = "te"),
+    LanguageItem(flagId = R.drawable.ic_flag_thailand, name = "ไทย", code = "th"),
+    LanguageItem(flagId = R.drawable.ic_flag_turkey, name = "Türkçe", code = "tr"),
+    LanguageItem(flagId = R.drawable.ic_flag_ukraine, name = "Українська", code = "uk"),
+    LanguageItem(flagId = R.drawable.ic_flag_pakistan, name = "اردو", code = "ur"),
+    LanguageItem(flagId = R.drawable.ic_flag_china, name = "简体中文", code = "zh"),
+    LanguageItem(flagId = R.drawable.ic_flag_taiwan, name = "繁體中文", code = "zh_TW"),
+    LanguageItem(flagId = R.drawable.ic_flag_vietnam, name = "Tiếng Việt", code = "vi"),
+    LanguageItem(flagId = R.drawable.ic_flag_brazil, name = "Brasil", code = "pt_BR"),
+    LanguageItem(flagId = R.drawable.ic_flag_mexico, name = "México", code = "es_MX"),
+    LanguageItem(flagId = R.drawable.ic_flag_pakistan, name = "پاکستان", code = "ur_PK"),
+    LanguageItem(
+        flagId = R.drawable.ic_flag_uae,
+        name = "الإمارات العربية المتحدة",
+        code = "ar_AE"
+    ),
+    LanguageItem(
+        flagId = R.drawable.ic_flag_arab,
+        name = "المملكة العربية السعودية",
+        code = "ar_SA"
+    ),
+)

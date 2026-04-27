@@ -1,7 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.component
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
@@ -13,14 +12,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -35,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -47,31 +44,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil3.compose.AsyncImage
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.rateApp
 import com.dongbv.alf_03_iptv.base.AppDialog
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style.IptvTypography
 import com.dongbv.alf_03_iptv.style.RatingBar
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style._10Sdp
+import com.dongbv.alf_03_iptv.style._11Ssp
 import com.dongbv.alf_03_iptv.style._12Sdp
 import com.dongbv.alf_03_iptv.style._12Ssp
 import com.dongbv.alf_03_iptv.style._14Ssp
 import com.dongbv.alf_03_iptv.style._16Sdp
 import com.dongbv.alf_03_iptv.style._18Sdp
+import com.dongbv.alf_03_iptv.style._42Sdp
+import com.dongbv.alf_03_iptv.style._6Sdp
 import com.dongbv.alf_03_iptv.style._8Sdp
 import com.dongbv.alf_03_iptv.style.black
 import com.dongbv.alf_03_iptv.style.gray
 import com.dongbv.alf_03_iptv.style.lightGrey
 import com.dongbv.alf_03_iptv.style.paddingEnd
 import com.dongbv.alf_03_iptv.style.paddingStart
+import com.dongbv.alf_03_iptv.style.paddingTop
+import com.dongbv.alf_03_iptv.style.paddingVertical
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
-import com.dongbv.alf_03_iptv.widget.grdEnd
-import com.dongbv.alf_03_iptv.widget.grdStart
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -97,6 +97,81 @@ fun PreviewDialog() {
         }
     }
 }
+
+
+
+@Preview(device = PIXEL_4_XL)
+@Composable
+fun PreviewDialog10() {
+    AppViewTheme {
+        Column {
+            DialogNoInternet(true) {
+            }
+        }
+    }
+}
+
+@Composable
+fun DialogNoInternet(
+    isShowDialog: Boolean,
+    onDismiss: () -> Unit = {},
+    tryAgain: () -> Unit = {}
+) {
+    if (isShowDialog) {
+        AppDialog(onDismiss) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(_8Sdp))
+                    .background(white)
+                    .padding(_12Sdp), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AsyncImage(
+                    R.drawable.ic_no_wifi_connect,
+                    contentDescription = null,
+                    modifier = Modifier.size(
+                        _42Sdp
+                    )
+                )
+                TextView(
+                    stringResource(R.string.no_wifi_connection),
+                    font = R.font.ss_600,
+                    textAlign = TextAlign.Center,
+                    textSize = _14Ssp,
+                    color = black,
+                    modifier = Modifier
+                        .paddingTop(_6Sdp)
+                        .fillMaxWidth()
+                )
+                TextView(
+                    stringResource(R.string.please_check_your_wifi_connection),
+                    font = R.font.ss_400,
+                    textAlign = TextAlign.Center,
+                    textSize = _11Ssp,
+                    color = Color(0xFF6B7785),
+                    modifier = Modifier
+                        .paddingVertical(_10Sdp)
+                        .fillMaxWidth()
+                )
+                TextView(
+                    stringResource(R.string.try_again),
+                    color = white,
+                    font = R.font.ss_500,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .background(
+                            color = white, CircleShape
+                        )
+                        .fillMaxWidth(1f)
+                        .padding(_12Sdp)
+                ) {
+                    tryAgain.invoke()
+                }
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -248,7 +323,7 @@ fun RatingDialog(
                         text = stringResource(titleRate),
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
-                        fontFamily = FontFamily(Font(R.font.rb_500)),
+                        fontFamily = FontFamily(Font(R.font.ss_500)),
                         fontSize = _14Ssp,
                         color = Color.Black
                     )
@@ -257,7 +332,7 @@ fun RatingDialog(
                         text = stringResource(contentRate),
                         fontSize = _12Ssp,
                         textAlign = TextAlign.Center,
-                        fontFamily = FontFamily(Font(R.font.rb_400)),
+                        fontFamily = FontFamily(Font(R.font.ss_400)),
                         color = Color.Gray,
                         minLines = 2
                     )
@@ -321,7 +396,7 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Un
             ) {
                 TextView(
                     stringResource(R.string.quit),
-                    font = R.font.rb_600,
+                    font = R.font.ss_600,
                     textSize = _14Ssp,
                     color = black,
                     modifier = Modifier.fillMaxWidth()
@@ -329,7 +404,7 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Un
                 SpaceH(_12Sdp)
                 TextView(
                     stringResource(R.string.are_you_sure_want_to_quit_app),
-                    font = R.font.rb_500,
+                    font = R.font.ss_500,
                     textSize = _12Ssp,
                     color = gray,
                     modifier = Modifier.fillMaxWidth()
@@ -340,7 +415,7 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Un
                     TextView(
                         stringResource(R.string.cancel),
                         color = lightGrey,
-                        font = R.font.rb_500,
+                        font = R.font.ss_500,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .border(
@@ -358,7 +433,7 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Un
                     TextView(
                         stringResource(R.string.ok),
                         color = IptvTextPrimary,
-                        font = R.font.rb_500,
+                        font = R.font.ss_500,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .background(IptvTextPrimary, CircleShape)

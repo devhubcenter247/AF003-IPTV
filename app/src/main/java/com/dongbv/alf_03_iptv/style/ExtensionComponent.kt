@@ -10,7 +10,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -23,6 +22,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -31,6 +31,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -38,11 +40,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -58,9 +60,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
@@ -72,10 +76,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
-fun ViewParentContent(
+fun BoxParentContent(
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.TopStart,
     propagateMinConstraints: Boolean = false,
@@ -91,6 +96,55 @@ fun ViewParentContent(
         modifier = modifier.fillMaxSize(),
         contentAlignment = contentAlignment,
         propagateMinConstraints = propagateMinConstraints,
+        content = content
+    )
+}
+
+@Composable
+fun BoxScope.onClick(enable: Boolean = true, onClick: () -> Unit) {
+    Box(modifier = Modifier
+        .matchParentSize()
+        .onClick(enable, onClick))
+}
+
+@Composable
+fun RowParentContent(
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
+    onBack: () -> Unit,
+    content: @Composable RowScope.() -> Unit
+) {
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
+    BackHandler(onBack = {
+        softwareKeyboardController?.hide()
+        onBack()
+    })
+    Row(
+        modifier = modifier.fillMaxSize(),
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment,
+        content = content
+    )
+}
+
+@Composable
+fun ColumnParentContent(
+    modifier: Modifier = Modifier,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    onBack: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
+    BackHandler(onBack = {
+        softwareKeyboardController?.hide()
+        onBack()
+    })
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
         content = content
     )
 }
@@ -123,12 +177,15 @@ fun VerScrollView(modifier: Modifier = Modifier, content: @Composable ColumnScop
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
-    Column(modifier.fillMaxSize().verticalScroll(scrollState)) {
+    Column(modifier
+        .fillMaxSize()
+        .verticalScroll(scrollState)) {
         content()
     }
 }
+
 @Stable
-fun Modifier.onClick(enable: Boolean =true,onClick: () -> Unit): Modifier = composed {
+fun Modifier.onClick(enable: Boolean = true, onClick: () -> Unit): Modifier = composed {
     val interactionSource = remember { MutableInteractionSource() }
     clickable(
         interactionSource = interactionSource,
@@ -137,6 +194,7 @@ fun Modifier.onClick(enable: Boolean =true,onClick: () -> Unit): Modifier = comp
         onClick = onClick
     )
 }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Modifier.onLongClick(onLongClick: () -> Unit): Modifier = composed {
@@ -170,6 +228,7 @@ fun Modifier.gradientContent(
                     start = Offset(0f, 0f),
                     end = Offset(size.width, size.height)
                 )
+
                 GradientType.Horizontal -> Brush.horizontalGradient(colors)
                 GradientType.Vertical -> Brush.verticalGradient(colors)
                 GradientType.Radial -> Brush.radialGradient(
@@ -177,6 +236,7 @@ fun Modifier.gradientContent(
                     center = Offset(size.width / 2, size.height / 2),
                     radius = size.minDimension / 2
                 )
+
                 GradientType.Sweep -> Brush.sweepGradient(
                     colors = colors,
                     center = Offset(size.width / 2, size.height / 2)
@@ -189,6 +249,7 @@ fun Modifier.gradientContent(
             }
         }
 )
+
 @Composable
 fun Modifier.dashedBorder(
     strokeWidth: Dp,
@@ -214,72 +275,78 @@ fun Modifier.dashedBorder(
         )
     }
 )
+
+
+@Stable
+class ShimmerState internal constructor(val progress: Float)
 @Composable
-fun Modifier.shimmer(
-    visible: Boolean,
-    alpha: Float = 1f,
-    shape: Shape = RectangleShape,
-    baseColor: Color = Color.LightGray.copy(alpha = 0.5f),
-    highlightColor: Color = Color.LightGray.copy(alpha = 0.18f),
+fun rememberShimmerState(
     durationMillis: Int = 900,
-    angleDegrees: Float = 20f,
-    bandWidthFraction: Float = 0.45f
-): Modifier = composed {
-    if (!visible) return@composed this
+): ShimmerState {
     val transition = rememberInfiniteTransition(label = "shimmer")
     val anim by transition.animateFloat(
-        initialValue = -1f, targetValue = 2f,
+        initialValue = -1f,
+        targetValue = 2f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "offset"
     )
-    val (dx, dy) = remember(angleDegrees) {
-        val r = Math.toRadians(angleDegrees.toDouble())
-        kotlin.math.cos(r).toFloat() to kotlin.math.sin(r).toFloat()
-    }
+    return remember(anim) { ShimmerState(anim) }
+}
 
-    drawWithCache {
+fun Modifier.shimmer(
+    state: ShimmerState,
+    visible: Boolean,
+    alpha: Float = 1f,
+    shape: Shape = RectangleShape,
+    baseColor: Color = Color.LightGray.copy(alpha = 0.5f),
+    highlightColor: Color = Color.LightGray.copy(alpha = 0.18f),
+    angleDegrees: Float = 20f,
+    bandWidthFraction: Float = 0.45f
+): Modifier = this.then(
+    if (!visible) Modifier else Modifier.drawWithCache {
         if (size.minDimension <= 0f || alpha <= 0f) {
             onDrawWithContent { drawContent() }
         } else {
+            val (dx, dy) = run {
+                val r = Math.toRadians(angleDegrees.toDouble())
+                cos(r).toFloat() to sin(r).toFloat()
+            }
+
             val w = size.width
-            val band = (bandWidthFraction.coerceIn(0.1f, 0.5f)) * w
+            val band = bandWidthFraction.coerceIn(0.1f, 0.5f) * w
+
             val outline = shape.createOutline(size, layoutDirection, this)
-            val cachedPath: androidx.compose.ui.graphics.Path? =
-                when (outline) {
-                    is Outline.Generic -> outline.path
-                    is Outline.Rounded -> androidx.compose.ui.graphics.Path().apply {
-                        addRoundRect(outline.roundRect)
-                    }
-                    is Outline.Rectangle -> null
-                }
+            val cachedPath: Path? = when (outline) {
+                is Outline.Generic -> outline.path
+                is Outline.Rounded -> Path().apply { addRoundRect(outline.roundRect) }
+                is Outline.Rectangle -> null
+            }
+
             val baseA = baseColor.copy(alpha = baseColor.alpha * alpha)
             val hiA = highlightColor.copy(alpha = highlightColor.alpha * alpha)
             val colors = listOf(baseA, hiA, baseA)
-
             onDrawWithContent {
                 drawContent()
-                val startX = -band + anim * (w + band * 2)
+                val startX = -band + state.progress * (w + band * 2)
                 val start = Offset(startX * dx, startX * dy)
                 val end = Offset(start.x + band * dx, start.y + band * dy)
                 val brush = Brush.linearGradient(colors = colors, start = start, end = end)
-                if (cachedPath != null) {
-                    drawPath(path = cachedPath, brush = brush)
-                } else {
-                    drawRect(brush = brush)
-                }
+
+                if (cachedPath != null) drawPath(cachedPath, brush) else drawRect(brush)
             }
         }
     }
-}
+)
+
 @Composable
 private inline fun Modifier.drawEdgeLine(
     width: Dp,
     color: Color?,
     brush: Brush?,
-    crossinline computeStartEnd: androidx.compose.ui.graphics.drawscope.DrawScope.(strokePx: Float) -> Pair<Offset, Offset>
+    crossinline computeStartEnd: DrawScope.(strokePx: Float) -> Pair<Offset, Offset>
 ): Modifier = drawWithContent {
     drawContent()
     val strokePx = width.toPx()
@@ -292,6 +359,7 @@ private inline fun Modifier.drawEdgeLine(
             end = end,
             strokeWidth = strokePx
         )
+
         color != null && color != Color.Unspecified -> drawLine(
             color = color,
             start = start,
@@ -300,6 +368,7 @@ private inline fun Modifier.drawEdgeLine(
         )
     }
 }
+
 @Composable
 fun Modifier.borderTop(
     width: Dp = _1Sdp,
@@ -313,6 +382,7 @@ fun Modifier.borderTop(
         }
     )
 }
+
 @Composable
 fun Modifier.borderBottom(
     width: Dp = _1Sdp,
@@ -326,6 +396,7 @@ fun Modifier.borderBottom(
         }
     )
 }
+
 @Composable
 fun Modifier.borderStart(
     width: Dp = _1Sdp,
@@ -341,6 +412,7 @@ fun Modifier.borderStart(
         }
     )
 }
+
 @Composable
 fun Modifier.borderEnd(
     width: Dp = _1Sdp,
@@ -356,6 +428,7 @@ fun Modifier.borderEnd(
         }
     )
 }
+
 @Composable
 fun Modifier.borderHorizontal(
     width: Dp = _1Sdp,
@@ -364,6 +437,7 @@ fun Modifier.borderHorizontal(
 ): Modifier = this
     .borderTop(width, color, brush)
     .borderBottom(width, color, brush)
+
 @Composable
 fun Modifier.borderVertical(
     width: Dp = _1Sdp,
@@ -372,6 +446,7 @@ fun Modifier.borderVertical(
 ): Modifier = this
     .borderStart(width, color, brush)
     .borderEnd(width, color, brush)
+
 @Composable
 fun DotIndicator(count: Int = 3, current: Int = 0) {
     val activeDotSize = _16Sdp
@@ -395,6 +470,7 @@ fun DotIndicator(count: Int = 3, current: Int = 0) {
         }
     }
 }
+
 @Composable
 fun CustomSwitch(
     checked: Boolean,
@@ -402,32 +478,38 @@ fun CustomSwitch(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val switchWidth = _46Sdp
-    val switchHeight = _24Sdp
-    val thumbRadius = _12Sdp
-    val thumbPadding = _2Sdp
-    val thumbPosition = animateDpAsState(
-        targetValue = if (checked) switchWidth - thumbRadius * 1.8f - thumbPadding else thumbPadding,
-        animationSpec = tween(durationMillis = 300), label = ""
-    )
-
-    Box(
+    BoxWithConstraints(
         modifier = modifier
-            .size(switchWidth, switchHeight)
-            .clip(RoundedCornerShape(switchHeight / 2))
-            .background(if (checked) thumbOn else Color(0xFFB5B5B5))
-            .onClick { onCheckedChange(!checked) },
-        contentAlignment = Alignment.CenterStart
+            .onClick { onCheckedChange(!checked) }
     ) {
+        val width = if (constraints.hasBoundedWidth) maxWidth else _46Sdp
+        val height = if (constraints.hasBoundedHeight) maxHeight else _24Sdp
+
+        val thumbPadding = height * 0.1f
+        val thumbSize = height - (thumbPadding * 2)
+
+        val thumbPosition by animateDpAsState(
+            targetValue = if (checked) width - thumbSize - thumbPadding else thumbPadding,
+            animationSpec = tween(durationMillis = 300), label = ""
+        )
+
         Box(
             modifier = Modifier
-                .size(thumbRadius * 1.8f)
-                .padding(thumbPadding)
-                .offset(x = thumbPosition.value)
-                .background(Color.White, CircleShape)
-        )
+                .size(width, height)
+                .clip(CircleShape)
+                .background(if (checked) thumbOn else Color(0xFFB5B5B5)),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(thumbSize)
+                    .offset(x = thumbPosition)
+                    .background(Color.White, CircleShape)
+            )
+        }
     }
 }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DotIndicator(pagerState: PagerState, count: Int = pagerState.pageCount) {
@@ -453,89 +535,55 @@ fun DotIndicator(pagerState: PagerState, count: Int = pagerState.pageCount) {
         }
     }
 }
+
+@Composable
+fun Modifier.onAppear(block: () -> Unit): Modifier {
+    LaunchedEffect(Unit) { block() }
+    return this
+}
+
+@Composable
+fun Modifier.onDisappear(block: () -> Unit): Modifier {
+    DisposableEffect(Unit) { onDispose { block() } }
+    return this
+}
+
 @Composable
 fun IconView(
     item: Any,
     tint: Color? = null,
     icSize: Int = 24,
+    mirrorForRtl: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     onclick: (() -> Unit)? = null
 ) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val iconModifier = Modifier
+        .size(icSize.dp)
+        .then(if (mirrorForRtl && isRtl) Modifier.graphicsLayer { scaleX = -1f } else Modifier)
+    Box(
+        modifier = modifier.then(if (onclick != null) Modifier.onClick { onclick() } else Modifier),
+        contentAlignment = Alignment.Center
+    ) {
         when (item) {
             is ImageVector -> Icon(
                 item,
                 contentDescription = "Image Vector",
                 tint = tint ?: Color.Unspecified,
-                modifier = Modifier.size(icSize.dp)
+                modifier = iconModifier
             )
             is Painter -> Icon(
                 painter = item,
                 contentDescription = "Painter",
-                modifier = Modifier.size(icSize.dp),
+                modifier = iconModifier,
                 tint = tint ?: Color.Unspecified
             )
-            is Int ->
-                Icon(
-                    painter = painterResource(item),
-                    contentDescription = "Painter",
-                    modifier = Modifier.size(icSize.dp),
-                    tint = tint ?: Color.Unspecified
-                )
+            is Int -> Icon(
+                painter = painterResource(item),
+                contentDescription = "Painter",
+                modifier = iconModifier,
+                tint = tint ?: Color.Unspecified
+            )
         }
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .onClick { onclick?.invoke() })
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

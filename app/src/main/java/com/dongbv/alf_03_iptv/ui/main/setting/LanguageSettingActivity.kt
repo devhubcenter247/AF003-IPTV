@@ -25,18 +25,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.PreferenceData
 import com.dongbv.alf_03_iptv.base.BaseActivity
-import com.dongbv.alf_03_iptv.base.InnerPadding
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.IconView
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
-import com.dongbv.alf_03_iptv.style.ViewParentContent
+import com.dongbv.alf_03_iptv.style.BoxParentContent
 import com.dongbv.alf_03_iptv.style._10Sdp
 import com.dongbv.alf_03_iptv.style._12Sdp
 import com.dongbv.alf_03_iptv.style._18Ssp
@@ -55,7 +54,7 @@ class LanguageSettingActivity : BaseActivity() {
     override fun initialize() = Unit
 
     @Composable
-    override fun BoxScope.ContentView(innerPadding: InnerPadding, context: Context) {
+    override fun BoxScope.ContentView(statusBarHeight: Dp) {
         val languages = remember { getLanguageArray().toList() }
         var selected by rememberSaveable {
             mutableStateOf(getLanguageArray().find { it ->
@@ -63,14 +62,14 @@ class LanguageSettingActivity : BaseActivity() {
             } ?: getLanguageArray()[0])
         }
 
-        ViewParentContent(onBack = { finish() }) {
+        BoxParentContent(onBack = { finish() }) {
             LanguageSettingScreen(
                 languages = languages,
                 selected = selected,
                 modifier = Modifier
                     .background(IptvBgPrimary)
                     .fillMaxSize(1f)
-                    .padding(top = innerPadding.top + _6Sdp),
+                    .padding(top = statusBarHeight),
                 onSelect = { selected = it },
                 onConfirm = {
                     val code = selected?.code ?: "en"
@@ -125,7 +124,7 @@ fun LanguageSettingScreen(
             SpaceW(_4Sdp)
             TextView(
                 text = R.string.language,
-                font = R.font.rb_700,
+                font = R.font.ss_700,
                 textSize = _18Ssp,
                 color = mainColor
             )

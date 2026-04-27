@@ -29,6 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -39,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style.Color_f2f2f7
 import com.dongbv.alf_03_iptv.style.IconView
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.TextView
@@ -99,7 +101,7 @@ fun LanguageItem(
             .border(
                 width = _1Sdp,
 
-                color = if (item != currentLanguage) Color_f2f2f7.opacity(0.5f) else IptvAccent,
+                color = if (item != currentLanguage) Color(0xFFF2F2F7).opacity(0.5f) else IptvAccent,
                 shape = RoundedCornerShape(_8Sdp)
             )
             .background(white.opacity(0.6f), shape = RoundedCornerShape(_12Sdp))
@@ -119,7 +121,7 @@ fun LanguageItem(
             )
             TextView(
                 text = item.name,
-                font = R.font.rb_400,
+                font = R.font.ss_400,
                 textSize = _12Ssp,
                 modifier = Modifier
                     .padding(start = 8.dp)
@@ -141,7 +143,10 @@ fun LanguageItem(
 }
 
 @Composable
-fun BoxScope.BlurView() {
+fun BoxScope.BlurView(
+    color: Color = Color.White.opacity(50),
+    shape: Shape = RoundedCornerShape(50)
+) {
     Box(
         Modifier
             .matchParentSize()
@@ -151,7 +156,27 @@ fun BoxScope.BlurView() {
             Modifier
                 .matchParentSize()
                 .background(
-                    color = white.opacity(0.5f), shape = RoundedCornerShape(_10Sdp)
+                    color = color, shape = shape
+                )
+        )
+    }
+}
+
+@Composable
+fun BoxScope.BlurView(
+    brush: Brush = Brush.linearGradient(),
+    shape: Shape = RoundedCornerShape(50)
+) {
+    Box(
+        Modifier
+            .matchParentSize()
+            .blur(_30Sdp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+    ) {
+        Box(
+            Modifier
+                .matchParentSize()
+                .background(
+                    brush = brush, shape = shape
                 )
         )
     }
@@ -175,7 +200,7 @@ fun ButtonCreate(
         ),
         textAlign = TextAlign.Center,
         textSize = _12Ssp,
-        font = R.font.rb_600,
+        font = R.font.ss_600,
         color = if (isEnable) IptvAccent else darkGray,
         singleLine = true,
         txtStyle = TextStyle.Default.fontPadding(false)
@@ -185,7 +210,6 @@ fun ButtonCreate(
         }
     }
 }
-
 
 @Composable
 fun HeaderCreate(
@@ -358,7 +382,7 @@ fun MonthYearSelect(
                         fontSize = _11Ssp,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
-                        style = TextStyle.Default.fontFamily(R.font.rb_500),
+                        style = TextStyle.Default.fontFamily(R.font.ss_500),
                         color = black,
                         modifier = Modifier
                             .weight(1f)
@@ -384,7 +408,7 @@ fun MonthYearSelect(
                         fontSize = _11Ssp,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
-                        style = TextStyle.Default.fontFamily(R.font.rb_500),
+                        style = TextStyle.Default.fontFamily(R.font.ss_500),
                         color = black,
                         modifier = Modifier
                             .weight(1f)

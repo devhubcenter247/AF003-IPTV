@@ -23,12 +23,12 @@ fun adjustComponent(component: Float, factor: Float): Float {
 
 fun Color.opacity(alpha: Float): Color {
     return this.copy(
-        alpha = alpha
+        alpha = if (alpha > 1) alpha / 100 else alpha
     )
 }
 
 fun Color.opacity(alpha: Int): Color {
-    val currentAlpha = if (alpha > 0) alpha / 100f else alpha.toFloat()
+    val currentAlpha = if (alpha > 1) alpha / 100f else alpha.toFloat()
     return this.copy(
         alpha = currentAlpha
     )
@@ -40,14 +40,6 @@ val pink80 = Color(0xFFEFB8C8)
 val purple40 = Color(0xFF6650a4)
 val purpleGrey40 = Color(0xFF625b71)
 val pink40 = Color(0xFF7D5260)
-val colorPhoto = Color(0xFF4285F4)
-val colorVideo = Color(0xFFEA4335)
-val colorOther = Color(0xFFC6C6C8)
-val ColorF0F5FF = Color(0xFFF0F5FF)
-val Color_f2f2f7 = Color(0xFFF2F2F7)
-val Color_3c3c43 = Color(0xFF3c3c43)
-val Color_C9CDD4 = Color(0xFFC9CDD4)
-val backgroundColor = Color(0xFFECF3F9)
 val disabled = Color(0xFFD9D9D9)
 val lineColor = Color(0xFFEAEAEA)
 val white = Color(0xFFFFFFFF)

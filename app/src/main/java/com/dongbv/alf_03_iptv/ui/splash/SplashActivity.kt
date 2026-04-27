@@ -27,17 +27,17 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.PreferenceData
 import com.dongbv.alf_03_iptv.base.BaseActivity
-import com.dongbv.alf_03_iptv.base.InnerPadding
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.TextView
-import com.dongbv.alf_03_iptv.style.ViewParentContent
+import com.dongbv.alf_03_iptv.style.BoxParentContent
 import com.dongbv.alf_03_iptv.style._11Ssp
 import com.dongbv.alf_03_iptv.style._12Sdp
 import com.dongbv.alf_03_iptv.style._18Ssp
@@ -61,6 +61,8 @@ class SplashActivity : BaseActivity() {
         }
     }
 
+
+
     override fun isFinishFirstFlow() = PreferenceData.isFinishFirstFlow
     fun goNextPage() {
         if (!PreferenceData.isFinishFirstFlow) {
@@ -71,14 +73,13 @@ class SplashActivity : BaseActivity() {
             finish()
         }
     }
-
     @Composable
-    override fun BoxScope.ContentView(innerPadding: InnerPadding, context: Context) {
-        ViewParentContent(onBack = {}, modifier = Modifier.fillMaxSize()) {
+    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+        BoxParentContent(onBack = {}, modifier = Modifier.fillMaxSize()) {
             SplashScreen(
                 Modifier
                     .background(IptvBgPrimary)
-                    .padding(top = innerPadding.top)
+                    .padding(top = statusBarHeight)
             )
         }
     }
@@ -112,7 +113,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
         SpaceH(h = _12Sdp)
         Text(
             text = stringResource(R.string.app_name),
-            fontFamily = FontFamily(Font(R.font.rb_700)),
+            fontFamily = FontFamily(Font(R.font.ss_700)),
             color = IptvAccent,
             textAlign = TextAlign.Center,
             fontSize = _18Ssp,
@@ -125,7 +126,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(bottom = 12.dp),
             textSize = _11Ssp,
             color = IptvTextSecondary,
-            font = R.font.rb_400
+            font = R.font.ss_400
         )
         LinearProgressIndicator(
             modifier = Modifier.height(6.dp),

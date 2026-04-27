@@ -89,7 +89,7 @@ fun RowScope.NavItem(
                 maxLines = 1,
                 softWrap = true,
                 fontSize = 14.sp,
-                fontFamily = FontFamily(Font(R.font.rb_500)),
+                fontFamily = FontFamily(Font(R.font.ss_500)),
                 color = if(selected) mainColor else gray,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false)

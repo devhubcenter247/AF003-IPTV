@@ -10,7 +10,7 @@ import com.dongbv.alf_03_iptv.R
 
 val headerScreen = TextStyle(
     color = Color.Black,
-    fontFamily = FontFamily(Font(R.font.rb_600)),
+    fontFamily = FontFamily(Font(R.font.ss_600)),
     platformStyle = PlatformTextStyle(
         includeFontPadding = false
     ),

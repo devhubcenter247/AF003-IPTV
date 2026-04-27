@@ -25,19 +25,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.R
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dongbv.alf_03_iptv.base.BaseActivity
-import com.dongbv.alf_03_iptv.base.InnerPadding
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.widget.IptvAccent
-import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.style._60Sdp
-import com.dongbv.alf_03_iptv.style.black
+import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.ui.component.DialogQuitApp
 import com.dongbv.alf_03_iptv.ui.component.ScreenRouter
 import com.dongbv.alf_03_iptv.ui.main.home.ChannelScreen
@@ -49,10 +46,9 @@ import com.dongbv.alf_03_iptv.widget.BottomNavigationBar
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
-import com.dongbv.alf_03_iptv.widget.IptvSuccess
-import com.dongbv.alf_03_iptv.widget.IptvSurface
 import com.dongbv.alf_03_iptv.widget.animComposable
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
     override fun initialize() = Unit
@@ -81,10 +77,7 @@ class MainActivity : BaseActivity() {
         }
     }
     @Composable
-    override fun BoxScope.ContentView(
-          innerPadding: InnerPadding,
-          context: Context
-    ) {
+    override fun BoxScope.ContentView(statusBarHeight: Dp) {
         LaunchedEffect(Unit) {
             requestNotificationPermissionIfNeeded()
         }
@@ -101,11 +94,11 @@ class MainActivity : BaseActivity() {
                 NavHost(
                     modifier = Modifier.matchParentSize(),
                     navController = navController,
-                    startDestination = ScreenRouter.MainScreen.SettingScreen.route
+                    startDestination = ScreenRouter.MainScreen.HomeScreen.route
 
                 ) {
                     animComposable(ScreenRouter.MainScreen.HomeScreen.route){
-                        HomeScreen()
+                        HomeScreen(modifier = Modifier.paddingTop(statusBarHeight), viewModel = viewModel)
                     }
                     animComposable(ScreenRouter.MainScreen.ChannelScreen.route){
                         ChannelScreen()
@@ -201,20 +194,3 @@ private fun MainPreviewBlue() {
         Surface { MainScreenPreviewScaffold( )}
     }
 }
-
-@Preview(name = "Main (PINK)", showBackground = true, device = Devices.PIXEL_4_XL)
-@Composable
-private fun MainPreviewPink() {
-    AppViewTheme {
-        Surface { MainScreenPreviewScaffold() }
-    }
-}
-
-@Preview(name = "Main (GREEN)", showBackground = true, device = Devices.PIXEL_4_XL)
-@Composable
-private fun MainPreviewGreen() {
-    AppViewTheme {
-        Surface { MainScreenPreviewScaffold() }
-    }
-}
-

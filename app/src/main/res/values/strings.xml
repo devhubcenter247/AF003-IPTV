@@ -49,4 +49,18 @@
     <string name="copyright">© %s. All rights reserved.</string>
     <string name="home">Home</string>
     <string name="channel">Chanel</string>
+    <string name="watch_now">Watch now</string>
+    <string name="add_new">Add new</string>
+    <string name="all">All</string>
+    <string name="url">Url</string>
+    <string name="file">File</string>
+    <string name="storage">Storage</string>
+    <string name="no_channel">No channel</string>
+
+    <string name="video">Video</string>
+    <string name="videos">Videos</string>
+    <string name="no_wifi_connection">No wifi connection</string>
+    <string name="please_check_your_wifi_connection">Please check your wifi connection!</string>
+    <string name="try_again">Try again</string>
+    <string name="how_to_add_new_channel">How to add new channel</string>
 </resources>

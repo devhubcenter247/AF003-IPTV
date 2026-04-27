@@ -14,7 +14,7 @@ fun FavoriteScreen(
 
 @ResponsivePreview
 @Composable
-private fun HomeScreenPreview() {
+private fun FavoriteScreenPreview() {
     AppViewTheme {
         FavoriteScreen()
     }

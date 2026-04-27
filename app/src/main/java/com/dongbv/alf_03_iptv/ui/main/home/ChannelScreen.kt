@@ -14,7 +14,7 @@ fun ChannelScreen(
 
 @ResponsivePreview
 @Composable
-private fun HomeScreenPreview() {
+private fun ChannelScreenPreview() {
     AppViewTheme {
         ChannelScreen()
     }

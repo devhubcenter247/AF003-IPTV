@@ -7,6 +7,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Size
+import android.util.SizeF
 import androidx.activity.result.ActivityResult
 import androidx.core.content.IntentCompat
 import androidx.core.os.BundleCompat
@@ -69,7 +71,7 @@ inline fun <reified T : Serializable> Intent.serializable(key: String): T? = whe
 
 fun Bundle.putAnySafe(key: String, value: Any?) {
     when (value) {
-        null -> putSerializable(key, null as java.io.Serializable?)
+        null -> putSerializable(key, null as Serializable?)
         is Int -> putInt(key, value)
         is Long -> putLong(key, value)
         is Boolean -> putBoolean(key, value)
@@ -129,8 +131,8 @@ fun Bundle.putAnySafe(key: String, value: Any?) {
                 }
             }
         }
-        is android.util.Size -> putSize(key, value)
-        is android.util.SizeF -> putSizeF(key, value)
+        is Size -> putSize(key, value)
+        is SizeF -> putSizeF(key, value)
         else -> throw IllegalArgumentException(
             "Unsupported type for key=\"$key\": ${value::class.java.name}"
         )
@@ -248,7 +250,8 @@ inline fun <reified T : Any?> Intent.safeGet(key: String?): T? {
 
 inline fun <reified T : Any> Fragment.getData(key: String?): T? =
     arguments?.safeGet<T>(key)
-
+inline fun <reified T : Any> Activity.getData(key: String, default: T): T =
+    intent?.safeGet<T>(key) ?: default
 inline fun <reified T : Any> Fragment.getData(key: String, default: T): T =
     arguments?.safeGet<T>(key) ?: default
 

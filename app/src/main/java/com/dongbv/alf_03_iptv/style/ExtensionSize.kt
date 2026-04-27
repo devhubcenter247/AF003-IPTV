@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.window.layout.WindowMetricsCalculator
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import androidx.compose.ui.platform.LocalResources
 
 @Composable
 fun Space(w: Int = 0, h: Int = 0) {
@@ -141,13 +142,13 @@ fun getScreenHeight(): Int {
 @Composable
 @Stable
 fun getScreenWidthInPx(): Int {
-    val metrics = LocalContext.current.resources.displayMetrics
+    val metrics = LocalResources.current.displayMetrics
     return metrics.widthPixels
 }
 @Composable
 @Stable
 fun getScreenHeightInPx(): Int {
-    val metrics = LocalContext.current.resources.displayMetrics
+    val metrics = LocalResources.current.displayMetrics
     return metrics.heightPixels
 }
 @Composable
@@ -183,7 +184,7 @@ fun Modifier.paddingHorizontal(values: Dp): Modifier = composed {
     this.then(Modifier.padding(horizontal = values))
 }
 @Stable
-@SuppressLint("ConfigurationScreenWidthHeight")
+@SuppressLint("ConfigurationScreenWidthHeight", "UnnecessaryComposedModifier")
 fun Modifier.paddingVertical(values: Dp): Modifier = composed {
     this.then(Modifier.padding(vertical = values))
 }

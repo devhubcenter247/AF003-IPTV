@@ -8,7 +8,11 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
-val LocalKeyboardShow = staticCompositionLocalOf { false }
+data class KeyboardState(
+    val height: Int,
+    val visible: Boolean
+)
+val LocalKeyboardState = staticCompositionLocalOf { KeyboardState(0,false) }
 
 fun Window.setFullScreen() {
     WindowCompat.setDecorFitsSystemWindows(this, false)
