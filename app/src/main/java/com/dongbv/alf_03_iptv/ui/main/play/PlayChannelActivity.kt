@@ -238,9 +238,6 @@ class PlayChannelActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        // isMinimizing guards against the moment openFullscreen() starts ChannelHorActivity and
-        // finishes this one: if we're in PIP right then, this onStop must NOT release the player
-        // — ChannelHorActivity is taking over playback, not the user backgrounding the app.
         if (isInPipMode && !isChangingConfigurations && !isMinimizing) {
             _activePlayerView?.let {
                 if (PlayerManager.isCurrentView(it)) PlayerManager.release()

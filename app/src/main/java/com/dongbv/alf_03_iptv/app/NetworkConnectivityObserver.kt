@@ -228,8 +228,6 @@ private fun observeNetworkInternal(
     callbacks: NetworkCallbacks
 ) {
     val networkObserver = NetworkConnectivityObserver(context)
-    // wasDisconnected/isFirstEmission distinguish a real reconnect from the very first
-    // "Available" emission on subscribe, which should fire onAvailable but not onReconnected.
     var wasDisconnected = false
     var isFirstEmission = true
 

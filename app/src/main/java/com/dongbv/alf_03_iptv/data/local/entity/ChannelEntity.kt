@@ -240,8 +240,6 @@ data class ChannelEntity(
     }
 }
 
-// Shared by every screen that filters a channel list by search text and/or group
-// (FavoriteViewModel, PlayListViewModel, PlayViewModel).
 fun List<ChannelEntity>.filterBy(query: String, group: String? = null): List<ChannelEntity> =
     filter { query.isBlank() || it.name.contains(query, ignoreCase = true) }
         .filter { group == null || it.groupName == group }

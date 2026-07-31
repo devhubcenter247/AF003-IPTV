@@ -7,8 +7,6 @@ import com.dongbv.alf_03_iptv.data.local.dao.PlaylistDao
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.data.local.entity.PlaylistEntity
 
-// The single instance is built once, in Koin's dataModule (see IModule.kt), and injected
-// everywhere else — do not add a second singleton-builder here.
 @Database(
     entities = [
         PlaylistEntity::class,

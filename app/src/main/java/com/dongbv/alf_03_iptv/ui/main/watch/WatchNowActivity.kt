@@ -299,8 +299,6 @@ private fun ChannelReelPage(
                             onToggleFavorite()
                         }
                     )
-                    // No mute/volume drawable exists yet in res/drawable — question/info icons
-                    // are a placeholder stand-in until a proper speaker asset is added.
                     ActionButton(
                         iconRes = if (isMuted) R.drawable.ic_app_question else R.drawable.ic_app_info,
                         tint = IptvTextPrimary,

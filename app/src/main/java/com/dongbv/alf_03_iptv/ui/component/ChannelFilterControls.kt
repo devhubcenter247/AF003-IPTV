@@ -43,8 +43,6 @@ import com.dongbv.alf_03_iptv.widget.headline600
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
-// Shared by the channel-list screens (Favorites, Playlist) that filter by search text.
-
 @Composable
 fun ChannelSearchBar(
     query: String,
@@ -106,8 +104,6 @@ fun ChannelSearchBar(
         }
     }
 }
-
-// Grid/list layout switch used by every channel-list screen.
 
 @Composable
 fun LayoutToggle(isGridView: Boolean, onToggle: () -> Unit) {

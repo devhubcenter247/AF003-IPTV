@@ -227,8 +227,6 @@ class ChannelHorActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (currentInstance == this) currentInstance = null
-        // Mirrors PlayChannelActivity.onDestroy(): only persist/release when this activity is
-        // really going away (not on a PIP stop or a hand-off back to the portrait screen).
         if (isFinishing && !isInPipMode && !isMinimizing) {
             _activePlayerView?.let {
                 if (PlayerManager.isCurrentView(it)) {

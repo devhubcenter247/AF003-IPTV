@@ -143,9 +143,6 @@ class SharedPreference(
     inline fun <reified T : Any> observable(key: String, default: T): ObservablePreference<T> =
         ObservablePreference(key, default, object : TypeToken<T>() {}.type)
 
-    // Primitives are read straight from SharedPreferences every time (cheap, always fresh).
-    // Non-primitives are JSON-decoded once and memoized in `cache`, since Gson parsing on
-    // every read would be wasteful for values read on every recomposition.
     @Suppress("UNCHECKED_CAST")
     @PublishedApi
     internal fun <T : Any> readRuntime(key: String, default: T, type: Type? = null): T {

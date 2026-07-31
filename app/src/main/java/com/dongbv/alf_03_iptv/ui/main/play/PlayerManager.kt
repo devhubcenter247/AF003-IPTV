@@ -16,16 +16,9 @@ import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
 
-// Singleton wrapping a single shared ExoPlayer for the fullscreen/portrait player screens.
-// This only works because there's exactly one PlayerManager-owned player at a time; the
-// WatchNowActivity reel intentionally bypasses this and manages its own pooled ExoPlayers.
 object PlayerManager {
 
     private var player: ExoPlayer? = null
-
-    // Reused across every play() call rather than rebuilt per-channel, so per-request headers
-    // (e.g. Referer/User-Agent from the VLC pipe format) are set on this shared instance right
-    // before use. Safe only because playback is strictly serialized through this singleton.
     private val httpFactory = DefaultHttpDataSource.Factory()
         .setUserAgent(BROWSER_UA)
         .setConnectTimeoutMs(15_000)
@@ -219,10 +212,6 @@ object PlayerManager {
     fun isSleepTimerActive(): Boolean = sleepTimer != null && remainingTimeMs > 0
     fun getSleepTimerRemainingMs(): Long = remainingTimeMs
 
-    // No Cast SDK is integrated, so there's no real device picker to show. This falls through
-    // system settings screens instead — Cast, then Wi-Fi Display, then connected devices,
-    // then Bluetooth, then general Settings — stopping at the first one the OEM's build
-    // actually resolves, since not all of those settings screens exist on every device/OS.
     fun openSystemScreenCast(context: Context) {
         val actions = listOf(
             android.provider.Settings.ACTION_CAST_SETTINGS,

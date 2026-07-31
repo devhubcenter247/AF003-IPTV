@@ -240,9 +240,6 @@ private fun GroupChip(label: String, isSelected: Boolean, onClick: () -> Unit) {
         tween(200),
         label = "chipText"
     )
-    // enabled must stay true so every chip (including unselected ones) stays tappable —
-    // AppNeonButton treats enabled=false as "disabled", not "unselected". Selection is
-    // conveyed instead via the fill color and the neon glow.
     AppNeonButton(
         text = label,
         onClick = onClick,
