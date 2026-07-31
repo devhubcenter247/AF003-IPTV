@@ -647,9 +647,9 @@ fun GradientCircularProgressIndicator(
         Stroke(width = with(density) { strokeWidth.toPx() }, cap = strokeCap)
     }
     val sizePx = remember(density) { with(density) { 40.dp.toPx() } }
-    // Cached once per color change — never recreated inside the draw loop.
-    // Position 0 = transparent tail; user colors are distributed from 15% onward
-    // so the trailing edge always fades out while the leading edge stays vivid.
+   
+   
+   
     val gradientBrush = remember(colors, sizePx, tailFraction) {
         val tailEnd = tailFraction.coerceIn(0f, 0.99f)
         val stops = buildList {
@@ -667,7 +667,7 @@ fun GradientCircularProgressIndicator(
 
     val infiniteTransition = rememberInfiniteTransition(label = "gradient_circular")
 
-    // Seamless: 360° == 0°, so Restart never jumps visually
+   
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
@@ -678,7 +678,7 @@ fun GradientCircularProgressIndicator(
         label = "rotation"
     )
 
-    // Reverse = ping-pong → no hard jump at cycle boundary
+   
     val sweepFraction by infiniteTransition.animateFloat(
         initialValue = 0.1f,
         targetValue = 0.8f,
@@ -805,7 +805,7 @@ fun GradientLinearProgressIndicator(
             if (lineLen <= 0f) return
             val fadeEndX = tailX + lineLen * fade
 
-            // Build color stops: transparent at tail → first color at fadeEnd → … → last color at head
+           
             val stops = Array(colors.size + 1) { i ->
                 when (i) {
                     0 -> tailX / width to colors.first().copy(alpha = 0f)
@@ -829,22 +829,22 @@ fun GradientLinearProgressIndicator(
             }
         }
 
-        // Track before line 1
+       
         if (firstLineHead < 1f - gapSizeFraction) {
             val start = if (firstLineHead > 0f) firstLineHead + gapSizeFraction else 0f
             drawTrack(start, 1f)
         }
-        // Line 1
+       
         if (firstLineHead - firstLineTail > 0f) drawGradientLine(firstLineHead, firstLineTail)
-        // Track between lines
+       
         if (firstLineTail > gapSizeFraction) {
             val start = if (secondLineHead > 0f) secondLineHead + gapSizeFraction else 0f
             val end = if (firstLineTail < 1f) firstLineTail - gapSizeFraction else 1f
             drawTrack(start, end)
         }
-        // Line 2
+       
         if (secondLineHead - secondLineTail > 0f) drawGradientLine(secondLineHead, secondLineTail)
-        // Track after line 2
+       
         if (secondLineTail > gapSizeFraction) {
             val end = if (secondLineTail < 1f) secondLineTail - gapSizeFraction else 1f
             drawTrack(0f, end)

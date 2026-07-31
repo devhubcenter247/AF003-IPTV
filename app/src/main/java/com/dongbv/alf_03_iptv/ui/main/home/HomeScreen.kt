@@ -229,6 +229,7 @@ fun HomeScreenContent(
                 )
                 AppNeonButton(
                     text = stringResource(R.string.watch_now),
+                    onClick = onWatchNow,
                     shape = CircleShape,
                     modifier = Modifier
                         .padding(12.Sdp)

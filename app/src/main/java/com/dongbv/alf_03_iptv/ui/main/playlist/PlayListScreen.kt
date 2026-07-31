@@ -129,7 +129,7 @@ fun PlayListScreenContent(
             .fillMaxSize()
             .paddingTop(12.Sdp)
     ) {
-        // Header
+       
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -171,7 +171,7 @@ fun PlayListScreenContent(
 
         Spacer(Modifier.height(12.Sdp))
 
-        // Search bar
+       
         ChannelSearchBar(
             query = searchQuery,
             onQueryChanged = onSearchQueryChanged,
@@ -180,7 +180,7 @@ fun PlayListScreenContent(
                 .paddingHorizontal(16.Sdp)
         )
 
-        // Group chips
+       
         if (availableGroups.isNotEmpty()) {
             Spacer(Modifier.height(10.Sdp))
             GroupFilterRow(

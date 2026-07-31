@@ -37,11 +37,11 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun addGalleryMedia(mediaList: List<MediaModel>) {
         val currentList = _galleryMedia.value.toMutableList()
-        // Remove the null placeholder
+       
         currentList.removeAll { it == null }
-        // Add new media
+       
         currentList.addAll(mediaList)
-        // Add null at the beginning for "add more" button
+       
         currentList.add(0, null)
 
         _galleryMedia.value = currentList
@@ -50,7 +50,7 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
     fun removeGalleryMedia(media: MediaModel) {
         val currentList = _galleryMedia.value.toMutableList()
         currentList.remove(media)
-        // Ensure there's always a null at the beginning for "add more" button
+       
         currentList.removeAll { it == null }
         currentList.add(0, null)
         _galleryMedia.value = currentList
@@ -76,7 +76,7 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
             }
 
             try {
-                // Create playlist entity
+               
                 val playlist = PlaylistEntity(
                     name = playlistName.trim(),
                     source = "gallery_${System.currentTimeMillis()}",
@@ -84,19 +84,19 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
                     channelCount = mediaList.size
                 )
 
-                // Create channel entities from media
+               
                 val channels = mediaList.map { media ->
                     ChannelEntity(
-                        playlistId = 0, // Will be set by repository
+                        playlistId = 0,
                         name = media.name,
                         url = media.path,
-                        logo = media.path, // Use video path as thumbnail
+                        logo = media.path,
                         duration = media.duration,
                         groupName = "Gallery"
                     )
                 }
 
-                // Save to database
+               
                 val playlistId = repository.insertPlaylistWithChannels(playlist, channels)
                 _saveState.emit(SaveState.Success(playlistId))
 
@@ -106,7 +106,7 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
         }
     }
 
-    // ==================== File Playlist ====================
+   
 
     private val _selectedFileUri = MutableStateFlow<Uri?>(null)
     val selectedFileUri: StateFlow<Uri?> = _selectedFileUri.asStateFlow()
@@ -120,12 +120,12 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
     fun setSelectedFile(uri: Uri?, fileName: String?) {
         _selectedFileUri.value = uri
         _selectedFileName.value = fileName
-        _selectedSuggestionUrl.value = null // Clear suggestion when file is selected
+        _selectedSuggestionUrl.value = null
     }
 
     fun setSelectedSuggestion(url: String?) {
         _selectedSuggestionUrl.value = url
-        _selectedFileUri.value = null // Clear file when suggestion is selected
+        _selectedFileUri.value = null
         _selectedFileName.value = null
     }
 
@@ -160,7 +160,7 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
                     return@launch
                 }
 
-                // Create playlist entity
+               
                 val playlist = PlaylistEntity(
                     name = playlistName.trim(),
                     source = fileUri.toString(),
@@ -168,7 +168,7 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
                     channelCount = channels.size
                 )
 
-                // Save to database
+               
                 val playlistId = repository.insertPlaylistWithChannels(playlist, channels)
                 clearSelectedFile()
                 _saveState.emit(SaveState.Success(playlistId))

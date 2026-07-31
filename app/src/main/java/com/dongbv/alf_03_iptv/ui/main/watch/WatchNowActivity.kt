@@ -123,7 +123,7 @@ fun WatchNowContent(
 
     val pagerState = rememberPagerState { channels.size }
 
-    // Advance to next page on stream error
+   
     LaunchedEffect(autoNextEvent) {
         autoNextEvent?.collect { nextPage ->
             if (nextPage < channels.size) {
@@ -140,14 +140,14 @@ fun WatchNowContent(
 
     VerticalPager(
         state = pagerState,
-        // Keep 2 pages beyond viewport so players [i-2..i+2] stay in composition
+       
         beyondViewportPageCount = 2,
         modifier = Modifier.fillMaxSize().background(Color.Black),
     ) { page ->
         val channel = channels[page]
         ChannelReelPage(
             channel = channel,
-            // null when page is outside the 5-slot cache window
+           
             player = pagePlayerMap[page],
             isMuted = isMuted,
             statusBarHeight = statusBarHeight,
@@ -161,7 +161,7 @@ fun WatchNowContent(
 @Composable
 private fun ChannelReelPage(
     channel: ChannelEntity,
-    player: ExoPlayer?,   // null → outside the 5-slot cache window
+    player: ExoPlayer?,  
     isMuted: Boolean,
     statusBarHeight: Dp,
     onBack: () -> Unit,
@@ -195,8 +195,8 @@ private fun ChannelReelPage(
             .background(Color.Black)
             .onClick { showControls = !showControls }
     ) {
-        // Each page owns its own pooled player — just attach it to the surface.
-        // AndroidView update block handles player reassignment if the pool recycles.
+       
+       
         if (player != null) {
             AndroidView(
                 factory = { ctx ->
@@ -214,7 +214,7 @@ private fun ChannelReelPage(
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            // Page is beyond the ±2 window — show logo thumbnail as placeholder
+           
             if (!channel.logo.isNullOrBlank()) {
                 AsyncImage(
                     model = channel.logo,
@@ -226,14 +226,14 @@ private fun ChannelReelPage(
             Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)))
         }
 
-        // Buffering indicator
+       
         if (isBuffering) {
             GradientCircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
 
-        // Bottom scrim
+       
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -246,7 +246,7 @@ private fun ChannelReelPage(
                 )
         )
 
-        // Top scrim
+       
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -267,7 +267,7 @@ private fun ChannelReelPage(
         ) {
             Box(Modifier.fillMaxSize()) {
 
-                // Top bar: back + LIVE badge
+               
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -280,7 +280,7 @@ private fun ChannelReelPage(
                     LiveBadge()
                 }
 
-                // Right-side action buttons
+               
                 Column(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
@@ -307,7 +307,7 @@ private fun ChannelReelPage(
                     )
                 }
 
-                // Bottom channel info
+               
                 Column(
                     modifier = Modifier
                         .align(Alignment.BottomStart)

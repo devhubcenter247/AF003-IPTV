@@ -5,9 +5,9 @@ package com.dongbv.alf_03_iptv.data.local.entity
  * Used for filtering playlists by category on the Home screen.
  */
 enum class SourceType(val value: Int) {
-    URL(0),      // Playlist loaded from a URL (M3U, etc.)
-    FILE(1),     // Playlist loaded from a local file
-    GALLERY(2);  // Videos from device gallery
+    URL(0),     
+    FILE(1),    
+    GALLERY(2); 
 
     companion object {
         fun fromValue(value: Int): SourceType {

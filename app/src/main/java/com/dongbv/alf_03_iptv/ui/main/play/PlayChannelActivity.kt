@@ -161,7 +161,7 @@ class PlayChannelActivity : BaseActivity() {
                 if (PlayerManager.getCurrentChannelId() == channelId &&
                     PlayerManager.getPlaybackState() != Player.STATE_IDLE
                 ) {
-                    // already playing — just re-attach
+                   
                 } else {
                     PlayerManager.play(channelUrl, channelId, channelName)
                 }
@@ -288,7 +288,7 @@ fun PlayChannelScreen(
     var isLocked by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
-    // Auto-hide controls after 4 seconds when playing
+   
     LaunchedEffect(showControls, isPlaying, isLocked) {
         if (showControls && isPlaying && !isLocked) {
             delay(4_000)
@@ -296,7 +296,7 @@ fun PlayChannelScreen(
         }
     }
 
-    // Player state listener
+   
     DisposableEffect(Unit) {
         val listener = object : PlayerManager.PlayerListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -320,7 +320,7 @@ fun PlayChannelScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // ── Player area (25% height) — extracted to break ColumnScope chain ──
+       
         PlayerSurface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -345,7 +345,7 @@ fun PlayChannelScreen(
             onPlayerViewDisposed = onPlayerViewDisposed
         )
 
-        // ── Search bar ───────────────────────────────────────────────────────
+       
         SearchBar(
             query = searchQuery,
             onQueryChange = {
@@ -354,7 +354,7 @@ fun PlayChannelScreen(
             }
         )
 
-        // ── Channel list ─────────────────────────────────────────────────────
+       
         LazyColumn(
             state = rememberLazyListState(),
             modifier = Modifier
@@ -631,7 +631,7 @@ fun ChannelListItem(
             .padding(horizontal = 12.Sdp, vertical = 8.Sdp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Logo / avatar
+       
         Box(
             Modifier
                 .size(48.Sdp)

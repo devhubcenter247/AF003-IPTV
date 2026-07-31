@@ -27,13 +27,13 @@ data class PlaylistEntity(
       val name: String,
 
       @ColumnInfo(name = "source")
-      val source: String, // URL or file path
+      val source: String,
 
       @ColumnInfo(name = "source_type")
       val sourceType: Int = SourceType.URL.value,
 
       @ColumnInfo(name = "icon")
-      val icon: String? = null, // Custom icon path or URL
+      val icon: String? = null,
 
       @ColumnInfo(name = "channel_count")
       val channelCount: Int = 0,

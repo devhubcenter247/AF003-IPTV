@@ -125,7 +125,7 @@ fun AboutUsScreen(
         ) {
             SpaceH(32)
 
-            // App Icon
+           
             Image(
                 painter = painterResource(R.drawable.img_logo_splash),
                 contentDescription = "App Icon",
@@ -136,7 +136,7 @@ fun AboutUsScreen(
 
             SpaceH(16)
 
-            // App Name
+           
             TextView(
                 text = stringResource(R.string.app_name),
                 font = R.font.ss_700,
@@ -148,7 +148,7 @@ fun AboutUsScreen(
 
             SpaceH(8)
 
-            // Version
+           
             TextView(
                 text = stringResource(R.string.version_format, BuildConfig.VERSION_NAME),
                 font = R.font.ss_400,
@@ -160,7 +160,7 @@ fun AboutUsScreen(
 
             SpaceH(32)
 
-            // Menu Items
+           
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -188,7 +188,7 @@ fun AboutUsScreen(
 
             SpaceH(32)
 
-            // Copyright
+           
             TextView(
                 text = stringResource(R.string.copyright).replace(
                     "%s",

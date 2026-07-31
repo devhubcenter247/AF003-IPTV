@@ -57,19 +57,19 @@ class WatchNowViewModel(
     private val _pagePlayerMap = MutableStateFlow<Map<Int, ExoPlayer>>(emptyMap())
     val pagePlayerMap: StateFlow<Map<Int, ExoPlayer>> = _pagePlayerMap.asStateFlow()
 
-    // Emits the target page index when the current stream errors out
+   
     private val _autoNextEvent = MutableSharedFlow<Int>(extraBufferCapacity = 1)
     val autoNextEvent: SharedFlow<Int> = _autoNextEvent.asSharedFlow()
 
-    // 100 MB LRU disk cache so HLS segments are re-used across the player pool
-    // and after back-navigation to a previously seen channel.
+   
+   
     private val streamCache = SimpleCache(
         File(application.cacheDir, "stream_cache"),
         LeastRecentlyUsedCacheEvictor(100L * 1024 * 1024),
         StandaloneDatabaseProvider(application)
     )
 
-    // Parse VLC pipe format: "https://stream.m3u8|Referer=https://site.com&User-Agent=Mozilla/..."
+   
     private fun parseStreamUrl(raw: String): Pair<String, Map<String, String>> {
         val pipe = raw.indexOf('|')
         if (pipe < 0) return raw to emptyMap()
@@ -84,9 +84,9 @@ class WatchNowViewModel(
         return url to headers
     }
 
-    // Universal source: RTSP → RtspMediaSource (no cache, different protocol)
-    //                   everything else → DefaultMediaSourceFactory (auto-detects
-    //                   HLS / DASH / SmoothStreaming / progressive TS/MP4/MKV)
+   
+   
+   
     private fun mediaSourceFor(rawUrl: String): MediaSource {
         val (url, headers) = parseStreamUrl(rawUrl)
         if (url.startsWith("rtsp://", ignoreCase = true) ||
@@ -116,14 +116,14 @@ class WatchNowViewModel(
     }
     private val freePool = ArrayDeque<ExoPlayer>().also { it.addAll(playerPool) }
 
-    // Tracks players that fired onPlayerError so the subsequent STATE_IDLE
-    // callback doesn't emit a second (duplicate) auto-next. ExoPlayer always
-    // calls: onPlayerError → onPlaybackStateChanged(IDLE). Without this guard
-    // a single stream failure would skip two pages instead of one.
+   
+   
+   
+   
     private val recentlyErrored = mutableSetOf<ExoPlayer>()
 
-    // Retry counter per player. Transient errors (PlaylistStuck, timeout) are
-    // retried up to MAX_RETRIES with exponential delay before auto-next fires.
+   
+   
     private val retryCount = mutableMapOf<ExoPlayer, Int>()
 
     private fun isRetryableError(error: PlaybackException): Boolean {
@@ -150,16 +150,16 @@ class WatchNowViewModel(
                         error
                     )
 
-                    // Suppress the duplicate STATE_IDLE that always follows onPlayerError
+                   
                     recentlyErrored += player
 
                     if (rawUrl != null && isRetryableError(error) && count < MAX_RETRIES) {
                         retryCount[player] = count + 1
-                        val delayMs = 2_000L * (count + 1)   // 2 s, 4 s, 6 s
+                        val delayMs = 2_000L * (count + 1)  
                         Log.w(TAG, "retryable error — retry ${count+1}/$MAX_RETRIES in ${delayMs}ms  slot=$slot  page=$page")
                         viewModelScope.launch {
                             delay(delayMs)
-                            // Only retry if this player is still assigned to the same page
+                           
                             if (_pagePlayerMap.value[page] !== player) return@launch
                             Log.d(TAG, "retrying  slot=$slot  page=$page")
                             val source = mediaSourceFor(rawUrl)
@@ -172,7 +172,7 @@ class WatchNowViewModel(
                         return
                     }
 
-                    // Non-retryable or retries exhausted → auto-next
+                   
                     retryCount.remove(player)
                     if (player === _pagePlayerMap.value[_currentIndex.value]) {
                         val next = _currentIndex.value + 1
@@ -195,13 +195,13 @@ class WatchNowViewModel(
                     Log.d(TAG, "state=$stateName  slot=$slot  page=$page  isCurrent=${player === _pagePlayerMap.value[_currentIndex.value]}")
 
                     if (state == Player.STATE_READY) {
-                        retryCount.remove(player)  // stream recovered — reset counter
+                        retryCount.remove(player) 
                     }
 
                     if (state == Player.STATE_IDLE) {
-                        // Suppress duplicate: this IDLE came right after onPlayerError
+                       
                         if (recentlyErrored.remove(player)) return
-                        // Silent stall (buffering → idle with no error): treat same as error
+                       
                         if (player === _pagePlayerMap.value[_currentIndex.value]) {
                             val next = _currentIndex.value + 1
                             if (next <= _channels.value.lastIndex) {
@@ -230,7 +230,7 @@ class WatchNowViewModel(
         val windowPositions = ((index - 2)..(index + 2)).filter { it in list.indices }
         val current = _pagePlayerMap.value.toMutableMap()
 
-        // Evict positions that left the window
+       
         val toEvict = current.keys.filter { it !in windowPositions }
         toEvict.forEach { pos ->
             current.remove(pos)?.also { p ->
@@ -242,7 +242,7 @@ class WatchNowViewModel(
             }
         }
 
-        // Assign a free player to each new position entering the window
+       
         windowPositions.forEach { pos ->
             if (pos !in current) {
                 val player = freePool.removeFirstOrNull() ?: run {
@@ -257,9 +257,9 @@ class WatchNowViewModel(
             }
         }
 
-        // Re-prepare any player that silently died (STATE_IDLE) while in the background window.
-        // Without this, navigating to a page whose player errored while off-screen produces a
-        // black screen: playWhenReady=true on an IDLE player is a no-op in ExoPlayer.
+       
+       
+       
         windowPositions.forEach { pos ->
             val player = current[pos] ?: return@forEach
             if (player.playbackState == Player.STATE_IDLE) {
@@ -270,7 +270,7 @@ class WatchNowViewModel(
             }
         }
 
-        // Only the current position plays; others buffer silently
+       
         val muted = _isMuted.value
         current.forEach { (pos, player) ->
             if (pos == index) {

@@ -44,6 +44,8 @@ import com.dongbv.alf_03_iptv.ui.main.home.SettingScreen
 import com.dongbv.alf_03_iptv.ui.main.add.AddChannelActivity
 import com.dongbv.alf_03_iptv.ui.main.play.PlayChannelActivity
 import com.dongbv.alf_03_iptv.ui.main.playlist.PlayListActivity
+import com.dongbv.alf_03_iptv.ui.main.setting.AboutUsActivity
+import com.dongbv.alf_03_iptv.ui.main.setting.LanguageSettingActivity
 import com.dongbv.alf_03_iptv.ui.main.watch.WatchNowActivity
 import com.dongbv.alf_03_iptv.viewmodel.HomeViewModel
 import com.dongbv.alf_03_iptv.widget.BottomNavigationBar
@@ -149,7 +151,10 @@ class MainActivity : BaseActivity() {
                         })
                     }
                     animComposable(ScreenRouter.MainScreen.SettingScreen.route) {
-                        SettingScreen { }
+                        SettingScreen(
+                            gotoLangSetting = { launchActivity<LanguageSettingActivity>() },
+                            gotoAboutUs = { launchActivity<AboutUsActivity>() }
+                        ) { }
                     }
                 }
 

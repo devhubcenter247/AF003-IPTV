@@ -127,7 +127,7 @@ fun encodeResourceToBase64(
     maxDimPx: Int = 512,
     format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
     quality: Int = 85,
-    maxSizeKB: Int? = null // optional size cap
+    maxSizeKB: Int? = null
 ): String? = runCatching {
     decodeResourceScaled(context, resId, maxDimPx)?.let { bmp ->
         encodeBitmapToBase64(bmp, format, quality, maxSizeKB)
@@ -226,7 +226,7 @@ private fun encodeBitmapToBase64(
     quality: Int,
     maxSizeKB: Int?
 ): String {
-    // Optional quality shrink loop to cap size
+   
     val baos = ByteArrayOutputStream()
     var q = quality.coerceIn(0, 100)
     fun compressToStream(): Int {
@@ -237,7 +237,7 @@ private fun encodeBitmapToBase64(
     compressToStream()
     if (maxSizeKB != null) {
         val limit = max(1, maxSizeKB) * 1024
-        // Reduce quality in steps until under limit or q <= 40
+       
         while (baos.size() > limit && q > 40) {
             q = (q * 0.85f).toInt().coerceAtLeast(40)
             compressToStream()
@@ -354,11 +354,11 @@ private fun calculateInSampleSize(
 }
 
 enum class ScaleType {
-    WIDTH,      // Scale based on width
-    HEIGHT,     // Scale based on height
-    MIN,        // Scale based on smaller side
-    MAX,        // Scale based on larger side
-    BOTH        // Force width = height = targetSize
+    WIDTH,     
+    HEIGHT,    
+    MIN,       
+    MAX,       
+    BOTH       
 }
 
 fun Bitmap.scaleBitmap(
@@ -388,7 +388,7 @@ fun Bitmap.scaleBitmap(
             Pair((width * scale).toInt(), (height * scale).toInt())
         }
         ScaleType.BOTH -> {
-            // Force square resize (e.g., for thumbnails)
+           
             Pair(targetSize, targetSize)
         }
     }

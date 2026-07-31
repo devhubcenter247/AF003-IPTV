@@ -169,7 +169,7 @@ class SharedPreference(
         val isPrimitive = value is Boolean || value is String || value is Int ||
                 value is Long || value is Float || value is Double
 
-        if (!isPrimitive && cache[key] == value) return // không đổi -> bỏ ghi
+        if (!isPrimitive && cache[key] == value) return
 
         prefs.edit {
             when (value) {

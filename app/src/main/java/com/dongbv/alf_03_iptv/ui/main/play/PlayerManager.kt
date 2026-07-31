@@ -98,7 +98,7 @@ object PlayerManager {
 
         player?.let {
             if (isRtsp) {
-                // Bypass the HTTP factory — RTSP is a separate protocol
+               
                 it.setMediaSource(RtspMediaSource.Factory().createMediaSource(mediaItem))
             } else {
                 httpFactory.setDefaultRequestProperties(headers)

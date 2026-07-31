@@ -115,7 +115,7 @@ suspend fun saveBitmapToInternalStorage(
     baseFileName: String,
     format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG,
     quality: Int = 100,
-    subDir: String? = null   // nếu muốn: "images", "qr", v.v.
+    subDir: String? = null  
 ): File?  = withContext(Dispatchers.IO){
     return@withContext try {
         val ext = when (format) {
@@ -607,7 +607,7 @@ private fun saveBitmapUsingMediaStore(
                 }
             } ?: throw IOException("OpenOutputStream failed")
 
-            // Clear pending
+           
             values.clear()
             values.put(MediaStore.MediaColumns.IS_PENDING, 0)
             cr.update(uri, values, null, null)
@@ -917,7 +917,7 @@ private fun Uri.getRealPathFromUriLegacy(context: Context): String? {
                             )
                             getDataColumn(context, contentUri, null, null)
                         } catch (e: NumberFormatException) {
-                            // Handle raw file downloads
+                           
                             getDataColumn(context, uri, null, null)
                         }
                     }

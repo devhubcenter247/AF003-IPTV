@@ -311,7 +311,7 @@ fun ChannelHorScreen(
                 }
             }
     ) {
-        // Full-screen player
+       
         AndroidView(
             factory = { ctx ->
                 PlayerView(ctx).apply {
@@ -328,7 +328,7 @@ fun ChannelHorScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Controls overlay
+       
         AnimatedVisibility(
             visible = showControls && !isLocked,
             enter = fadeIn(),
@@ -339,7 +339,7 @@ fun ChannelHorScreen(
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.40f))
             ) {
-                // Top row
+               
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -359,14 +359,14 @@ fun ChannelHorScreen(
                     Spacer(Modifier.width(8.Sdp))
                     LiveBadge()
                     Spacer(Modifier.width(12.Sdp))
-                    // Channel list toggle
+                   
                     PlayerCtrlButton(
                         iconRes = R.drawable.ic_app_menu,
                         onClick = { showChannelList = !showChannelList }
                     )
                 }
 
-                // Center: Prev | Play/Pause | Next
+               
                 Row(
                     Modifier.align(Alignment.Center),
                     horizontalArrangement = Arrangement.spacedBy(32.Sdp),
@@ -381,7 +381,7 @@ fun ChannelHorScreen(
                     PlayerCtrlButton(iconRes = R.drawable.ic_app_skip_next, size = 36.Sdp, onClick = onNext)
                 }
 
-                // Bottom-right controls
+               
                 Row(
                     Modifier
                         .align(Alignment.BottomEnd)
@@ -406,7 +406,7 @@ fun ChannelHorScreen(
             }
         }
 
-        // Lock unlock button
+       
         if (isLocked) {
             Box(
                 Modifier
@@ -435,7 +435,7 @@ fun ChannelHorScreen(
             }
         }
 
-        // Buffering
+       
         if (isBuffering) {
             CircularProgressIndicator(
                 color = IptvAccent,
@@ -443,7 +443,7 @@ fun ChannelHorScreen(
             )
         }
 
-        // Sliding channel list panel (right side)
+       
         AnimatedVisibility(
             visible = showChannelList,
             enter = slideInHorizontally(initialOffsetX = { it }),

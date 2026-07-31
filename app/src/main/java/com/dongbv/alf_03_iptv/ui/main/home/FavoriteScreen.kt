@@ -146,7 +146,7 @@ private fun FavoriteScreenContent(
             .fillMaxSize()
             .paddingTop(12.Sdp)
     ) {
-        // Header
+       
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -168,7 +168,7 @@ private fun FavoriteScreenContent(
                     style = headline600(fontSize = 12.Ssp, color = IptvAccent)
                 )
             }
-            // Layout toggle only on All Channels tab
+           
             if (selectedTab == 2) {
                 Spacer(Modifier.width(10.Sdp))
                 LayoutToggle(isGridView = isGridView, onToggle = onToggleLayout)
@@ -177,7 +177,7 @@ private fun FavoriteScreenContent(
 
         Spacer(Modifier.height(12.Sdp))
 
-        // 3-tab bar
+       
         FavoriteTabBar(
             selectedTab = selectedTab,
             onTabSelected = onTabSelected,
@@ -188,7 +188,7 @@ private fun FavoriteScreenContent(
 
         Spacer(Modifier.height(12.Sdp))
 
-        // Search bar
+       
         ChannelSearchBar(
             query = searchQuery,
             onQueryChanged = onSearchQueryChanged,
@@ -197,7 +197,7 @@ private fun FavoriteScreenContent(
                 .paddingHorizontal(16.Sdp)
         )
 
-        // Group chips
+       
         if (availableGroups.isNotEmpty()) {
             Spacer(Modifier.height(10.Sdp))
             GroupFilterRow(
@@ -209,7 +209,7 @@ private fun FavoriteScreenContent(
 
         Spacer(Modifier.height(8.Sdp))
 
-        // Tab content with slide animation
+       
         AnimatedContent(
             targetState = selectedTab,
             transitionSpec = {
@@ -406,7 +406,7 @@ private fun ChannelListCard(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.Sdp)
     ) {
-        // Logo
+       
         Box(
             modifier = Modifier
                 .size(50.Sdp)
@@ -433,7 +433,7 @@ private fun ChannelListCard(
             }
         }
 
-        // Info
+       
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 channel.name,
@@ -470,7 +470,7 @@ private fun ChannelListCard(
             }
         }
 
-        // Action button
+       
         val actionIcon =
             if (isHistory) R.drawable.ic_app_delete else if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add
         val actionTint =
@@ -557,7 +557,7 @@ private fun AllChannelGridCard(
                     )
                 }
             }
-            // Heart — top right
+           
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -574,7 +574,7 @@ private fun AllChannelGridCard(
                     modifier = Modifier.size(15.Sdp)
                 )
             }
-            // More — bottom right
+           
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

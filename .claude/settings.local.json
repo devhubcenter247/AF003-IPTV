@@ -14,7 +14,12 @@
       "Bash(grep -v \"^$\")",
       "Bash(chmod +x gradlew)",
       "Bash(xargs -I{} basename {})",
-      "Bash(./gradlew :app:compileDevDebugKotlin -q)"
+      "Bash(./gradlew :app:compileDevDebugKotlin -q)",
+      "Bash(adb version *)",
+      "Bash(adb devices *)",
+      "Bash(./gradlew assembleDevDebug --console=plain -q)",
+      "Bash(adb *)",
+      "Bash(python3 *)"
     ],
     "deny": [],
     "ask": []

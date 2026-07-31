@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class FavoriteViewModel(private val repository: AppRepository) : ViewModel() {
 
-    // 0 = Favorites, 1 = History, 2 = All Channels
+   
     private val _selectedTab = MutableStateFlow(0)
     val selectedTab: StateFlow<Int> = _selectedTab.asStateFlow()
 

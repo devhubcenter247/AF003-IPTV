@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChannelDao {
 
-    // Insert operations
+   
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(channel: ChannelEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(channels: List<ChannelEntity>)
 
-    // Update operations
+   
     @Update
     suspend fun update(channel: ChannelEntity)
 
@@ -46,7 +46,7 @@ interface ChannelDao {
     @Query("UPDATE channels SET name =:newName WHERE id =:channelId")
     suspend fun renameChannel(channelId: Long, newName: String)
 
-    // Delete operations
+   
     @Delete
     suspend fun delete(channel: ChannelEntity)
 
@@ -59,7 +59,7 @@ interface ChannelDao {
     @Query("DELETE FROM channels")
     suspend fun deleteAll()
 
-    // Query operations - Flow (reactive)
+   
     @Query("SELECT * FROM channels WHERE playlist_id = :playlistId ORDER BY name ASC")
     fun getChannelsByPlaylist(playlistId: Long): Flow<List<ChannelEntity>>
 
@@ -84,7 +84,7 @@ interface ChannelDao {
     @Query("SELECT DISTINCT group_name FROM channels WHERE playlist_id = :playlistId AND group_name IS NOT NULL ORDER BY group_name ASC")
     fun getGroupsByPlaylist(playlistId: Long): Flow<List<String>>
 
-    // Query operations - Suspend (one-shot)
+   
     @Query("SELECT * FROM channels WHERE playlist_id = :playlistId ORDER BY name ASC")
     suspend fun getChannelsByPlaylistOnce(playlistId: Long): List<ChannelEntity>
 
@@ -106,7 +106,7 @@ interface ChannelDao {
     @Query("SELECT COUNT(*) FROM channels WHERE is_favorite = 1")
     suspend fun getFavoriteCount(): Int
 
-    // Check if channel exists
+   
     @Query("SELECT EXISTS(SELECT 1 FROM channels WHERE playlist_id = :playlistId AND url = :url LIMIT 1)")
     suspend fun channelExists(playlistId: Long, url: String): Boolean
 }

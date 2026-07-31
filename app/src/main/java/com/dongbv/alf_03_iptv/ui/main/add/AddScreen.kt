@@ -207,7 +207,7 @@ fun AddScreenContent(
         else -> videoCount > 0
     }
 
-    // What's still missing — shown below the CTA when disabled
+   
     val missingHint: String? = when {
         isAddEnabled -> null
         playlistName.isBlank() -> "Enter a playlist name to continue"
@@ -225,12 +225,12 @@ fun AddScreenContent(
     ) {
         SpaceH(statusBarHeight)
 
-        // Header
+       
         AddHeader(title = stringResource(R.string.add_channel_to_playlist), onBack = onBack)
 
         SpaceH(12.Sdp)
 
-        // Tab bar
+       
         AddTabBar(
             selectedTab = selectedTab,
             onTabSelected = { tab ->
@@ -244,7 +244,7 @@ fun AddScreenContent(
 
         SpaceH(8.Sdp)
 
-        // Animated subtitle below tabs
+       
         AnimatedContent(
             targetState = selectedTab,
             transitionSpec = { fadeIn(tween(200)) togetherWith fadeOut(tween(150)) },
@@ -263,7 +263,7 @@ fun AddScreenContent(
 
         SpaceH(12.Sdp)
 
-        // Tab content
+       
         AnimatedContent(
             targetState = selectedTab,
             modifier = Modifier.weight(1f),
@@ -301,7 +301,7 @@ fun AddScreenContent(
             }
         }
 
-        // CTA + hint
+       
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -381,7 +381,7 @@ private fun AddHeader(title: String, onBack: () -> Unit) {
             textAlign = TextAlign.Center
         )
 
-        Box(Modifier.size(38.Sdp)) // balance
+        Box(Modifier.size(38.Sdp))
     }
 }
 
@@ -453,7 +453,7 @@ private fun AddUrlTab(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
-        // Step 1 — name
+       
         StepSection(step = "1", label = stringResource(R.string.playlist_name))
         SpaceH(8.Sdp)
         InputFieldWithIcon(
@@ -465,7 +465,7 @@ private fun AddUrlTab(
 
         SpaceH(20.Sdp)
 
-        // Step 2 — URL
+       
         StepSection(step = "2", label = "Paste your M3U URL")
         SpaceH(8.Sdp)
         InputFieldWithIcon(
@@ -516,7 +516,7 @@ private fun AddFileTab(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
-        // Step 1
+       
         StepSection(step = "1", label = stringResource(R.string.playlist_name))
         SpaceH(8.Sdp)
         InputFieldWithIcon(
@@ -528,7 +528,7 @@ private fun AddFileTab(
 
         SpaceH(20.Sdp)
 
-        // Step 2 — file upload
+       
         StepSection(step = "2", label = "Upload your playlist file")
         SpaceH(8.Sdp)
 
@@ -577,7 +577,7 @@ private fun AddGalleryTab(
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        // Step 1
+       
         StepSection(step = "1", label = stringResource(R.string.playlist_name))
         SpaceH(8.Sdp)
         InputFieldWithIcon(
@@ -589,7 +589,7 @@ private fun AddGalleryTab(
 
         SpaceH(20.Sdp)
 
-        // Step 2 — videos
+       
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -738,7 +738,7 @@ private fun SuggestionCard(
             .padding(12.Sdp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            // Emoji avatar
+           
             Box(
                 modifier = Modifier
                     .size(42.Sdp)
@@ -780,7 +780,7 @@ private fun SuggestionCard(
 
             SpaceW(8)
 
-            // Check or arrow
+           
             Box(
                 modifier = Modifier
                     .size(26.Sdp)
@@ -829,7 +829,7 @@ private fun FileUploadZone(
         contentAlignment = Alignment.Center
     ) {
         if (selectedFileName != null) {
-            // File selected state
+           
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -884,7 +884,7 @@ private fun FileUploadZone(
                 }
             }
         } else {
-            // Empty state
+           
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -969,7 +969,7 @@ private fun GalleryVideoItem(item: MediaModel, onRemove: (MediaModel) -> Unit) {
             .clip(RoundedCornerShape(10.Sdp))
             .background(IptvBgSecondary)
     ) {
-        // Placeholder thumbnail
+       
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -984,7 +984,7 @@ private fun GalleryVideoItem(item: MediaModel, onRemove: (MediaModel) -> Unit) {
             )
         }
 
-        // Bottom name bar
+       
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1005,7 +1005,7 @@ private fun GalleryVideoItem(item: MediaModel, onRemove: (MediaModel) -> Unit) {
             )
         }
 
-        // Remove button
+       
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)

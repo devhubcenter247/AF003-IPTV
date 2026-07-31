@@ -23,17 +23,17 @@ data class CategoryModel(
 @Parcelize
 data class LanguageModel(
     val index: Int,
-    val code: String,   // ISO 639-1 2-char code, matches Locale.getDefault().language
+    val code: String,  
     val name: String,
     val count: Int,
-    val url: String,    // playlist URL uses ISO 639-3 internally — do not use code for URL
+    val url: String,   
     var select: Boolean = false
 ) : Parcelable {
 }
 
 // Returns the LanguageModel whose code matches the device locale, or null if not in the list.
 fun detectDeviceLanguage(): LanguageModel? {
-    val lang = Locale.getDefault().language   // e.g. "en", "vi", "zh"
+    val lang = Locale.getDefault().language  
     return listLanguageModel.find { it.code == lang }
 }
 

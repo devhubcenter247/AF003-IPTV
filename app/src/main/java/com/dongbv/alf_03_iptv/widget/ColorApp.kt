@@ -9,18 +9,18 @@ val grdStart = Color(0xFF00F5FF)
 val mainColor = Color(0xFF6C63FF)
 
 // ── IPTV Dark Theme ──────────────────────────────────────────────────────────
-val IptvBgPrimary = Color(0xFF0A0A1A) // Main app background
-val IptvBgSecondary = Color(0xFF1A1A2E) // Card, bottom sheet, sidebar
-val IptvSurface = Color(0xFF16213E) // Input field, dropdown, chip
-val IptvAccent = Color(0xFFE94560) // CTA, badge, active tab, progress
-val IptvAccentSecondary = Color(0xFF0F3460) // Gradient, tag, emphasis bg
-val IptvTextPrimary = Color(0xFFFFFFFF) // Title, channel name, key label
-val IptvTextSecondary = Color(0xFFA0A3B1) // Description, timestamp, placeholder
-val IptvTextTertiary = Color(0xFF6C7086) // Hint, disabled text
-val IptvSuccess = Color(0xFF27AE60) // LIVE badge, online, success
-val IptvWarning = Color(0xFFF39C12) // Expiring soon, warning
-val IptvError = Color(0xFFE74C3C) // Error, failure, delete
-val IptvDivider = Color(0xFF2A2D3E) // Divider line, thin border
+val IptvBgPrimary = Color(0xFF0A0A1A)
+val IptvBgSecondary = Color(0xFF1A1A2E)
+val IptvSurface = Color(0xFF16213E)
+val IptvAccent = Color(0xFFE94560)
+val IptvAccentSecondary = Color(0xFF0F3460)
+val IptvTextPrimary = Color(0xFFFFFFFF)
+val IptvTextSecondary = Color(0xFFA0A3B1)
+val IptvTextTertiary = Color(0xFF6C7086)
+val IptvSuccess = Color(0xFF27AE60)
+val IptvWarning = Color(0xFFF39C12)
+val IptvError = Color(0xFFE74C3C)
+val IptvDivider = Color(0xFF2A2D3E)
 
 // ── IPTV Light Theme ─────────────────────────────────────────────────────────
 val IptvLightBgPrimary = Color(0xFFFFFFFF)

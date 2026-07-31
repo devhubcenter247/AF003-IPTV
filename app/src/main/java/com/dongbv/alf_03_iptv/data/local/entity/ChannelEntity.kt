@@ -41,16 +41,16 @@ data class ChannelEntity(
     val name: String,
 
     @ColumnInfo(name = "url")
-    val url: String, // Stream URL or file path
+    val url: String,
 
     @ColumnInfo(name = "logo")
     val logo: String? = null,
 
     @ColumnInfo(name = "group_name")
-    val groupName: String? = null, // Category within the playlist
+    val groupName: String? = null,
 
     @ColumnInfo(name = "epg_id")
-    val epgId: String? = null, // EPG channel ID for TV guide
+    val epgId: String? = null,
 
     @ColumnInfo(name = "is_favorite")
     val isFavorite: Boolean = false,
@@ -59,10 +59,10 @@ data class ChannelEntity(
     val lastWatched: Long? = null,
 
     @ColumnInfo(name = "watch_position")
-    val watchPosition: Long = 0, // Resume position in milliseconds
+    val watchPosition: Long = 0,
 
     @ColumnInfo(name = "duration")
-    val duration: Long = 0, // Total duration in milliseconds
+    val duration: Long = 0,
     @ColumnInfo(name = "categoryId")
     val  categoryId : Int = 0,
     @ColumnInfo(name = "created_at")
