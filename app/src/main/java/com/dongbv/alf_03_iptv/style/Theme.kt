@@ -3,52 +3,42 @@ package com.dongbv.alf_03_iptv.style
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import androidx.activity.ComponentActivity
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
-fun Context.findActivity(): Activity? {
-    var context = this
-    while (context is ContextWrapper) {
-        if (context is Activity) return context
-        context = context.baseContext
-    }
-    return null
-}
-
-fun Context.getActivity(): Activity? = when (this) {
-    is ComponentActivity -> this
-    is ContextWrapper -> baseContext.getActivity()
+tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
     else -> null
 }
-
 @Composable
 fun AppViewTheme(
     lightStatusBar: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-
     val view = LocalView.current
     if (!view.isInEditMode) {
-        val window = (view.context.findActivity())?.window
+        val window = remember(view) { view.context.findActivity()?.window }
         if (window != null) {
-            val insetsController = WindowCompat.getInsetsController(window, view)
-            SideEffect {
+            val insetsController = remember(window, view) {
+                WindowCompat.getInsetsController(window, view)
+            }
+            LaunchedEffect(window, view) {
                 WindowCompat.setDecorFitsSystemWindows(window, false)
-                insetsController.apply {
-                    hide(WindowInsetsCompat.Type.systemBars())
-                    hide(WindowInsetsCompat.Type.statusBars())
-                    hide(WindowInsetsCompat.Type.navigationBars())
-                    systemBarsBehavior =
-                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                    isAppearanceLightStatusBars = lightStatusBar
-                }
+                insetsController.hide(WindowInsetsCompat.Type.systemBars())
+                insetsController.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+            LaunchedEffect(lightStatusBar) {
+                insetsController.isAppearanceLightStatusBars = lightStatusBar
             }
         }
     }
-    content()
+    MaterialTheme(content = content)
 }

@@ -10,8 +10,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.TextUnit
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.style._12Ssp
 import com.dongbv.alf_03_iptv.style.black
+import com.sdp.ssp.android.Ssp
 
 enum class GradientOrientation {
     Horizontal,
@@ -64,7 +64,7 @@ fun gradientBrush(
 }
 
 @Composable
-fun headline400(color: Color = black, fontSize: TextUnit = _12Ssp) = TextStyle(
+fun headline400(color: Color = black, fontSize: TextUnit = 12.Ssp) = TextStyle(
     fontFamily = FontFamily(Font(R.font.ss_400)),
     fontSize = fontSize,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
@@ -72,21 +72,21 @@ fun headline400(color: Color = black, fontSize: TextUnit = _12Ssp) = TextStyle(
 )
 
 @Composable
-fun headline500(color: Color = black, fontSize: TextUnit = _12Ssp) = TextStyle(
+fun headline500(color: Color = black, fontSize: TextUnit = 12.Ssp) = TextStyle(
     fontFamily = FontFamily(Font(R.font.ss_500)),
     fontSize = fontSize,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
     color = color
 )
 @Composable
-fun headline700(color: Color = black, fontSize: TextUnit = _12Ssp) = TextStyle(
+fun headline700(color: Color = black, fontSize: TextUnit = 12.Ssp) = TextStyle(
     fontFamily = FontFamily(Font(R.font.ss_700)),
     fontSize = fontSize,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
     color = color
 )
 @Composable
-fun headline600(color: Color = black, fontSize: TextUnit = _12Ssp) = TextStyle(
+fun headline600(color: Color = black, fontSize: TextUnit = 12.Ssp) = TextStyle(
     fontFamily = FontFamily(Font(R.font.ss_600)),
     fontSize = fontSize,
     platformStyle = PlatformTextStyle(includeFontPadding = false),

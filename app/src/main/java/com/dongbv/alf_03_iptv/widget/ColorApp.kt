@@ -2,10 +2,11 @@ package com.dongbv.alf_03_iptv.widget
 
 import androidx.compose.ui.graphics.Color
 
-val grdEnd = Color(0xFFE74C3C)
-val grdStart = Color(0xFFE94560)
-val mainColor = Color(0xFFE94560)
-
+private val IapPrimary = Color(0xFF6C63FF)
+private val IapSecondary = Color(0xFF9C27B0)
+val grdEnd = Color(0xFF6366F1)
+val grdStart = Color(0xFF00F5FF)
+val mainColor = Color(0xFF6C63FF)
 
 // ── IPTV Dark Theme ──────────────────────────────────────────────────────────
 val IptvBgPrimary = Color(0xFF0A0A1A) // Main app background

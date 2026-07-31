@@ -37,11 +37,6 @@ import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.VerScrollView
 import com.dongbv.alf_03_iptv.style.BoxParentContent
-import com.dongbv.alf_03_iptv.style._10Ssp
-import com.dongbv.alf_03_iptv.style._12Ssp
-import com.dongbv.alf_03_iptv.style._16Ssp
-import com.dongbv.alf_03_iptv.style._34Sdp
-import com.dongbv.alf_03_iptv.style._8Sdp
 import com.dongbv.alf_03_iptv.style.black
 import com.dongbv.alf_03_iptv.style.gray
 import com.dongbv.alf_03_iptv.style.onClick
@@ -50,12 +45,14 @@ import com.dongbv.alf_03_iptv.style.white
 import androidx.core.net.toUri
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
+import com.sdp.ssp.android.Sdp
+import com.sdp.ssp.android.Ssp
 
 class AboutUsActivity : BaseActivity() {
     override fun initialize() = Unit
 
     @Composable
-    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+    override fun ContentView(statusBarHeight: Dp) {
         BoxParentContent(
             onBack = { finish() },
             modifier = Modifier
@@ -144,7 +141,7 @@ fun AboutUsScreen(
                 text = stringResource(R.string.app_name),
                 font = R.font.ss_700,
                 color = black,
-                textSize = _16Ssp,
+                textSize = 16.Ssp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -156,7 +153,7 @@ fun AboutUsScreen(
                 text = stringResource(R.string.version_format, BuildConfig.VERSION_NAME),
                 font = R.font.ss_400,
                 color = gray,
-                textSize = _12Ssp,
+                textSize = 12.Ssp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -195,11 +192,11 @@ fun AboutUsScreen(
             TextView(
                 text = stringResource(R.string.copyright).replace(
                     "%s",
-                    context.getString(R.string.app_name)
+                    stringResource(R.string.app_name)
                 ),
                 font = R.font.ss_400,
                 color = gray,
-                textSize = _10Ssp,
+                textSize = 10.Ssp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -214,12 +211,12 @@ private fun AboutTopBar(onBack: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .paddingHorizontal(_8Sdp),
+            .paddingHorizontal(8.Sdp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconView(
             item = R.drawable.ic_app_back,
-            modifier = Modifier.size(_34Sdp),
+            modifier = Modifier.size(34.Sdp),
             icSize = 28,
             tint = black
         ) { onBack() }
@@ -228,7 +225,7 @@ private fun AboutTopBar(onBack: () -> Unit) {
             text = R.string.about_us,
             font = R.font.ss_700,
             color = black,
-            textSize = _16Ssp
+            textSize = 16.Ssp
         )
     }
 }
@@ -254,7 +251,7 @@ private fun AboutMenuItem(
             TextView(
                 text = stringResource(label),
                 font = R.font.ss_400,
-                textSize = _12Ssp,
+                textSize = 12.Ssp,
                 color = black
             )
             Spacer(Modifier.weight(1f))

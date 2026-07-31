@@ -1,13 +1,11 @@
 package com.dongbv.alf_03_iptv.ui.main
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,9 +29,11 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style._60Sdp
+import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.ui.component.DialogQuitApp
 import com.dongbv.alf_03_iptv.ui.component.ScreenRouter
@@ -41,17 +41,22 @@ import com.dongbv.alf_03_iptv.ui.main.home.ChannelScreen
 import com.dongbv.alf_03_iptv.ui.main.home.FavoriteScreen
 import com.dongbv.alf_03_iptv.ui.main.home.HomeScreen
 import com.dongbv.alf_03_iptv.ui.main.home.SettingScreen
+import com.dongbv.alf_03_iptv.ui.main.add.AddChannelActivity
+import com.dongbv.alf_03_iptv.ui.main.play.PlayChannelActivity
+import com.dongbv.alf_03_iptv.ui.main.playlist.PlayListActivity
+import com.dongbv.alf_03_iptv.ui.main.watch.WatchNowActivity
 import com.dongbv.alf_03_iptv.viewmodel.HomeViewModel
 import com.dongbv.alf_03_iptv.widget.BottomNavigationBar
 import com.dongbv.alf_03_iptv.widget.IptvAccent
-import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
 import com.dongbv.alf_03_iptv.widget.animComposable
+import com.sdp.ssp.android.Sdp
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
-    override fun initialize() = Unit
+    override fun initialize() {
+        AppPreferences.isFinishFirstFlow = true
+    }
 
     private val viewModel: HomeViewModel by inject()
     private val requestNotificationPermissionLauncher =
@@ -64,7 +69,8 @@ class MainActivity : BaseActivity() {
             ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED -> { }
+            ) == PackageManager.PERMISSION_GRANTED -> {
+            }
 
             shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
                 requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -76,15 +82,31 @@ class MainActivity : BaseActivity() {
             }
         }
     }
+
     @Composable
-    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+    override fun ContentView(statusBarHeight: Dp) {
         LaunchedEffect(Unit) {
             requestNotificationPermissionIfNeeded()
         }
         var isShowQuitDialog by rememberSaveable { mutableStateOf(false) }
         val navController = rememberNavController()
 
-        Box(Modifier.fillMaxSize().background(IptvBgPrimary), contentAlignment = Alignment.BottomCenter) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .backgroundResource(R.drawable.img_bg_app)
+                /*.background(
+                    Brush.verticalGradient(
+                        listOf(
+
+                            Color(0xFF1A0533),
+                            Color(0xFF0D0D1A),
+                            Color(0xFF1A1A2E)
+                        )
+                    )
+                )*/
+            , contentAlignment = Alignment.BottomCenter
+        ) {
             Box(
                 Modifier
                     .fillMaxSize()
@@ -97,27 +119,47 @@ class MainActivity : BaseActivity() {
                     startDestination = ScreenRouter.MainScreen.HomeScreen.route
 
                 ) {
-                    animComposable(ScreenRouter.MainScreen.HomeScreen.route){
-                        HomeScreen(modifier = Modifier.paddingTop(statusBarHeight), viewModel = viewModel)
+                    animComposable(ScreenRouter.MainScreen.HomeScreen.route) {
+                        HomeScreen(
+                            modifier = Modifier.paddingTop(statusBarHeight),
+                            viewModel = viewModel,
+                            onWatchNow = { launchActivity<WatchNowActivity>() },
+                            onOpenChannel = { item ->
+                                startActivity(
+                                    PlayListActivity.newIntent(this@MainActivity, item.id.toLong())
+                                )
+                            },
+                            onAddPlaylist = { launchActivity<AddChannelActivity>() }
+                        )
                     }
-                    animComposable(ScreenRouter.MainScreen.ChannelScreen.route){
+                    animComposable(ScreenRouter.MainScreen.ChannelScreen.route) {
                         ChannelScreen()
                     }
-                    animComposable(ScreenRouter.MainScreen.FavoriteScreen.route){
-                        FavoriteScreen()
+                    animComposable(ScreenRouter.MainScreen.FavoriteScreen.route) {
+                        FavoriteScreen( openChanel = {cn->
+                            val newIntent = PlayChannelActivity.newIntent(
+                                this@MainActivity,
+                                cn.id,
+                                cn.name,
+                                cn.url,
+                                cn.logo,
+                                cn.playlistId
+                            )
+                            startActivity(newIntent)
+                        })
                     }
-                    animComposable(ScreenRouter.MainScreen.SettingScreen.route){
+                    animComposable(ScreenRouter.MainScreen.SettingScreen.route) {
                         SettingScreen { }
                     }
                 }
-
 
             }
 
             BottomNavigationBar(
                 navHostController = navController, modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp).background(IptvBgSecondary)
+                    .height(80.dp)
+                    .background(IptvBgSecondary)
             )
         }
         DialogQuitApp(
@@ -179,7 +221,7 @@ private fun MainScreenPreviewScaffold() {
                 }
             }
 
-            Box(Modifier.size(_60Sdp), contentAlignment = Alignment.Center) {
+            Box(Modifier.size(60.Sdp), contentAlignment = Alignment.Center) {
 
             }
         }
@@ -191,6 +233,6 @@ private fun MainScreenPreviewScaffold() {
 @Composable
 private fun MainPreviewBlue() {
     AppViewTheme {
-        Surface { MainScreenPreviewScaffold( )}
+        Surface { MainScreenPreviewScaffold() }
     }
 }

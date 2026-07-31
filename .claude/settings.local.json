@@ -11,7 +11,10 @@
       "Bash(git push:*)",
       "Bash(./gradlew :app:compileDevDebugKotlin)",
       "Bash(bash gradlew:*)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(chmod +x gradlew)",
+      "Bash(xargs -I{} basename {})",
+      "Bash(./gradlew :app:compileDevDebugKotlin -q)"
     ],
     "deny": [],
     "ask": []

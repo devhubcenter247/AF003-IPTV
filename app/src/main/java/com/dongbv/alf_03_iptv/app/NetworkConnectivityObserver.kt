@@ -7,9 +7,9 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.provider.Settings
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -198,7 +198,7 @@ fun Fragment.observeNetwork(builder: NetworkObserverBuilder.() -> Unit) {
 /**
  * Simple network observation in Activity
  */
-fun AppCompatActivity.observeNetworkConnectivity(
+fun ComponentActivity.observeNetworkConnectivity(
     onNetworkAvailable: (() -> Unit)? = null,
     onNetworkLost: (() -> Unit)? = null,
     onNetworkReconnected: (() -> Unit)? = null
@@ -228,6 +228,8 @@ private fun observeNetworkInternal(
     callbacks: NetworkCallbacks
 ) {
     val networkObserver = NetworkConnectivityObserver(context)
+    // wasDisconnected/isFirstEmission distinguish a real reconnect from the very first
+    // "Available" emission on subscribe, which should fire onAvailable but not onReconnected.
     var wasDisconnected = false
     var isFirstEmission = true
 
@@ -257,64 +259,5 @@ private fun observeNetworkInternal(
                 isFirstEmission = false
             }
         }
-    }
-}
-
-// ==================== Auto-dispose Observer ====================
-
-/**
- * Network observer that automatically disposes when lifecycle is destroyed
- * Useful for one-time operations or manual control
- *
- * Example:
- * ```
- * val observer = NetworkLifecycleObserver(this) { isAvailable ->
- *     updateUI(isAvailable)
- * }
- * lifecycle.addObserver(observer)
- * ```
- */
-class NetworkLifecycleObserver(
-    private val context: Context,
-    private val onStatusChanged: (isAvailable: Boolean) -> Unit
-) : DefaultLifecycleObserver {
-
-    private val networkObserver = NetworkConnectivityObserver(context)
-    private var callback: ConnectivityManager.NetworkCallback? = null
-    private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    override fun onStart(owner: LifecycleOwner) {
-        callback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                onStatusChanged(true)
-            }
-
-            override fun onLost(network: Network) {
-                onStatusChanged(false)
-            }
-
-            override fun onUnavailable() {
-                onStatusChanged(false)
-            }
-        }
-
-        val request = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .build()
-
-        callback?.let {
-            connectivityManager.registerNetworkCallback(request, it)
-        }
-
-        // Send initial status
-        onStatusChanged(networkObserver.isNetworkAvailable())
-    }
-
-    override fun onStop(owner: LifecycleOwner) {
-        callback?.let {
-            connectivityManager.unregisterNetworkCallback(it)
-        }
-        callback = null
     }
 }

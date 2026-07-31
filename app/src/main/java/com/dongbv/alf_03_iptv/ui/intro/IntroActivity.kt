@@ -1,6 +1,5 @@
 package com.dongbv.alf_03_iptv.ui.intro
 
-import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -35,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.app.PreferenceData
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.SpaceF
@@ -43,34 +41,30 @@ import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.BoxParentContent
-import com.dongbv.alf_03_iptv.style._12Sdp
-import com.dongbv.alf_03_iptv.style._12Ssp
-import com.dongbv.alf_03_iptv.style._13Ssp
-import com.dongbv.alf_03_iptv.style._16Sdp
-import com.dongbv.alf_03_iptv.style._6Sdp
-import com.dongbv.alf_03_iptv.style._8Sdp
+
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.style.heightPercentDp
 import com.dongbv.alf_03_iptv.style.paddingHorizontal
 import com.dongbv.alf_03_iptv.style.paddingTop
-import com.dongbv.alf_03_iptv.ui.main.MainActivity
+import com.dongbv.alf_03_iptv.ui.personalization.PersonalizationActivity
 import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
 import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
+import com.sdp.ssp.android.Sdp
+import com.sdp.ssp.android.Ssp
 import kotlinx.coroutines.launch
 
 class IntroActivity : BaseActivity() {
     override fun initialize() = Unit
 
     @Composable
-    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+    override fun ContentView(statusBarHeight: Dp) {
         BoxParentContent(onBack = { finishAffinity() }) {
             IntroScreen(
                 modifier = Modifier.background(IptvBgPrimary),
                 nextScreen = {
-                    PreferenceData.isFinishFirstFlow = true
-                    launchActivity<MainActivity>()
+                    launchActivity<PersonalizationActivity>()
                     finish()
                 }
             )
@@ -122,14 +116,14 @@ fun IntroScreen(
                 .background(IptvBgSecondary)
                 .statusBarsPadding()
                 .navigationBarsPadding()
-                .paddingHorizontal(_12Sdp)
-                .paddingTop(_12Sdp)
+                .paddingHorizontal(12.Sdp)
+                .paddingTop(12.Sdp)
                 .animateContentSize()
         ) {
             TextView(
                 text = stringResource(currentModel.title),
                 font = Font(R.font.ss_600),
-                textSize = _13Ssp,
+                textSize = 13.Ssp,
                 color = IptvTextPrimary,
                 minLine = 1,
                 modifier = Modifier.fillMaxWidth()
@@ -138,13 +132,13 @@ fun IntroScreen(
             TextView(
                 text = stringResource(currentModel.content),
                 font = Font(R.font.ss_400),
-                textSize = _12Ssp,
+                textSize = 12.Ssp,
                 color = IptvTextSecondary,
-                modifier = Modifier.paddingTop(_6Sdp),
+                modifier = Modifier.paddingTop(6.Sdp),
                 minLine = 2
             )
 
-            SpaceH(_8Sdp)
+            SpaceH(8.Sdp)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -167,7 +161,7 @@ fun IntroScreen(
                         stringResource(R.string.continues)
                     },
                     font = R.font.ss_600,
-                    textSize = _13Ssp,
+                    textSize = 13.Ssp,
                     color = IptvAccent
                 ) {
                     if (currentPage >= items.lastIndex) {
@@ -212,7 +206,7 @@ fun DotIndicator(
     ) {
         repeat(totalPage) { index ->
             val width by animateDpAsState(
-                targetValue = if (index == currentPage) _16Sdp else _8Sdp,
+                targetValue = if (index == currentPage) 16.Sdp else 8.Sdp,
                 animationSpec = tween(220),
                 label = "indicator_width"
             )
@@ -220,7 +214,7 @@ fun DotIndicator(
             val color = if (index == currentPage) IptvAccent else IptvTextSecondary.copy(alpha = 0.4f)
             Box(
                 modifier = Modifier
-                    .size(width = width, height = _8Sdp)
+                    .size(width = width, height = 8.Sdp)
                     .background(
                         Brush.linearGradient(listOf(color, color)),
                         shape = CircleShape
@@ -228,7 +222,7 @@ fun DotIndicator(
             )
 
             if (index != totalPage - 1) {
-                SpaceW(_6Sdp)
+                SpaceW(6.Sdp)
             }
         }
     }

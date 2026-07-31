@@ -25,6 +25,7 @@ import androidx.window.layout.WindowMetricsCalculator
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.unit.Density
 
 @Composable
 fun Space(w: Int = 0, h: Int = 0) {
@@ -158,28 +159,23 @@ fun Dp.toPx(): Float {
 }
 @Composable
 @Stable
-fun Int.pxToDp(): Dp {
-    return with(LocalDensity.current) { this@pxToDp.toDp() }
-}
-@Composable
-@Stable
 fun Float.pxToDp(): Dp {
     return with(LocalDensity.current) { this@pxToDp.toDp() }
 }
 @Stable
-@SuppressLint("ConfigurationScreenWidthHeight")
+@SuppressLint("ConfigurationScreenWidthHeight", "UnnecessaryComposedModifier")
 fun Modifier.widthPercent(percent: Float): Modifier = composed {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     this.then(Modifier.width(screenWidth * (percent / 100f)))
 }
 @Stable
-@SuppressLint("ConfigurationScreenWidthHeight")
+@SuppressLint("ConfigurationScreenWidthHeight", "UnnecessaryComposedModifier")
 fun Modifier.heightPercent(percent: Float): Modifier = composed {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     this.then(Modifier.height(screenHeight * (percent / 100f)))
 }
 @Stable
-@SuppressLint("ConfigurationScreenWidthHeight")
+@SuppressLint("ConfigurationScreenWidthHeight", "UnnecessaryComposedModifier")
 fun Modifier.paddingHorizontal(values: Dp): Modifier = composed {
     this.then(Modifier.padding(horizontal = values))
 }
@@ -189,12 +185,12 @@ fun Modifier.paddingVertical(values: Dp): Modifier = composed {
     this.then(Modifier.padding(vertical = values))
 }
 @Stable
-@SuppressLint("ConfigurationScreenWidthHeight")
+@SuppressLint("ConfigurationScreenWidthHeight", "UnnecessaryComposedModifier")
 fun Modifier.paddingTop(values: Dp): Modifier = composed {
     this.then(Modifier.padding(top = values))
 }
 @Stable
-@SuppressLint("ConfigurationScreenWidthHeight")
+@SuppressLint("ConfigurationScreenWidthHeight", "UnnecessaryComposedModifier")
 fun Modifier.paddingBottom(values: Dp): Modifier = composed {
     this.then(Modifier.padding(bottom = values))
 }
@@ -204,7 +200,7 @@ fun Modifier.paddingStart(values: Dp): Modifier = composed {
     this.then(Modifier.padding(start = values))
 }
 @Stable
-@SuppressLint("ConfigurationScreenWidthHeight")
+@SuppressLint("ConfigurationScreenWidthHeight", "UnnecessaryComposedModifier")
 fun Modifier.paddingEnd(values: Dp): Modifier = composed {
     this.then(Modifier.padding(end = values))
 }
@@ -234,4 +230,24 @@ fun heightPercentDp(percent: Float): Dp {
     val heightPx = (screenHeightPx * percent / 100f)
     return with(LocalDensity.current) { heightPx.toDp() }
 }
+@Stable
+fun Context.getScreenWidthInDp(): Dp {
+    return resources.configuration.screenWidthDp.dp
+}
+@Stable
+fun Context.getScreenWidthInPx(): Int {
+    return resources.displayMetrics.widthPixels
+}
+@Stable
+fun Context.getScreenHeightInDp(): Dp {
+    return resources.configuration.screenHeightDp.dp
+}
+@Stable
+fun Context.getScreenHeightInPx(): Int {
+    return resources.displayMetrics.heightPixels
+}
+@Stable
+fun Dp.toPx(density: Density): Float = with(density) { this@toPx.toPx() }
+
+
 

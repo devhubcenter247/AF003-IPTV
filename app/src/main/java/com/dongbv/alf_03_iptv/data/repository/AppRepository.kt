@@ -170,13 +170,8 @@ class AppRepository(private val channelDao: ChannelDao, private val playlistDao:
 }
 
 fun PlaylistEntity.toHomeChannelItem(): HomeChannelItem {
-    val contentType = when (SourceType.fromValue(sourceType)) {
-        SourceType.URL -> ContentType.URL
-        SourceType.FILE -> ContentType.FILE
-        SourceType.GALLERY -> ContentType.GALLERY
-    }
-
-    val icon = when (SourceType.fromValue(sourceType)) {
+    val sourceType = getSourceTypeEnum()
+    val icon = when (sourceType) {
         SourceType.URL -> R.drawable.ic_app_url
         SourceType.FILE -> R.drawable.ic_app_file
         SourceType.GALLERY -> R.drawable.ic_app_storage
@@ -186,7 +181,7 @@ fun PlaylistEntity.toHomeChannelItem(): HomeChannelItem {
         id = id.toInt(),
         title = name,
         count = channelCount,
-        type = contentType,
+        type = sourceType.toContentType(),
         icon = icon
     )
 }

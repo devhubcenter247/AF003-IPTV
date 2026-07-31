@@ -1,9 +1,7 @@
 package com.dongbv.alf_03_iptv.ui.splash
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,22 +29,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.app.PreferenceData
+import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.BoxParentContent
-import com.dongbv.alf_03_iptv.style._11Ssp
-import com.dongbv.alf_03_iptv.style._12Sdp
-import com.dongbv.alf_03_iptv.style._18Ssp
+import com.dongbv.alf_03_iptv.style.GradientLinearProgressIndicator
+import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.getScreenWidthInDp
 import com.dongbv.alf_03_iptv.widget.IptvAccent
-import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
-import com.dongbv.alf_03_iptv.style.opacity
+import com.dongbv.alf_03_iptv.style.widthPercent
 import com.dongbv.alf_03_iptv.ui.language.LanguageActivity
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
 import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.grdEnd
+import com.dongbv.alf_03_iptv.widget.grdStart
+import com.dongbv.alf_03_iptv.widget.mainColor
+import com.sdp.ssp.android.Sdp
+import com.sdp.ssp.android.Ssp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -63,9 +63,9 @@ class SplashActivity : BaseActivity() {
 
 
 
-    override fun isFinishFirstFlow() = PreferenceData.isFinishFirstFlow
+    override fun isFinishFirstFlow() = AppPreferences.isFinishFirstFlow
     fun goNextPage() {
-        if (!PreferenceData.isFinishFirstFlow) {
+        if (!AppPreferences.isFinishFirstFlow) {
             launchActivity<LanguageActivity>()
             finish()
         } else {
@@ -74,11 +74,10 @@ class SplashActivity : BaseActivity() {
         }
     }
     @Composable
-    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+    override fun ContentView(statusBarHeight: Dp) {
         BoxParentContent(onBack = {}, modifier = Modifier.fillMaxSize()) {
             SplashScreen(
                 Modifier
-                    .background(IptvBgPrimary)
                     .padding(top = statusBarHeight)
             )
         }
@@ -96,7 +95,7 @@ fun SplashPreview() {
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier.fillMaxSize(),
+        modifier.fillMaxSize().backgroundResource(R.drawable.img_bg_app),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SpaceH(h = getScreenWidthInDp() * 0.35f)
@@ -107,16 +106,16 @@ fun SplashScreen(modifier: Modifier = Modifier) {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(120.dp)
-                .clip(RoundedCornerShape(_12Sdp))
+                .clip(RoundedCornerShape(12.Sdp))
         )
 
-        SpaceH(h = _12Sdp)
+        SpaceH(h = 12.Sdp)
         Text(
             text = stringResource(R.string.app_name),
             fontFamily = FontFamily(Font(R.font.ss_700)),
             color = IptvAccent,
             textAlign = TextAlign.Center,
-            fontSize = _18Ssp,
+            fontSize = 18.Ssp,
             letterSpacing = 1.5.sp
         )
 
@@ -124,15 +123,15 @@ fun SplashScreen(modifier: Modifier = Modifier) {
         TextView(
             text = stringResource(R.string.this_action_may_be_constant_adverting),
             modifier = Modifier.padding(bottom = 12.dp),
-            textSize = _11Ssp,
+            textSize = 11.Ssp,
             color = IptvTextSecondary,
             font = R.font.ss_400
         )
-        LinearProgressIndicator(
-            modifier = Modifier.height(6.dp),
-            color = IptvAccent,
-            trackColor = IptvAccent.opacity(.25f),
-            strokeCap = StrokeCap.Round
+        GradientLinearProgressIndicator(
+            colors = listOf(grdStart, grdEnd),
+            modifier = Modifier.height(6.dp).widthPercent(60f),
+            strokeCap = StrokeCap.Round,
+            trackColor = mainColor.copy(alpha = 0.2f)
         )
         SpaceH(h = 32.dp)
     }

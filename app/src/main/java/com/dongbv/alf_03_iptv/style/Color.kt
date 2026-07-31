@@ -22,8 +22,9 @@ fun adjustComponent(component: Float, factor: Float): Float {
 }
 
 fun Color.opacity(alpha: Float): Color {
+    val currentAlpha = if (alpha > 1f) alpha / 100f else alpha
     return this.copy(
-        alpha = if (alpha > 1) alpha / 100 else alpha
+        alpha = currentAlpha
     )
 }
 

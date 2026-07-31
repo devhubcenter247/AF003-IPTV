@@ -1,10 +1,13 @@
 package com.dongbv.alf_03_iptv.data.local.entity
 
+import android.os.Parcelable
+import androidx.compose.runtime.Stable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 /**
  * Entity representing a channel/video in a playlist.
@@ -25,6 +28,8 @@ import androidx.room.PrimaryKey
         Index(value = ["group_name"])
     ]
 )
+@Stable
+@Parcelize
 data class ChannelEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -58,10 +63,11 @@ data class ChannelEntity(
 
     @ColumnInfo(name = "duration")
     val duration: Long = 0, // Total duration in milliseconds
-
+    @ColumnInfo(name = "categoryId")
+    val  categoryId : Int = 0,
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis()
-) {
+) : Parcelable {
     fun getFormattedDuration(): String {
         if (duration <= 0) return ""
         val seconds = (duration / 1000) % 60
@@ -233,3 +239,9 @@ data class ChannelEntity(
         }
     }
 }
+
+// Shared by every screen that filters a channel list by search text and/or group
+// (FavoriteViewModel, PlayListViewModel, PlayViewModel).
+fun List<ChannelEntity>.filterBy(query: String, group: String? = null): List<ChannelEntity> =
+    filter { query.isBlank() || it.name.contains(query, ignoreCase = true) }
+        .filter { group == null || it.groupName == group }

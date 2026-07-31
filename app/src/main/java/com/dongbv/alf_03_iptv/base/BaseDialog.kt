@@ -51,9 +51,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.dongbv.alf_03_iptv.style._12Sdp
-import com.dongbv.alf_03_iptv.style._8Sdp
 import com.dongbv.alf_03_iptv.style.widthPercentDp
+import com.sdp.ssp.android.Sdp
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 @Composable
@@ -174,8 +173,8 @@ fun AppBottomSheet(
             ) {
                 Surface(
                     color = Color.White,
-                    shape = RoundedCornerShape(topStart = _12Sdp, topEnd = _12Sdp),
-                    tonalElevation = _8Sdp,
+                    shape = RoundedCornerShape(topStart = 12.Sdp, topEnd = 12.Sdp),
+                    tonalElevation = 8.Sdp,
                     modifier = Modifier.fillMaxWidth()
                 ) { content() }
             }
@@ -200,9 +199,9 @@ fun AppDialog(
         )
     ) {
         Surface(
-            shape = RoundedCornerShape(_12Sdp),
+            shape = RoundedCornerShape(12.Sdp),
             color = Color.White,
-            tonalElevation = _8Sdp,
+            tonalElevation = 8.Sdp,
             modifier = Modifier.padding(horizontal = widthPercentDp(5f))
         ) {
             dialog.invoke()

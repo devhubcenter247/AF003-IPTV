@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -30,18 +31,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.app.PreferenceData
+import com.dongbv.alf_03_iptv.app.AppPreferences
+import com.dongbv.alf_03_iptv.app.collectAsStateWithLifecycle
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.FullPreview
-import com.dongbv.alf_03_iptv.style.SpaceH
-import com.dongbv.alf_03_iptv.style.TextView
-import com.dongbv.alf_03_iptv.style.VerScrollView
-import com.dongbv.alf_03_iptv.style.BoxParentContent
 import com.dongbv.alf_03_iptv.style.*
-import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.RatingDialog
 import com.dongbv.alf_03_iptv.ui.language.LanguageItem
 import com.dongbv.alf_03_iptv.ui.language.getLanguageArray
+import com.sdp.ssp.android.Ssp
 
 @FullPreview
 @Composable
@@ -90,12 +88,13 @@ fun SettingScreen(
     gotoAboutUs: () -> Unit = {},
     onBack: () -> Unit = {}
 ) {
+    val isPreview = LocalInspectionMode.current
     val currentLanguage by remember {
         mutableStateOf(getLanguageArray().find { it ->
-            it.code == (PreferenceData.languageCode)
+            it.code == (if(isPreview) "en" else AppPreferences.languageCode)
         } ?: getLanguageArray()[0])
     }
-    val isRateApp by PreferenceData.isRatingApp.flow.collectAsStateWithLifecycle(false)
+    val isRateApp by AppPreferences.isRatingApp.collectAsStateWithLifecycle()
     var isShowRating by remember {
         mutableStateOf(false)
     }
@@ -114,7 +113,7 @@ fun SettingScreen(
                 R.string.setting,
                 font = R.font.ss_600,
                 color = black,
-                textSize = _18Ssp,
+                textSize = 18.Ssp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start
             )
@@ -143,7 +142,7 @@ fun SettingScreen(
     }
     RatingDialog(isShowRating, { isShowRating = false }, {
         isShowRating = false
-        PreferenceData.isRatingApp.value = true
+        AppPreferences.isRatingApp.value = true
     }) {
     }
 }
@@ -166,14 +165,14 @@ fun LangSettingItem(
             TextView(
                 text = R.string.language,
                 font = R.font.ss_400,
-                textSize = _12Ssp,
+                textSize = 12.Ssp,
                 color = black
             )
             Spacer(Modifier.weight(1f))
             TextView(
                 text = currentLanguage.name,
                 font = R.font.ss_500,
-                textSize = _12Ssp,
+                textSize = 12.Ssp,
                 color = burgundy
             )
             SpaceW(8)
@@ -205,7 +204,7 @@ fun SettingItem(@DrawableRes icon: Int, @StringRes label: Int, action: () -> Uni
             TextView(
                 text = stringResource(label),
                 txtStyle = TextStyle.Default.fontFamily(R.font.ss_500).fontPadding(false).copy(
-                    color = black, fontSize = _11Ssp
+                    color = black, fontSize = 11.Ssp
                 )
             )
         }

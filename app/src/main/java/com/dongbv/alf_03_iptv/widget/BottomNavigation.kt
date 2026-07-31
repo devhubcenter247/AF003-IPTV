@@ -23,22 +23,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
-import com.dongbv.alf_03_iptv.style._1Sdp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.style._24Sdp
-import com.dongbv.alf_03_iptv.style._28Sdp
-import com.dongbv.alf_03_iptv.style._2Sdp
-import com.dongbv.alf_03_iptv.style._3Sdp
 import com.dongbv.alf_03_iptv.style.gradientContent
 import com.dongbv.alf_03_iptv.style.gray
 import com.dongbv.alf_03_iptv.style.lightGrey
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.transparent
 import com.dongbv.alf_03_iptv.ui.component.ScreenRouter
+import com.sdp.ssp.android.Sdp
+import androidx.compose.ui.res.stringResource
 
 enum class BottomNavItems(
     val index: Int = 0,
@@ -81,11 +78,11 @@ fun RowScope.NavItem(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(icon),
-                modifier = Modifier.size(_24Sdp).padding(_2Sdp).gradientContent( if(selected)listOf(grdStart,grdEnd) else listOf(gray,gray)),
+                modifier = Modifier.size(24.Sdp).padding(2.Sdp).gradientContent( if(selected)listOf(grdStart,grdEnd) else listOf(gray,gray)),
                 contentDescription = null
             )
             Text(
-                text = LocalContext.current.getString(item.title),
+                text = stringResource(item.title),
                 maxLines = 1,
                 softWrap = true,
                 fontSize = 14.sp,

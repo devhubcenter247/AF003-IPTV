@@ -53,16 +53,6 @@ import com.dongbv.alf_03_iptv.style.RatingBar
 import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
-import com.dongbv.alf_03_iptv.style._10Sdp
-import com.dongbv.alf_03_iptv.style._11Ssp
-import com.dongbv.alf_03_iptv.style._12Sdp
-import com.dongbv.alf_03_iptv.style._12Ssp
-import com.dongbv.alf_03_iptv.style._14Ssp
-import com.dongbv.alf_03_iptv.style._16Sdp
-import com.dongbv.alf_03_iptv.style._18Sdp
-import com.dongbv.alf_03_iptv.style._42Sdp
-import com.dongbv.alf_03_iptv.style._6Sdp
-import com.dongbv.alf_03_iptv.style._8Sdp
 import com.dongbv.alf_03_iptv.style.black
 import com.dongbv.alf_03_iptv.style.gray
 import com.dongbv.alf_03_iptv.style.lightGrey
@@ -72,6 +62,8 @@ import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.paddingVertical
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
+import com.sdp.ssp.android.Sdp
+import com.sdp.ssp.android.Ssp
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -122,35 +114,35 @@ fun DialogNoInternet(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(_8Sdp))
+                    .clip(RoundedCornerShape(8.Sdp))
                     .background(white)
-                    .padding(_12Sdp), horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(12.Sdp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AsyncImage(
                     R.drawable.ic_no_wifi_connect,
                     contentDescription = null,
                     modifier = Modifier.size(
-                        _42Sdp
+                        42.Sdp
                     )
                 )
                 TextView(
                     stringResource(R.string.no_wifi_connection),
                     font = R.font.ss_600,
                     textAlign = TextAlign.Center,
-                    textSize = _14Ssp,
+                    textSize = 14.Ssp,
                     color = black,
                     modifier = Modifier
-                        .paddingTop(_6Sdp)
+                        .paddingTop(6.Sdp)
                         .fillMaxWidth()
                 )
                 TextView(
                     stringResource(R.string.please_check_your_wifi_connection),
                     font = R.font.ss_400,
                     textAlign = TextAlign.Center,
-                    textSize = _11Ssp,
+                    textSize = 11.Ssp,
                     color = Color(0xFF6B7785),
                     modifier = Modifier
-                        .paddingVertical(_10Sdp)
+                        .paddingVertical(10.dp)
                         .fillMaxWidth()
                 )
                 TextView(
@@ -163,7 +155,7 @@ fun DialogNoInternet(
                             color = white, CircleShape
                         )
                         .fillMaxWidth(1f)
-                        .padding(_12Sdp)
+                        .padding(12.Sdp)
                 ) {
                     tryAgain.invoke()
                 }
@@ -310,7 +302,7 @@ fun RatingDialog(
             Box(
                 modifier = Modifier
                     .padding(16.dp)
-                    .clip(RoundedCornerShape(_10Sdp))
+                    .clip(RoundedCornerShape(10.dp))
                     .background(Color.White)
             ) {
                 Column(
@@ -324,13 +316,13 @@ fun RatingDialog(
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         fontFamily = FontFamily(Font(R.font.ss_500)),
-                        fontSize = _14Ssp,
+                        fontSize = 14.Ssp,
                         color = Color.Black
                     )
-                    SpaceH(_18Sdp)
+                    SpaceH(18.Sdp)
                     Text(
                         text = stringResource(contentRate),
-                        fontSize = _12Ssp,
+                        fontSize = 12.Ssp,
                         textAlign = TextAlign.Center,
                         fontFamily = FontFamily(Font(R.font.ss_400)),
                         color = Color.Gray,
@@ -343,7 +335,7 @@ fun RatingDialog(
                         rating = rating,
                         onRatingChanged = { rating = it }
                     )
-                    Spacer(Modifier.height(_18Sdp))
+                    Spacer(Modifier.height(18.Sdp))
                     TextView(
                         text = if (rating >= 4) stringResource(R.string.rate_on_google_play) else stringResource(
                             R.string.rate_us
@@ -354,7 +346,7 @@ fun RatingDialog(
                             .background(
                                 color = white, CircleShape
                             )
-                            .padding(_12Sdp),
+                            .padding(12.Sdp),
                         color = black,
                     ) {
                         when {
@@ -390,26 +382,26 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Un
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(_8Sdp))
+                    .clip(RoundedCornerShape(8.Sdp))
                     .background(white)
-                    .padding(_12Sdp)
+                    .padding(12.Sdp)
             ) {
                 TextView(
                     stringResource(R.string.quit),
                     font = R.font.ss_600,
-                    textSize = _14Ssp,
+                    textSize = 14.Ssp,
                     color = black,
                     modifier = Modifier.fillMaxWidth()
                 )
-                SpaceH(_12Sdp)
+                SpaceH(12.Sdp)
                 TextView(
                     stringResource(R.string.are_you_sure_want_to_quit_app),
                     font = R.font.ss_500,
-                    textSize = _12Ssp,
+                    textSize = 12.Ssp,
                     color = gray,
                     modifier = Modifier.fillMaxWidth()
                 )
-                SpaceH(_12Sdp)
+                SpaceH(12.Sdp)
 
                 Row(Modifier.fillMaxWidth()) {
                     TextView(
@@ -423,13 +415,13 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Un
                                 CircleShape
                             )
                             .fillMaxWidth()
-                            .paddingEnd(_8Sdp)
+                            .paddingEnd(8.Sdp)
                             .weight(1f)
-                            .padding(_12Sdp)
+                            .padding(12.Sdp)
                     ) {
                         onDismiss.invoke()
                     }
-                    SpaceW(_16Sdp)
+                    SpaceW(16.Sdp)
                     TextView(
                         stringResource(R.string.ok),
                         color = IptvTextPrimary,
@@ -437,9 +429,9 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit, onQuit: () -> Un
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .background(IptvTextPrimary, CircleShape)
-                            .paddingStart(_8Sdp)
+                            .paddingStart(8.Sdp)
                             .weight(1f)
-                            .padding(_12Sdp)
+                            .padding(12.Sdp)
                     ) {
                         onQuit.invoke()
                     }

@@ -1,0 +1,321 @@
+package com.dongbv.alf_03_iptv.viewmodel
+
+import android.app.Application
+import android.util.Log
+import androidx.annotation.OptIn
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.rtsp.RtspMediaSource
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.source.MediaSource
+import java.io.File
+import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
+import com.dongbv.alf_03_iptv.data.repository.AppRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+
+/**
+ * 5-slot player pool. Slots mapped to channel positions:
+ *   [current-2]  [current-1]  [current]  [current+1]  [current+2]
+ *   prepared     prepared     PLAYING     prepared      prepared
+ *
+ * On playback error the current player's listener emits autoNextEvent,
+ * and the composable animates the pager to the next page.
+ */
+@UnstableApi
+class WatchNowViewModel(
+    application: Application,
+    private val repository: AppRepository
+) : AndroidViewModel(application) {
+
+    private val _channels = MutableStateFlow<List<ChannelEntity>>(emptyList())
+    val channels: StateFlow<List<ChannelEntity>> = _channels.asStateFlow()
+
+    private val _isMuted = MutableStateFlow(false)
+    val isMuted: StateFlow<Boolean> = _isMuted.asStateFlow()
+
+    private val _currentIndex = MutableStateFlow(0)
+    val currentIndex: StateFlow<Int> = _currentIndex.asStateFlow()
+
+    private val _pagePlayerMap = MutableStateFlow<Map<Int, ExoPlayer>>(emptyMap())
+    val pagePlayerMap: StateFlow<Map<Int, ExoPlayer>> = _pagePlayerMap.asStateFlow()
+
+    // Emits the target page index when the current stream errors out
+    private val _autoNextEvent = MutableSharedFlow<Int>(extraBufferCapacity = 1)
+    val autoNextEvent: SharedFlow<Int> = _autoNextEvent.asSharedFlow()
+
+    // 100 MB LRU disk cache so HLS segments are re-used across the player pool
+    // and after back-navigation to a previously seen channel.
+    private val streamCache = SimpleCache(
+        File(application.cacheDir, "stream_cache"),
+        LeastRecentlyUsedCacheEvictor(100L * 1024 * 1024),
+        StandaloneDatabaseProvider(application)
+    )
+
+    // Parse VLC pipe format: "https://stream.m3u8|Referer=https://site.com&User-Agent=Mozilla/..."
+    private fun parseStreamUrl(raw: String): Pair<String, Map<String, String>> {
+        val pipe = raw.indexOf('|')
+        if (pipe < 0) return raw to emptyMap()
+        val url = raw.substring(0, pipe)
+        val headers = raw.substring(pipe + 1)
+            .split('&')
+            .mapNotNull { kv ->
+                val eq = kv.indexOf('=')
+                if (eq < 0) null else kv.substring(0, eq).trim() to kv.substring(eq + 1).trim()
+            }
+            .toMap()
+        return url to headers
+    }
+
+    // Universal source: RTSP → RtspMediaSource (no cache, different protocol)
+    //                   everything else → DefaultMediaSourceFactory (auto-detects
+    //                   HLS / DASH / SmoothStreaming / progressive TS/MP4/MKV)
+    private fun mediaSourceFor(rawUrl: String): MediaSource {
+        val (url, headers) = parseStreamUrl(rawUrl)
+        if (url.startsWith("rtsp://", ignoreCase = true) ||
+            url.startsWith("rtsps://", ignoreCase = true)) {
+            Log.d(TAG, "protocol=RTSP  url=$url")
+            return RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(url))
+        }
+        val http = DefaultHttpDataSource.Factory()
+            .setUserAgent(BROWSER_UA)
+            .setConnectTimeoutMs(15_000)
+            .setReadTimeoutMs(15_000)
+            .setAllowCrossProtocolRedirects(true)
+        if (headers.isNotEmpty()) http.setDefaultRequestProperties(headers)
+        return DefaultMediaSourceFactory(
+            CacheDataSource.Factory()
+                .setCache(streamCache)
+                .setUpstreamDataSourceFactory(http)
+                .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+        ).createMediaSource(MediaItem.fromUri(url))
+    }
+
+    private val playerPool: List<ExoPlayer> = List(5) {
+        ExoPlayer.Builder(application).build().apply {
+            playWhenReady = false
+            volume = 0f
+        }
+    }
+    private val freePool = ArrayDeque<ExoPlayer>().also { it.addAll(playerPool) }
+
+    // Tracks players that fired onPlayerError so the subsequent STATE_IDLE
+    // callback doesn't emit a second (duplicate) auto-next. ExoPlayer always
+    // calls: onPlayerError → onPlaybackStateChanged(IDLE). Without this guard
+    // a single stream failure would skip two pages instead of one.
+    private val recentlyErrored = mutableSetOf<ExoPlayer>()
+
+    // Retry counter per player. Transient errors (PlaylistStuck, timeout) are
+    // retried up to MAX_RETRIES with exponential delay before auto-next fires.
+    private val retryCount = mutableMapOf<ExoPlayer, Int>()
+
+    private fun isRetryableError(error: PlaybackException): Boolean {
+        val causeClass = error.cause?.javaClass?.simpleName ?: ""
+        return causeClass == "PlaylistStuckException" ||
+               error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT ||
+               error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED ||
+               error.errorCode == PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE
+    }
+
+    init {
+        playerPool.forEachIndexed { slot, player ->
+            player.addListener(object : Player.Listener {
+                override fun onPlayerError(error: PlaybackException) {
+                    val page = _pagePlayerMap.value.entries.find { it.value === player }?.key
+                    val rawUrl = _channels.value.getOrNull(page ?: -1)?.url
+                    val count  = retryCount.getOrDefault(player, 0)
+
+                    Log.e(
+                        TAG,
+                        "POOL ERROR  slot=$slot  page=$page  retry=$count/$MAX_RETRIES" +
+                        "  code=${error.errorCode}  cause=${error.cause?.javaClass?.simpleName}" +
+                        "  url=$rawUrl",
+                        error
+                    )
+
+                    // Suppress the duplicate STATE_IDLE that always follows onPlayerError
+                    recentlyErrored += player
+
+                    if (rawUrl != null && isRetryableError(error) && count < MAX_RETRIES) {
+                        retryCount[player] = count + 1
+                        val delayMs = 2_000L * (count + 1)   // 2 s, 4 s, 6 s
+                        Log.w(TAG, "retryable error — retry ${count+1}/$MAX_RETRIES in ${delayMs}ms  slot=$slot  page=$page")
+                        viewModelScope.launch {
+                            delay(delayMs)
+                            // Only retry if this player is still assigned to the same page
+                            if (_pagePlayerMap.value[page] !== player) return@launch
+                            Log.d(TAG, "retrying  slot=$slot  page=$page")
+                            val source = mediaSourceFor(rawUrl)
+                            player.setMediaSource(source)
+                            player.prepare()
+                            if (player === _pagePlayerMap.value[_currentIndex.value]) {
+                                player.playWhenReady = true
+                            }
+                        }
+                        return
+                    }
+
+                    // Non-retryable or retries exhausted → auto-next
+                    retryCount.remove(player)
+                    if (player === _pagePlayerMap.value[_currentIndex.value]) {
+                        val next = _currentIndex.value + 1
+                        if (next <= _channels.value.lastIndex) {
+                            Log.w(TAG, "giving up → auto-next to page $next  slot=$slot")
+                            _autoNextEvent.tryEmit(next)
+                        }
+                    }
+                }
+
+                override fun onPlaybackStateChanged(state: Int) {
+                    val stateName = when (state) {
+                        Player.STATE_IDLE      -> "IDLE"
+                        Player.STATE_BUFFERING -> "BUFFERING"
+                        Player.STATE_READY     -> "READY"
+                        Player.STATE_ENDED     -> "ENDED"
+                        else                   -> "UNKNOWN($state)"
+                    }
+                    val page = _pagePlayerMap.value.entries.find { it.value === player }?.key
+                    Log.d(TAG, "state=$stateName  slot=$slot  page=$page  isCurrent=${player === _pagePlayerMap.value[_currentIndex.value]}")
+
+                    if (state == Player.STATE_READY) {
+                        retryCount.remove(player)  // stream recovered — reset counter
+                    }
+
+                    if (state == Player.STATE_IDLE) {
+                        // Suppress duplicate: this IDLE came right after onPlayerError
+                        if (recentlyErrored.remove(player)) return
+                        // Silent stall (buffering → idle with no error): treat same as error
+                        if (player === _pagePlayerMap.value[_currentIndex.value]) {
+                            val next = _currentIndex.value + 1
+                            if (next <= _channels.value.lastIndex) {
+                                Log.w(TAG, "silent stall  slot=$slot  page=$page  → auto-next to $next")
+                                _autoNextEvent.tryEmit(next)
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        viewModelScope.launch {
+            val all = repository.getAllChannels().first()
+            _channels.value = all.shuffled()
+            if (all.isNotEmpty()) updateWindow(0)
+        }
+    }
+
+    @OptIn(UnstableApi::class)
+    fun updateWindow(index: Int) {
+        val list = _channels.value
+        if (list.isEmpty()) return
+        _currentIndex.value = index
+
+        val windowPositions = ((index - 2)..(index + 2)).filter { it in list.indices }
+        val current = _pagePlayerMap.value.toMutableMap()
+
+        // Evict positions that left the window
+        val toEvict = current.keys.filter { it !in windowPositions }
+        toEvict.forEach { pos ->
+            current.remove(pos)?.also { p ->
+                Log.d(TAG, "evict  page=$pos  slot=${playerPool.indexOf(p)}")
+                retryCount.remove(p)
+                p.stop()
+                p.clearMediaItems()
+                freePool.addLast(p)
+            }
+        }
+
+        // Assign a free player to each new position entering the window
+        windowPositions.forEach { pos ->
+            if (pos !in current) {
+                val player = freePool.removeFirstOrNull() ?: run {
+                    Log.e(TAG, "freePool exhausted  cannot prepare page=$pos  freePool=${freePool.size}  window=$windowPositions")
+                    return@forEach
+                }
+                Log.d(TAG, "prepare  page=$pos  slot=${playerPool.indexOf(player)}  url=${list[pos].url}")
+                val source = mediaSourceFor(list[pos].url)
+                player.setMediaSource(source)
+                player.prepare()
+                current[pos] = player
+            }
+        }
+
+        // Re-prepare any player that silently died (STATE_IDLE) while in the background window.
+        // Without this, navigating to a page whose player errored while off-screen produces a
+        // black screen: playWhenReady=true on an IDLE player is a no-op in ExoPlayer.
+        windowPositions.forEach { pos ->
+            val player = current[pos] ?: return@forEach
+            if (player.playbackState == Player.STATE_IDLE) {
+                Log.w(TAG, "re-prepare dead player  page=$pos  slot=${playerPool.indexOf(player)}  url=${list[pos].url}")
+                val source = mediaSourceFor(list[pos].url)
+                player.setMediaSource(source)
+                player.prepare()
+            }
+        }
+
+        // Only the current position plays; others buffer silently
+        val muted = _isMuted.value
+        current.forEach { (pos, player) ->
+            if (pos == index) {
+                player.volume = if (muted) 0f else 1f
+                player.playWhenReady = true
+            } else {
+                player.volume = 0f
+                player.playWhenReady = false
+            }
+        }
+
+        _pagePlayerMap.value = current.toMap()
+    }
+
+    fun toggleMute() {
+        val muted = !_isMuted.value
+        _isMuted.value = muted
+        _pagePlayerMap.value[_currentIndex.value]?.volume = if (muted) 0f else 1f
+    }
+
+    fun toggleFavorite(channelId: Long) {
+        viewModelScope.launch { repository.toggleFavorite(channelId) }
+    }
+
+    fun pausePlayback() {
+        _pagePlayerMap.value[_currentIndex.value]?.playWhenReady = false
+    }
+
+    fun resumePlayback() {
+        if (_channels.value.isNotEmpty()) {
+            _pagePlayerMap.value[_currentIndex.value]?.playWhenReady = true
+        }
+    }
+
+    override fun onCleared() {
+        playerPool.forEach { it.release() }
+        streamCache.release()
+        super.onCleared()
+    }
+
+    companion object {
+        private const val TAG = "WatchNowViewModel"
+        private const val MAX_RETRIES = 3
+        private const val BROWSER_UA =
+            "Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+    }
+}

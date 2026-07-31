@@ -1,7 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.main.setting
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
@@ -28,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dongbv.alf_03_iptv.R
-import com.dongbv.alf_03_iptv.app.PreferenceData
+import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.IconView
@@ -36,11 +35,6 @@ import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.BoxParentContent
-import com.dongbv.alf_03_iptv.style._10Sdp
-import com.dongbv.alf_03_iptv.style._12Sdp
-import com.dongbv.alf_03_iptv.style._18Ssp
-import com.dongbv.alf_03_iptv.style._4Sdp
-import com.dongbv.alf_03_iptv.style._6Sdp
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.LanguageItem
@@ -49,16 +43,18 @@ import com.dongbv.alf_03_iptv.ui.language.getLanguageArray
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.mainColor
+import com.sdp.ssp.android.Sdp
+import com.sdp.ssp.android.Ssp
 
 class LanguageSettingActivity : BaseActivity() {
     override fun initialize() = Unit
 
     @Composable
-    override fun BoxScope.ContentView(statusBarHeight: Dp) {
+    override fun ContentView(statusBarHeight: Dp) {
         val languages = remember { getLanguageArray().toList() }
         var selected by rememberSaveable {
             mutableStateOf(getLanguageArray().find { it ->
-                it.code == (PreferenceData.languageCode)
+                it.code == (AppPreferences.languageCode)
             } ?: getLanguageArray()[0])
         }
 
@@ -73,7 +69,7 @@ class LanguageSettingActivity : BaseActivity() {
                 onSelect = { selected = it },
                 onConfirm = {
                     val code = selected?.code ?: "en"
-                    PreferenceData.setLocale(code)
+                    AppPreferences.setLocale(code)
                     launchAndClearTask<MainActivity>()
                 }, onBack = {
                     finish()
@@ -91,7 +87,7 @@ fun GreetingPreview() {
         LanguageSettingScreen(
             listLanguages, listLanguages[0], modifier =
                 Modifier
-                    .paddingTop(_6Sdp)
+                    .paddingTop(6.Sdp)
                     .background(white), onSelect = {}, onConfirm = {}, onBack = {}
         )
     }
@@ -112,7 +108,7 @@ fun LanguageSettingScreen(
     }
     Column(modifier) {
         Row(
-            Modifier.padding(horizontal = _12Sdp),
+            Modifier.padding(horizontal = 12.Sdp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconView(
@@ -121,11 +117,11 @@ fun LanguageSettingScreen(
             ) {
                 onBack()
             }
-            SpaceW(_4Sdp)
+            SpaceW(4.Sdp)
             TextView(
                 text = R.string.language,
                 font = R.font.ss_700,
-                textSize = _18Ssp,
+                textSize = 18.Ssp,
                 color = mainColor
             )
             Spacer(Modifier.weight(1f))
@@ -142,8 +138,8 @@ fun LanguageSettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(horizontal = _12Sdp)
-                .paddingTop(_12Sdp),
+                .padding(horizontal = 12.Sdp)
+                .paddingTop(12.Sdp),
             state = listState,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -156,7 +152,7 @@ fun LanguageSettingScreen(
                 }
             }
             item {
-                SpaceH(_10Sdp)
+                SpaceH(10.dp)
             }
         }
     }

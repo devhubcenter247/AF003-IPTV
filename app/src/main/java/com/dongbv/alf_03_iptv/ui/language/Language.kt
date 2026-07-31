@@ -1,11 +1,8 @@
 package com.dongbv.alf_03_iptv.ui.language
 
-import android.content.res.Resources
-import android.os.LocaleList
 import android.os.Parcelable
 import com.dongbv.alf_03_iptv.R
-import kotlinx.android.parcel.Parcelize
-import java.util.Locale
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class LanguageItem(
@@ -15,32 +12,6 @@ data class LanguageItem(
     var isChoose: Boolean = false,
     var isDefault: Boolean = false,
 ) : Parcelable
-
-
-object LocateManager {
-    private const val PREF_NAME = "data"
-    private const val KEY_LANGUAGE = "KEY_LANGUAGE"
-
-    private var cacheLocateInit = ""
-    fun initDeviceLocate() {
-        cacheLocateInit = Resources.getSystem().configuration.locales[0].language
-    }
-
-    fun getDeviceLanguageCode(): String = cacheLocateInit
-}
-
-private fun String.toLocaleOrNull(): Locale? {
-    return try {
-        val l = Locale.forLanguageTag(this)
-        if (l.language.isNullOrBlank()) null else l
-    } catch (_: Throwable) {
-        null
-    }
-}
-
-private fun LocaleList.getOrNull(index: Int): Locale? =
-    if (index in 0 until this.size()) this.get(index) else null
-
 
 fun getLanguageArray() = mutableListOf(
     LanguageItem(flagId = R.drawable.ic_flag_uk, name = "English", code = "en"),

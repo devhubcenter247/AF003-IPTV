@@ -1,10 +1,13 @@
 package com.dongbv.alf_03_iptv.data.local.entity
 
 import android.content.Context
+import android.os.Parcelable
+import androidx.compose.runtime.Stable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dongbv.alf_03_iptv.R
+import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -13,6 +16,8 @@ import java.util.Locale
  * Entity representing a playlist in the IPTV app.
  * A playlist can be loaded from URL, local file, or gallery.
  */
+@Stable
+@Parcelize
 @Entity(tableName = "playlists")
 data class PlaylistEntity(
       @PrimaryKey(autoGenerate = true)
@@ -45,7 +50,7 @@ data class PlaylistEntity(
       val isFavorite: Boolean = false,
       @ColumnInfo(name = "last_watched")
       val lastWatched: Long? = null
-) {
+) : Parcelable {
     fun getSourceTypeEnum(): SourceType = SourceType.fromValue(sourceType)
 
     fun getFormattedDate(): String {

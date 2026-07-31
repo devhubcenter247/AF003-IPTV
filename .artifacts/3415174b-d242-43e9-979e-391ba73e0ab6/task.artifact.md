@@ -1,0 +1,4 @@
+- [ ] Update `agp` version in `libs.versions.toml`
+- [ ] Update Gradle distribution URL in `gradle-wrapper.properties`
+- [ ] Sync Gradle
+- [ ] Verify build with `./gradlew :app:assembleDevDebug`

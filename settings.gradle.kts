@@ -17,6 +17,9 @@ plugins {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven(url = "https://jitpack.io")
+        maven(url = "https://artifact.bytedance.com/repository/pangle/")
+        maven(url = "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea")
         google()
         mavenCentral()
     }

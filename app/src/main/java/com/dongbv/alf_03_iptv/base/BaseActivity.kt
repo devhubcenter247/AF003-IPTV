@@ -8,11 +8,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -36,19 +36,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.dongbv.alf_03_iptv.app.PreferenceData
+import com.dongbv.alf_03_iptv.app.AppPreferences
+import com.dongbv.alf_03_iptv.app.ProjectApplication
 import com.dongbv.alf_03_iptv.app.observeNetworkConnectivity
+import com.dongbv.alf_03_iptv.app.openWifiSettings
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style._32Sdp
-import com.dongbv.alf_03_iptv.style._6Sdp
 import com.dongbv.alf_03_iptv.style.pxToDp
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.DialogNoInternet
-import com.dongbv.alf_03_iptv.ui.language.LocateManager
+import com.sdp.ssp.android.Sdp
+import com.sdp.ssp.android.pxToDp
 import java.util.Locale
 
-abstract class BaseActivity(private val lightStatus: Boolean = true) : AppCompatActivity() {
+abstract class BaseActivity : ComponentActivity() {
 
+    open val lightStatus: Boolean = true
     var isShowDialogLoading by mutableStateOf(false)
     var isShowDialogInternet by mutableStateOf(false)
     abstract fun initialize()
@@ -66,7 +68,7 @@ abstract class BaseActivity(private val lightStatus: Boolean = true) : AppCompat
     }
 
     @Composable
-    abstract fun BoxScope.ContentView(statusBarHeight: Dp)
+    abstract fun ContentView(statusBarHeight: Dp)
     open fun isFinishFirstFlow(): Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,15 +96,16 @@ abstract class BaseActivity(private val lightStatus: Boolean = true) : AppCompat
             KeyboardState(height = imeBottom, visible = imeVisible)
         }
         CompositionLocalProvider(LocalKeyboardState provides keyboardState) {
+
             AppViewTheme(lightStatus) {
                 Box(
                     Modifier
                         .fillMaxSize()
                         .pointerInput(Unit) {
-                            detectTapGestures(onTap = { focusManager.clearFocus() })
+                            detectTapGestures(onTap = { focusManager.clearFocus(force = true) })
                         }
                 ) {
-                    ContentView(statusBarHeight.pxToDp() + _6Sdp)
+                    ContentView(statusBarHeight.pxToDp() + 2.Sdp)
                 }
             }
             if (isShowDialogLoading) {
@@ -117,7 +120,7 @@ abstract class BaseActivity(private val lightStatus: Boolean = true) : AppCompat
                     )
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(_32Sdp),
+                        modifier = Modifier.size(32.Sdp),
                         color = white,
                         strokeWidth = 4.dp,
                         strokeCap = StrokeCap.Round
@@ -128,13 +131,8 @@ abstract class BaseActivity(private val lightStatus: Boolean = true) : AppCompat
             DialogNoInternet(
                 isShowDialog = isShowDialogInternet,
                 onDismiss = { isShowDialogInternet = false },
-            ) {
-                try {
-                    startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
-                } catch (e: Exception) {
-                    startActivity(Intent(Settings.ACTION_SETTINGS))
-                }
-            }
+                tryAgain = { openWifiSettings() },
+            )
         }
     }
 
@@ -196,16 +194,16 @@ abstract class BaseActivity(private val lightStatus: Boolean = true) : AppCompat
             return
         }
         val languageCode = if (isFinishFirstFlow()) {
-            PreferenceData.languageCode
+            AppPreferences.languageCode
         } else {
-            LocateManager.getDeviceLanguageCode()
+            ProjectApplication.languageCodeDefault
         }
         val localizedContext = applyLocale(newBase, languageCode)
         super.attachBaseContext(localizedContext)
     }
 
     fun applyLocale(context: Context, languageCode: String?): Context {
-        val locale = createLocale(languageCode ?: LocateManager.getDeviceLanguageCode())
+        val locale = createLocale(languageCode ?: ProjectApplication.languageCodeDefault)
         Locale.setDefault(locale)
         val config = Configuration(context.resources.configuration)
         config.setLocale(locale)

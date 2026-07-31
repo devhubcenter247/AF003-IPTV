@@ -10,7 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.dongbv.alf_03_iptv.R
+import com.sdp.ssp.android.Sdp
 
 @Composable
 fun RatingBar(
@@ -18,7 +20,7 @@ fun RatingBar(
     rating: Int,
     onRatingChanged: (Int) -> Unit,
     stars: Int = 5,
-    starSize: Dp = _28Sdp,
+    starSize: Dp = 32.dp,
     ) {
     val starFill: Int = R.drawable.ic_rate_5
     val starDefault: Int = R.drawable.ic_rate_def
@@ -42,7 +44,7 @@ fun RatingBar(
                     .size(starSize)
                     .clickable { onRatingChanged(i) }
             )
-            SpaceW(_8Sdp)
+            SpaceW(8.Sdp)
         }
     }
 }

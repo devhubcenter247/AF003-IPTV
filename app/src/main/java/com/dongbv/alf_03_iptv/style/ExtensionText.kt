@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,13 +19,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
@@ -42,33 +47,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dongbv.alf_03_iptv.R
-
-
-fun String.format(): String {
-    return this.replace("\n", "").trim()
-}
-
-fun String.checkValue(): Boolean {
-    return this.replace("", "").replace("\n", "").isNotEmpty()
-}
-
-fun String.maxLength(length: Int): Boolean {
-    return this.replace("\n", "").length < (length)
-}
-
-fun String.minLength(length: Int): Boolean {
-    return this.replace("\n", "").length >= (length)
-}
-
-fun String.isEmail(): Boolean {
-    return this.isNotEmpty() &&
-            Patterns.EMAIL_ADDRESS.matcher(this).matches()
-}
-
-fun fontOf(@FontRes vararg fonts: Int): FontFamily =
-    FontFamily(*fonts.map { resId -> Font(resId) }.toTypedArray())
+import com.sdp.ssp.android.Sdp
+import com.sdp.ssp.android.Ssp
 
 fun fontPadding(isPadding: Boolean) = PlatformTextStyle(includeFontPadding = isPadding)
 
@@ -126,7 +109,7 @@ fun InputValue(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(_12Sdp), contentAlignment = Alignment.CenterStart
+                        .padding(16.Sdp), contentAlignment = Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {
                         Text(
@@ -144,7 +127,6 @@ fun InputValue(
         )
     }
 }
-
 @Composable
 fun InputValue(
     value: String,
@@ -161,12 +143,21 @@ fun InputValue(
     textStyle: TextStyle = TextStyle.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
     showCursor: Boolean = true,
+    autoFocus: Boolean = false,
+    contentPadding: PaddingValues = PaddingValues(12.dp),
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit = {}
 ) {
     val focusRequester = remember { FocusRequester() }
     val interaction = remember { MutableInteractionSource() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    if (autoFocus) {
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
+    }
     Row(
         modifier = boxModifier
             .fillMaxWidth()
@@ -174,13 +165,14 @@ fun InputValue(
                 indication = null,
                 interactionSource = interaction
             ) { focusRequester.requestFocus() },
-        horizontalArrangement = horizontalArrangement, verticalAlignment = verticalAlignment
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment
     ) {
         BasicTextField(
             value = value,
             singleLine = singleLine,
             onValueChange = { onValueChange(it) },
-            modifier = modifier,
+            modifier = modifier.focusRequester(focusRequester),
             cursorBrush = SolidColor(if (showCursor) color else Color.Transparent),
             textStyle = textStyle.copy(
                 color = color,
@@ -197,7 +189,7 @@ fun InputValue(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = _6Sdp, vertical = _12Sdp),
+                        .padding(contentPadding),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {
@@ -206,7 +198,8 @@ fun InputValue(
                             style = TextStyle(
                                 color = hintColor,
                                 fontSize = textSize,
-                                fontFamily = FontFamily(font), platformStyle = PlatformTextStyle(
+                                fontFamily = FontFamily(font),
+                                platformStyle = PlatformTextStyle(
                                     includeFontPadding = false
                                 )
                             )
@@ -223,7 +216,7 @@ fun InputValue(
 fun TextView(
     text: String,
     modifier: Modifier = Modifier,
-    textSize: TextUnit = _12Ssp,
+    textSize: TextUnit = 12.Ssp,
     color: Color? = null,
     font: Font? = null,
     maxLine: Int = 100,
@@ -259,17 +252,17 @@ fun TextView(
 fun TextView(
     text: String,
     modifier: Modifier = Modifier,
-    textSize: TextUnit = _12Ssp,
+    textSize: TextUnit = 12.Ssp,
     color: Color? = null,
     font: Font? = null,
     maxLine: Int = 100,
     minLine: Int = 1,
     singleLine: Boolean = false,
     textAlign: TextAlign? = TextAlign.Start,
-    onclick: (() -> Unit) = {}
+    onclick: (() -> Unit)? = null
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-
+    val clickableModifier = if (onclick != null) Modifier.clickable(interactionSource, null) { onclick.invoke() } else Modifier
     Text(
         text = text,
         fontSize = textSize,
@@ -288,9 +281,7 @@ fun TextView(
                 includeFontPadding = false
             )
         ),
-        modifier = modifier.clickable(interactionSource, null) {
-            onclick.invoke()
-        }
+        modifier = modifier.then(clickableModifier)
     )
 }
 
@@ -298,7 +289,7 @@ fun TextView(
 fun TextView(
     @StringRes text: Int,
     modifier: Modifier = Modifier,
-    textSize: TextUnit = _12Ssp,
+    textSize: TextUnit = 12.Ssp,
     color: Color = Color.Black,
     font: Int = R.font.ss_400,
     maxLine: Int = 100,
@@ -315,7 +306,7 @@ fun TextView(
         maxLines = maxLine,
         minLines = minLine,
         overflow = if (singleLine) TextOverflow.Ellipsis else TextOverflow.Clip,
-        color = color ?: black,
+        color = color,
         fontFamily = FontFamily(
             Font(
                 font
@@ -336,7 +327,7 @@ fun TextView(
 fun TextView(
     text: String,
     modifier: Modifier = Modifier,
-    textSize: TextUnit = _12Ssp,
+    textSize: TextUnit = 12.Ssp,
     color: Color = Color.Black,
     font: Int = R.font.ss_400,
     maxLine: Int = 100,
@@ -344,7 +335,7 @@ fun TextView(
     singleLine: Boolean = false,
     txtStyle: TextStyle = TextStyle(),
     textAlign: TextAlign? = TextAlign.Start,
-    onclick: () -> Unit = {}
+    onclick: (() -> Unit)? = null
 ) = Text(
     text = text,
     fontSize = textSize,
@@ -359,7 +350,7 @@ fun TextView(
             includeFontPadding = false
         ),
     ),
-    modifier = modifier.onClick { onclick.invoke() }
+    modifier = if(onclick!= null) modifier.onClick { onclick.invoke() } else modifier
 )
 
 @Composable
