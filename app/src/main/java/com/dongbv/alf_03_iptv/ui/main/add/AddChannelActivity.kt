@@ -40,7 +40,7 @@ class AddChannelActivity : BaseActivity (){
 
     @Composable
     override fun ContentView(statusBarHeight: Dp) {
-        AddScreen(
+        AddSChanelcreen(
             viewModel = viewModel,
             statusBarHeight = statusBarHeight,
             onBack = ::finish,

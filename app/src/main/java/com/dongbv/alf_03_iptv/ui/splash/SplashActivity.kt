@@ -2,10 +2,10 @@ package com.dongbv.alf_03_iptv.ui.splash
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,17 +32,19 @@ import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style.SpaceH
-import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.BoxParentContent
 import com.dongbv.alf_03_iptv.style.GradientLinearProgressIndicator
+import com.dongbv.alf_03_iptv.style.SpaceH
+import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.getScreenWidthInDp
-import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.style.widthPercent
+import com.dongbv.alf_03_iptv.ui.component.neonState
 import com.dongbv.alf_03_iptv.ui.language.LanguageActivity
+import com.dongbv.alf_03_iptv.ui.language.LanguageScreenType
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
-import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.IptvAccent
+import com.dongbv.alf_03_iptv.widget.colorSecondary
 import com.dongbv.alf_03_iptv.widget.grdEnd
 import com.dongbv.alf_03_iptv.widget.grdStart
 import com.dongbv.alf_03_iptv.widget.mainColor
@@ -51,28 +53,29 @@ import com.sdp.ssp.android.Ssp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity() {
     override fun initialize() {
         lifecycleScope.launch(Dispatchers.Main) {
-            delay(3000)
+            delay(3000.milliseconds)
             goNextPage()
         }
     }
 
 
-
     override fun isFinishFirstFlow() = AppPreferences.isFinishFirstFlow
     fun goNextPage() {
         if (!AppPreferences.isFinishFirstFlow) {
-            launchActivity<LanguageActivity>()
+            LanguageActivity.startLanguage(this@SplashActivity, LanguageScreenType.Language1)
             finish()
         } else {
             launchActivity<MainActivity>()
             finish()
         }
     }
+
     @Composable
     override fun ContentView(statusBarHeight: Dp) {
         BoxParentContent(onBack = {}, modifier = Modifier.fillMaxSize()) {
@@ -95,7 +98,10 @@ fun SplashPreview() {
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier.fillMaxSize().backgroundResource(R.drawable.img_bg_app),
+        Modifier
+            .fillMaxSize()
+            .backgroundResource(R.drawable.img_bg_app)
+            .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SpaceH(h = getScreenWidthInDp() * 0.35f)
@@ -105,7 +111,8 @@ fun SplashScreen(modifier: Modifier = Modifier) {
             contentDescription = "Logo",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(120.dp)
+                .size(92.Sdp)
+                .neonState(true, outerRadius = 4.Sdp, shape = RoundedCornerShape(12.Sdp))
                 .clip(RoundedCornerShape(12.Sdp))
         )
 
@@ -122,14 +129,19 @@ fun SplashScreen(modifier: Modifier = Modifier) {
         Spacer(Modifier.weight(1f))
         TextView(
             text = stringResource(R.string.this_action_may_be_constant_adverting),
-            modifier = Modifier.padding(bottom = 12.dp),
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
             textSize = 11.Ssp,
-            color = IptvTextSecondary,
+            color = colorSecondary,
             font = R.font.ss_400
         )
         GradientLinearProgressIndicator(
             colors = listOf(grdStart, grdEnd),
-            modifier = Modifier.height(6.dp).widthPercent(60f),
+            modifier = Modifier
+                .height(6.dp)
+                .widthPercent(60f),
             strokeCap = StrokeCap.Round,
             trackColor = mainColor.copy(alpha = 0.2f)
         )

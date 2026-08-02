@@ -7,7 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,11 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,17 +30,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
@@ -58,7 +65,9 @@ import com.dongbv.alf_03_iptv.viewmodel.PlayListViewModel
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvDivider
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
-import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.colorSecondary
+import com.dongbv.alf_03_iptv.widget.grdEnd
+import com.dongbv.alf_03_iptv.widget.grdStart
 import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.headline600
 import com.dongbv.alf_03_iptv.widget.headline700
@@ -123,87 +132,102 @@ fun PlayListScreenContent(
 ) {
     val hasFilter = searchQuery.isNotBlank() || selectedGroup != null
 
-    Column(
-        modifier = modifier
-            .backgroundResource(R.drawable.img_bg_app)
-            .fillMaxSize()
-            .paddingTop(12.Sdp)
-    ) {
-       
-        Row(
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val isTablet = maxWidth >= 600.dp
+        val horizontalPadding = 16.Sdp
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .paddingHorizontal(16.Sdp),
-            verticalAlignment = Alignment.CenterVertically
+                .backgroundResource(R.drawable.img_bg_app)
+                .fillMaxSize()
+                .then(if(isTablet) Modifier.paddingTop(12.Sdp) else modifier)
         ) {
-            Box(
+
+            Row(
                 modifier = Modifier
-                    .size(32.Sdp)
-                    .background(white.opacity(8), CircleShape)
-                    .onClick(onClick = onBack),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .paddingHorizontal(horizontalPadding),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_app_back),
-                    contentDescription = null,
-                    tint = IptvTextPrimary,
-                    modifier = Modifier.size(16.Sdp)
-                )
-            }
-            Spacer(Modifier.width(10.Sdp))
-            Text(
-                text = title,
-                style = headline700(fontSize = 18.Ssp, color = IptvTextPrimary),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-
-            if (channels.isNotEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .size(26.Sdp)
+                        .background(white.opacity(8), CircleShape)
+                        .onClick(onClick = onBack),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_app_back),
+                        contentDescription = null,
+                        tint = IptvTextPrimary,
+                        modifier = Modifier.size(14.Sdp)
+                    )
+                }
+                Spacer(Modifier.width(10.Sdp))
                 Text(
-                    text = "${channels.size} Channel",
-                    style = headline600(fontSize = 12.Ssp, color = IptvAccent)
+                    text = title,
+                    style = headline700(
+                        fontSize = if (isTablet) 16.Ssp else 18.Ssp,
+                        color = IptvTextPrimary
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+
+                if (channels.isNotEmpty()) {
+                    Text(
+                        text = "${channels.size} Channel",
+                        style = headline600(fontSize = 12.Ssp, color = IptvAccent)
+                    )
+                }
+                Spacer(Modifier.width(10.Sdp))
+                LayoutToggle(isGridView = isGridView, onToggle = onToggleLayout)
+            }
+
+            Spacer(Modifier.height(12.Sdp))
+
+
+            ChannelSearchBar(
+                query = searchQuery,
+                onQueryChanged = onSearchQueryChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .paddingHorizontal(horizontalPadding)
+            )
+
+
+            if (availableGroups.isNotEmpty()) {
+                Spacer(Modifier.height(10.Sdp))
+                GroupFilterRow(
+                    groups = availableGroups,
+                    selectedGroup = selectedGroup,
+                    isTablet = isTablet,
+                    horizontalPadding = horizontalPadding,
+                    onGroupSelected = onGroupSelected
                 )
             }
-            Spacer(Modifier.width(10.Sdp))
-            LayoutToggle(isGridView = isGridView, onToggle = onToggleLayout)
-        }
 
-        Spacer(Modifier.height(12.Sdp))
+            Spacer(Modifier.height(8.Sdp))
 
-       
-        ChannelSearchBar(
-            query = searchQuery,
-            onQueryChanged = onSearchQueryChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .paddingHorizontal(16.Sdp)
-        )
+            when {
+                channels.isEmpty() -> PlayListEmptyState(hasFilter = hasFilter)
+                isGridView -> PlayListChannelsGrid(
+                    channels = channels,
+                    isTablet = isTablet,
+                    horizontalPadding = horizontalPadding,
+                    onToggleFavorite = onToggleFavorite,
+                    onOpenChannel = onOpenChannel
+                )
 
-       
-        if (availableGroups.isNotEmpty()) {
-            Spacer(Modifier.height(10.Sdp))
-            GroupFilterRow(
-                groups = availableGroups,
-                selectedGroup = selectedGroup,
-                onGroupSelected = onGroupSelected
-            )
-        }
-
-        Spacer(Modifier.height(8.Sdp))
-
-        when {
-            channels.isEmpty() -> PlayListEmptyState(hasFilter = hasFilter)
-            isGridView -> PlayListChannelsGrid(
-                channels = channels,
-                onToggleFavorite = onToggleFavorite,
-                onOpenChannel = onOpenChannel
-            )
-            else -> PlayListChannelsList(
-                channels = channels,
-                onToggleFavorite = onToggleFavorite,
-                onOpenChannel = onOpenChannel
-            )
+                else -> PlayListChannelsList(
+                    channels = channels,
+                    isTablet = isTablet,
+                    horizontalPadding = horizontalPadding,
+                    onToggleFavorite = onToggleFavorite,
+                    onOpenChannel = onOpenChannel
+                )
+            }
         }
     }
 }
@@ -214,21 +238,41 @@ fun PlayListScreenContent(
 private fun GroupFilterRow(
     groups: List<String>,
     selectedGroup: String?,
+    isTablet: Boolean = false,
+    horizontalPadding: Dp = 16.Sdp,
     onGroupSelected: (String?) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .paddingHorizontal(16.Sdp),
-        horizontalArrangement = Arrangement.spacedBy(8.Sdp)
-    ) {
-        GroupChip("All", selectedGroup == null) { onGroupSelected(null) }
-        groups.forEach { group ->
-            GroupChip(
-                group,
-                selectedGroup == group
-            ) { onGroupSelected(if (selectedGroup == group) null else group) }
+    if (isTablet) {
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .paddingHorizontal(horizontalPadding),
+            horizontalArrangement = Arrangement.spacedBy(8.Sdp),
+            verticalArrangement = Arrangement.spacedBy(8.Sdp)
+        ) {
+            GroupChip(stringResource(R.string.all), selectedGroup == null) { onGroupSelected(null) }
+            groups.forEach { group ->
+                GroupChip(
+                    group,
+                    selectedGroup == group
+                ) { onGroupSelected(if (selectedGroup == group) null else group) }
+            }
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .paddingHorizontal(horizontalPadding),
+            horizontalArrangement = Arrangement.spacedBy(8.Sdp)
+        ) {
+            GroupChip(stringResource(R.string.all), selectedGroup == null) { onGroupSelected(null) }
+            groups.forEach { group ->
+                GroupChip(
+                    group,
+                    selectedGroup == group
+                ) { onGroupSelected(if (selectedGroup == group) null else group) }
+            }
         }
     }
 }
@@ -236,7 +280,7 @@ private fun GroupFilterRow(
 @Composable
 private fun GroupChip(label: String, isSelected: Boolean, onClick: () -> Unit) {
     val textColor by animateColorAsState(
-        if (isSelected) white else IptvTextSecondary,
+        if (isSelected) white else colorSecondary,
         tween(200),
         label = "chipText"
     )
@@ -244,8 +288,12 @@ private fun GroupChip(label: String, isSelected: Boolean, onClick: () -> Unit) {
         text = label,
         onClick = onClick,
         textStyle = headline600(fontSize = 11.Ssp, color = textColor),
-        colors = if (isSelected) listOf(IptvAccent, IptvAccent) else listOf(white.opacity(7), white.opacity(7)),
-        enabled = true,
+        shape = CircleShape,
+        colors = if (isSelected) listOf(grdStart, grdEnd) else listOf(
+            white.opacity(0.1f),
+            white.opacity(0.1f),
+        ),
+        paddingValues = PaddingValues(horizontal = 14.Sdp, vertical = 8.Sdp),
         neonEnabled = isSelected
     )
 }
@@ -256,12 +304,19 @@ private fun GroupChip(label: String, isSelected: Boolean, onClick: () -> Unit) {
 @Composable
 private fun PlayListChannelsGrid(
     channels: List<ChannelEntity>,
+    isTablet: Boolean,
+    horizontalPadding: Dp = 16.Sdp,
     onToggleFavorite: (Long) -> Unit,
     onOpenChannel: (ChannelEntity) -> Unit
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(start = 16.Sdp, end = 16.Sdp, top = 4.Sdp, bottom = 90.dp),
+        columns = if (isTablet) GridCells.Fixed(4) else GridCells.Fixed(2),
+        contentPadding = PaddingValues(
+            start = horizontalPadding,
+            end = horizontalPadding,
+            top = 4.Sdp,
+            bottom = 90.dp
+        ),
         horizontalArrangement = Arrangement.spacedBy(10.Sdp),
         verticalArrangement = Arrangement.spacedBy(14.Sdp),
         modifier = Modifier.fillMaxSize()
@@ -269,6 +324,7 @@ private fun PlayListChannelsGrid(
         items(channels, key = { it.id }) { channel ->
             PlayListChannelGridCard(
                 channel = channel,
+                isTablet = isTablet,
                 onToggleFavorite = { onToggleFavorite(channel.id) },
                 onOpenChannel = { onOpenChannel(channel) }
             )
@@ -279,6 +335,7 @@ private fun PlayListChannelsGrid(
 @Composable
 private fun PlayListChannelGridCard(
     channel: ChannelEntity,
+    isTablet: Boolean = false,
     onToggleFavorite: () -> Unit,
     onOpenChannel: () -> Unit
 ) {
@@ -286,16 +343,18 @@ private fun PlayListChannelGridCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(16f / 10f)
-                .clip(RoundedCornerShape(10.dp))
+                .aspectRatio(if(isTablet) (7f/5f) else (16f / 10f))
+                .clip(RoundedCornerShape(14.Sdp))
                 .background(white.opacity(10))
                 .onClick(onClick = onOpenChannel)
         ) {
-            if (!channel.logo.isNullOrBlank()) {
+            var isLogoLoadError by remember(channel.logo) { mutableStateOf(false) }
+            if (!channel.logo.isNullOrBlank() && !isLogoLoadError) {
                 AsyncImage(
                     model = channel.logo,
                     contentDescription = null,
                     contentScale = ContentScale.None,
+                    onState = { state -> isLogoLoadError = state is AsyncImagePainter.State.Error },
                     modifier = Modifier.fillMaxSize()
                 )
             } else {
@@ -303,16 +362,16 @@ private fun PlayListChannelGridCard(
                     Icon(
                         painter = painterResource(R.drawable.ic_nav_channel),
                         contentDescription = null,
-                        tint = IptvTextSecondary,
-                        modifier = Modifier.size(32.Sdp)
+                        tint = colorSecondary,
+                        modifier = Modifier.size(30.Sdp)
                     )
                 }
             }
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(7.dp)
-                    .size(30.Sdp)
+                    .padding(6.Sdp)
+                    .size(22.Sdp)
                     .background(if (channel.isFavorite) IptvAccent else white, CircleShape)
                     .onClick(onClick = onToggleFavorite),
                 contentAlignment = Alignment.Center
@@ -321,14 +380,17 @@ private fun PlayListChannelGridCard(
                     painter = painterResource(if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add),
                     contentDescription = null,
                     tint = if (channel.isFavorite) white else Color(0xFF555555),
-                    modifier = Modifier.size(15.Sdp)
+                    modifier = Modifier.size( 15.Sdp)
                 )
             }
         }
         Spacer(Modifier.height(6.dp))
         Text(
             channel.name,
-            style = headline600(fontSize = 11.Ssp, color = IptvTextPrimary),
+            style = headline600(
+                fontSize = if (isTablet) 11.sp else 11.Ssp,
+                color = IptvTextPrimary
+            ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -340,17 +402,27 @@ private fun PlayListChannelGridCard(
 @Composable
 private fun PlayListChannelsList(
     channels: List<ChannelEntity>,
+    isTablet: Boolean,
+    horizontalPadding: Dp = 16.Sdp,
     onToggleFavorite: (Long) -> Unit,
     onOpenChannel: (ChannelEntity) -> Unit
 ) {
-    LazyColumn(
-        contentPadding = PaddingValues(start = 16.Sdp, end = 16.Sdp, top = 4.Sdp, bottom = 90.dp),
+    LazyVerticalGrid(
+        columns = if (isTablet) GridCells.Adaptive(minSize = 300.dp) else GridCells.Fixed(1),
+        contentPadding = PaddingValues(
+            start = horizontalPadding,
+            end = horizontalPadding,
+            top = 4.Sdp,
+            bottom = 90.dp
+        ),
+        horizontalArrangement = Arrangement.spacedBy(10.Sdp),
         verticalArrangement = Arrangement.spacedBy(8.Sdp),
         modifier = Modifier.fillMaxSize()
     ) {
         items(channels, key = { it.id }) { channel ->
             PlayListChannelListRow(
                 channel = channel,
+                isTablet = isTablet,
                 onToggleFavorite = { onToggleFavorite(channel.id) },
                 onOpenChannel = { onOpenChannel(channel) }
             )
@@ -361,6 +433,7 @@ private fun PlayListChannelsList(
 @Composable
 private fun PlayListChannelListRow(
     channel: ChannelEntity,
+    isTablet: Boolean = false,
     onToggleFavorite: () -> Unit,
     onOpenChannel: () -> Unit
 ) {
@@ -368,15 +441,15 @@ private fun PlayListChannelListRow(
         modifier = Modifier
             .onClick(onClick = onOpenChannel)
             .fillMaxWidth()
-            .background(white.opacity(5), RoundedCornerShape(12.dp))
-            .border(1.dp, IptvDivider, RoundedCornerShape(12.dp))
-            .padding(10.Sdp),
+            .background(white.opacity(5), RoundedCornerShape(12.Sdp))
+            .border(1.dp, IptvDivider, RoundedCornerShape(12.Sdp))
+            .padding( if (isTablet) 8.Sdp else 12.Sdp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.Sdp)
+        horizontalArrangement = Arrangement.spacedBy(if (isTablet) 6.Sdp else 12.Sdp)
     ) {
         Box(
             modifier = Modifier
-                .size(52.Sdp)
+                .size(if (isTablet) 42.Sdp else 52.Sdp)
                 .background(white.opacity(10), RoundedCornerShape(8.dp))
                 .clip(RoundedCornerShape(8.dp)),
             contentAlignment = Alignment.Center
@@ -392,8 +465,8 @@ private fun PlayListChannelListRow(
                 Icon(
                     painter = painterResource(R.drawable.ic_nav_channel),
                     contentDescription = null,
-                    tint = IptvTextSecondary,
-                    modifier = Modifier.size(26.Sdp)
+                    tint = colorSecondary,
+                    modifier = Modifier.size(if (isTablet) 22.dp else 26.Sdp)
                 )
             }
         }
@@ -401,7 +474,10 @@ private fun PlayListChannelListRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 channel.name,
-                style = headline600(fontSize = 13.Ssp, color = IptvTextPrimary),
+                style = headline600(
+                    fontSize = if (isTablet) 13.sp else 13.Ssp,
+                    color = IptvTextPrimary
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -414,7 +490,10 @@ private fun PlayListChannelListRow(
                 ) {
                     Text(
                         channel.groupName,
-                        style = headline400(fontSize = 9.Ssp, color = IptvAccent)
+                        style = headline400(
+                            fontSize = if (isTablet) 9.sp else 9.Ssp,
+                            color = IptvAccent
+                        )
                     )
                 }
             }
@@ -422,7 +501,7 @@ private fun PlayListChannelListRow(
 
         Box(
             modifier = Modifier
-                .size(36.Sdp)
+                .size(if (isTablet) 34.dp else 36.Sdp)
                 .background(
                     if (channel.isFavorite) IptvAccent.copy(alpha = 0.12f) else white.opacity(8),
                     CircleShape
@@ -438,8 +517,8 @@ private fun PlayListChannelListRow(
             Icon(
                 painter = painterResource(if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add),
                 contentDescription = null,
-                tint = if (channel.isFavorite) IptvAccent else IptvTextSecondary,
-                modifier = Modifier.size(16.Sdp)
+                tint = if (channel.isFavorite) IptvAccent else colorSecondary,
+                modifier = Modifier.size(if (isTablet) 15.dp else 16.Sdp)
             )
         }
     }
@@ -451,7 +530,7 @@ private fun PlayListChannelListRow(
 private fun PlayListEmptyState(hasFilter: Boolean) {
     val title = if (hasFilter) "No results found" else "No channels yet"
     val subtitle = if (hasFilter) "Try a different search or group filter"
-        else "This playlist doesn't have any channels"
+    else "This playlist doesn't have any channels"
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -467,7 +546,7 @@ private fun PlayListEmptyState(hasFilter: Boolean) {
             Icon(
                 painter = painterResource(R.drawable.ic_nav_channel),
                 contentDescription = null,
-                tint = IptvTextSecondary,
+                tint = colorSecondary,
                 modifier = Modifier.size(36.Sdp)
             )
         }
@@ -476,7 +555,7 @@ private fun PlayListEmptyState(hasFilter: Boolean) {
         Spacer(Modifier.height(8.Sdp))
         Text(
             subtitle,
-            style = headline400(fontSize = 12.Ssp, color = IptvTextSecondary),
+            style = headline400(fontSize = 12.Ssp, color = colorSecondary),
             textAlign = TextAlign.Center,
             modifier = Modifier.paddingHorizontal(32.Sdp)
         )
@@ -492,6 +571,7 @@ private fun PlayListGridPreview() {
         PlayListScreenContent(
             title = "My Playlist",
             isGridView = true,
+            modifier = Modifier.paddingTop(28.Sdp),
             channels = ChannelEntity.fakeList(),
             availableGroups = listOf("News", "Entertainment", "Kids", "Regional")
         )
@@ -505,6 +585,7 @@ private fun PlayListListPreview() {
         PlayListScreenContent(
             title = "My Playlist",
             isGridView = false,
+            modifier = Modifier.paddingTop(28.Sdp),
             channels = ChannelEntity.fakeList(),
             availableGroups = listOf("News", "Entertainment")
         )

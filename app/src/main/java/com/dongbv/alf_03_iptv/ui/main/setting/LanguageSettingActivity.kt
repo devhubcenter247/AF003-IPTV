@@ -3,7 +3,6 @@ package com.dongbv.alf_03_iptv.ui.main.setting
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +36,7 @@ import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.BoxParentContent
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.white
-import com.dongbv.alf_03_iptv.ui.component.LanguageItem
+import com.dongbv.alf_03_iptv.ui.component.LanguageViewItem
 import com.dongbv.alf_03_iptv.ui.language.LanguageItem
 import com.dongbv.alf_03_iptv.ui.language.getLanguageArray
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
@@ -63,12 +62,12 @@ class LanguageSettingActivity : BaseActivity() {
                 languages = languages,
                 selected = selected,
                 modifier = Modifier
-                    .background(IptvBgPrimary)
+                
                     .fillMaxSize(1f)
                     .padding(top = statusBarHeight),
                 onSelect = { selected = it },
                 onConfirm = {
-                    val code = selected?.code ?: "en"
+                    val code = selected.code
                     AppPreferences.setLocale(code)
                     launchAndClearTask<MainActivity>()
                 }, onBack = {
@@ -113,7 +112,7 @@ fun LanguageSettingScreen(
         ) {
             IconView(
                 item = R.drawable.ic_app_back,
-                icSize = 28, tint = mainColor,
+                icSize = 28.Sdp, tint = mainColor,
             ) {
                 onBack()
             }
@@ -127,7 +126,7 @@ fun LanguageSettingScreen(
             Spacer(Modifier.weight(1f))
             IconView(
                 item = R.drawable.ic_app_check,
-                icSize = 28,
+                icSize = 28.Sdp,
                 tint = mainColor,
             ) {
                 if (selected != null) onConfirm()
@@ -147,7 +146,7 @@ fun LanguageSettingScreen(
                 items = languages,
                 key = { it.code }
             ) { item ->
-                LanguageItem(currentLanguage = selected,item = item) { chosen ->
+                LanguageViewItem(currentLanguage = selected,item = item) { chosen ->
                     onSelect(chosen)
                 }
             }

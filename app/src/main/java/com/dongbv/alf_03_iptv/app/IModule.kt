@@ -1,5 +1,8 @@
 package com.dongbv.alf_03_iptv.app
 
+import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
 import androidx.room.Room
 import com.dongbv.alf_03_iptv.data.local.AppDatabase
 import com.dongbv.alf_03_iptv.data.repository.AppRepository
@@ -16,6 +19,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import java.io.File
 
 val viewModelModule = module {
     viewModelOf(::HomeViewModel)
@@ -24,7 +28,7 @@ val viewModelModule = module {
     viewModelOf(::PlayViewModel)
     viewModel { params -> PlayListViewModel(params.get(), get()) }
     viewModel { PersonalizationViewModel(androidApplication(), get()) }
-    viewModel { WatchNowViewModel(androidApplication(), get()) }
+    viewModel { WatchNowViewModel(androidApplication(), get(), get()) }
 }
 
 val dataModule = module {
@@ -39,4 +43,11 @@ val dataModule = module {
     single { get<AppDatabase>().playlistDao() }
     single { get<AppDatabase>().channelDao() }
     single { AppRepository(get(), get()) }
+    single {
+        SimpleCache(
+            File(androidContext().cacheDir, "stream_cache"),
+            LeastRecentlyUsedCacheEvictor(100L * 1024 * 1024),
+            StandaloneDatabaseProvider(androidContext())
+        )
+    }
 }

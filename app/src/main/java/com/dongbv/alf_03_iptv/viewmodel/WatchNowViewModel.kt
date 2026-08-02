@@ -9,16 +9,13 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
-import java.io.File
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.data.repository.AppRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,17 +39,14 @@ import kotlinx.coroutines.launch
 @UnstableApi
 class WatchNowViewModel(
     application: Application,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val streamCache: SimpleCache
 ) : AndroidViewModel(application) {
 
-    private val _channels = MutableStateFlow<List<ChannelEntity>>(emptyList())
-    val channels: StateFlow<List<ChannelEntity>> = _channels.asStateFlow()
+    val channels: StateFlow<List<ChannelEntity>> field=  MutableStateFlow<List<ChannelEntity>>(emptyList())
+    val isMuted: StateFlow<Boolean> field = MutableStateFlow(false)
 
-    private val _isMuted = MutableStateFlow(false)
-    val isMuted: StateFlow<Boolean> = _isMuted.asStateFlow()
-
-    private val _currentIndex = MutableStateFlow(0)
-    val currentIndex: StateFlow<Int> = _currentIndex.asStateFlow()
+     val currentIndex:StateFlow<Int>  field = MutableStateFlow(0)
 
     private val _pagePlayerMap = MutableStateFlow<Map<Int, ExoPlayer>>(emptyMap())
     val pagePlayerMap: StateFlow<Map<Int, ExoPlayer>> = _pagePlayerMap.asStateFlow()
@@ -61,15 +55,7 @@ class WatchNowViewModel(
     private val _autoNextEvent = MutableSharedFlow<Int>(extraBufferCapacity = 1)
     val autoNextEvent: SharedFlow<Int> = _autoNextEvent.asSharedFlow()
 
-   
-   
-    private val streamCache = SimpleCache(
-        File(application.cacheDir, "stream_cache"),
-        LeastRecentlyUsedCacheEvictor(100L * 1024 * 1024),
-        StandaloneDatabaseProvider(application)
-    )
 
-   
     private fun parseStreamUrl(raw: String): Pair<String, Map<String, String>> {
         val pipe = raw.indexOf('|')
         if (pipe < 0) return raw to emptyMap()
@@ -139,7 +125,7 @@ class WatchNowViewModel(
             player.addListener(object : Player.Listener {
                 override fun onPlayerError(error: PlaybackException) {
                     val page = _pagePlayerMap.value.entries.find { it.value === player }?.key
-                    val rawUrl = _channels.value.getOrNull(page ?: -1)?.url
+                    val rawUrl = channels.value.getOrNull(page ?: -1)?.url
                     val count  = retryCount.getOrDefault(player, 0)
 
                     Log.e(
@@ -165,7 +151,7 @@ class WatchNowViewModel(
                             val source = mediaSourceFor(rawUrl)
                             player.setMediaSource(source)
                             player.prepare()
-                            if (player === _pagePlayerMap.value[_currentIndex.value]) {
+                            if (player === _pagePlayerMap.value[currentIndex.value]) {
                                 player.playWhenReady = true
                             }
                         }
@@ -174,9 +160,9 @@ class WatchNowViewModel(
 
                    
                     retryCount.remove(player)
-                    if (player === _pagePlayerMap.value[_currentIndex.value]) {
-                        val next = _currentIndex.value + 1
-                        if (next <= _channels.value.lastIndex) {
+                    if (player === _pagePlayerMap.value[currentIndex.value]) {
+                        val next = currentIndex.value + 1
+                        if (next <= channels.value.lastIndex) {
                             Log.w(TAG, "giving up → auto-next to page $next  slot=$slot")
                             _autoNextEvent.tryEmit(next)
                         }
@@ -192,7 +178,7 @@ class WatchNowViewModel(
                         else                   -> "UNKNOWN($state)"
                     }
                     val page = _pagePlayerMap.value.entries.find { it.value === player }?.key
-                    Log.d(TAG, "state=$stateName  slot=$slot  page=$page  isCurrent=${player === _pagePlayerMap.value[_currentIndex.value]}")
+                    Log.d(TAG, "state=$stateName  slot=$slot  page=$page  isCurrent=${player === _pagePlayerMap.value[currentIndex.value]}")
 
                     if (state == Player.STATE_READY) {
                         retryCount.remove(player) 
@@ -202,9 +188,9 @@ class WatchNowViewModel(
                        
                         if (recentlyErrored.remove(player)) return
                        
-                        if (player === _pagePlayerMap.value[_currentIndex.value]) {
-                            val next = _currentIndex.value + 1
-                            if (next <= _channels.value.lastIndex) {
+                        if (player === _pagePlayerMap.value[currentIndex.value]) {
+                            val next = currentIndex.value + 1
+                            if (next <= channels.value.lastIndex) {
                                 Log.w(TAG, "silent stall  slot=$slot  page=$page  → auto-next to $next")
                                 _autoNextEvent.tryEmit(next)
                             }
@@ -216,16 +202,16 @@ class WatchNowViewModel(
 
         viewModelScope.launch {
             val all = repository.getAllChannels().first()
-            _channels.value = all.shuffled()
+            channels.value = all.shuffled()
             if (all.isNotEmpty()) updateWindow(0)
         }
     }
 
     @OptIn(UnstableApi::class)
     fun updateWindow(index: Int) {
-        val list = _channels.value
+        val list = channels.value
         if (list.isEmpty()) return
-        _currentIndex.value = index
+        currentIndex.value = index
 
         val windowPositions = ((index - 2)..(index + 2)).filter { it in list.indices }
         val current = _pagePlayerMap.value.toMutableMap()
@@ -271,7 +257,7 @@ class WatchNowViewModel(
         }
 
        
-        val muted = _isMuted.value
+        val muted = isMuted.value
         current.forEach { (pos, player) ->
             if (pos == index) {
                 player.volume = if (muted) 0f else 1f
@@ -286,9 +272,9 @@ class WatchNowViewModel(
     }
 
     fun toggleMute() {
-        val muted = !_isMuted.value
-        _isMuted.value = muted
-        _pagePlayerMap.value[_currentIndex.value]?.volume = if (muted) 0f else 1f
+        val muted = !isMuted.value
+        isMuted.value = muted
+        _pagePlayerMap.value[currentIndex.value]?.volume = if (muted) 0f else 1f
     }
 
     fun toggleFavorite(channelId: Long) {
@@ -296,18 +282,17 @@ class WatchNowViewModel(
     }
 
     fun pausePlayback() {
-        _pagePlayerMap.value[_currentIndex.value]?.playWhenReady = false
+        _pagePlayerMap.value[currentIndex.value]?.playWhenReady = false
     }
 
     fun resumePlayback() {
-        if (_channels.value.isNotEmpty()) {
-            _pagePlayerMap.value[_currentIndex.value]?.playWhenReady = true
+        if (channels.value.isNotEmpty()) {
+            _pagePlayerMap.value[currentIndex.value]?.playWhenReady = true
         }
     }
 
     override fun onCleared() {
         playerPool.forEach { it.release() }
-        streamCache.release()
         super.onCleared()
     }
 

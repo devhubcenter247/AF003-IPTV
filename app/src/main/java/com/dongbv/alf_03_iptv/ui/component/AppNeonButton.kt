@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,22 +23,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_4_XL
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.SpaceH
-import com.dongbv.alf_03_iptv.widget.grdEnd
-import com.dongbv.alf_03_iptv.widget.grdStart
+import com.dongbv.alf_03_iptv.widget.IptvPrimaryGradient
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
@@ -73,10 +72,7 @@ object NeonPalettes {
         Color(0xFF0284C7)
     )
 
-    val Cyber = listOf(
-        Color(0xFF00F5FF),
-        Color(0xFF6366F1)
-    )
+    val Cyber = IptvPrimaryGradient
 }
 
 
@@ -86,10 +82,15 @@ fun AppNeonButton(
     onClick: () -> Unit = {},
     textStyle: TextStyle = TextStyle.Default.copy(fontSize = 12.Ssp),
     modifier: Modifier = Modifier,
-    colors: List<Color> = listOf(grdStart, grdEnd),
+    paddingValues: PaddingValues = PaddingValues(horizontal = 16.Sdp, vertical = 10.Sdp),
+    colors: List<Color> = IptvPrimaryGradient,
     shape: RoundedCornerShape = RoundedCornerShape(24.Sdp),
     enabled: Boolean = true,
-    neonEnabled: Boolean = true
+    neonEnabled: Boolean = true,
+    outerRadius: Dp = 16.dp,
+    outerSpread: Dp = 1.dp,
+    innerRadius: Dp = 0.dp,
+    innerSpread: Dp = 0.dp
 ) {
     require(colors.size >= 2)
 
@@ -124,30 +125,15 @@ fun AppNeonButton(
                 scaleX = scale
                 scaleY = scale
             }
-            .then(
-                if (neonEnabled) {
-                    Modifier
-                        .dropShadow(
-                            shape = shape,
-                            shadow = Shadow(
-                                radius = 16.dp,
-                                spread = 1.dp,
-                                brush = Brush.horizontalGradient(colors),
-                                alpha = glowAlpha
-                            )
-                        )
-                        .dropShadow(
-                            shape = shape,
-                            shadow = Shadow(
-                                radius = 6.dp,
-                                spread = 1.dp,
-                                color = colors.last(),
-                                alpha = glowAlpha
-                            )
-                        )
-                } else {
-                    Modifier
-                }
+            .neonState(
+                neonEnabled = neonEnabled,
+                alpha = glowAlpha,
+                shape = shape,
+                colors = colors,
+                innerRadius = innerRadius,
+                innerSpread = innerSpread,
+                outerRadius = outerRadius,
+                outerSpread = outerSpread
             )
             .clip(shape)
             .background(Brush.horizontalGradient(displayedColors))
@@ -157,12 +143,7 @@ fun AppNeonButton(
                     listOf(
                         Color.White.copy(alpha = if (neonEnabled) 0.65f else 0f),
                         Color.Transparent,
-                        if(enabled){
-                            colors.last().copy(alpha = if (neonEnabled) 0.8f else 0.1f)
-                        } else {
-                            Color.White.copy(alpha = 0f)
-                        }
-
+                        colors.last().copy(alpha = if (neonEnabled) 0.8f else 0.05f)
                     )
                 ),
                 shape = shape
@@ -174,8 +155,7 @@ fun AppNeonButton(
                 role = Role.Button,
                 onClick = onClick
             )
-            .defaultMinSize(minHeight = 52.dp)
-            .padding(horizontal = 28.dp, vertical = 14.dp),
+            .padding(paddingValues),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -198,40 +178,40 @@ fun PreviewUnitNeonButton() {
     AppViewTheme {
         Column(Modifier.fillMaxWidth()) {
             AppNeonButton(
-             text =    "Click me"
+                text = "Click me"
             )
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 colors = NeonPalettes.Green,
             )
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 colors = NeonPalettes.Purple,
             )
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 colors = NeonPalettes.Pink,
             )
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 colors = NeonPalettes.Orange,
             )
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 colors = NeonPalettes.Cyan,
             )
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 colors = NeonPalettes.Cyber
             )
             SpaceH(16.dp)
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 enabled = false
             )
             SpaceH(16.dp)
             AppNeonButton(
-                text =    "Click me",
+                text = "Click me",
                 enabled = false,
                 colors = NeonPalettes.Blue
             )

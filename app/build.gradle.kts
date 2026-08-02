@@ -66,19 +66,12 @@ android {
         viewBinding = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    kotlin {
-        jvmToolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
-    }
+
     flavorDimensions.add("version")
     productFlavors {
         create("dev") {
@@ -100,6 +93,15 @@ android {
                 srcDirs("src/main/assets")
             }
         }
+    }
+
+}
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-XXLanguage:+ExplicitBackingFields")
+    }
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 ksp {

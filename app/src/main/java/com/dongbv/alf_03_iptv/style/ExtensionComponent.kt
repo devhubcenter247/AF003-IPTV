@@ -63,6 +63,7 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -78,8 +79,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -89,12 +92,15 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
+import com.sdp.ssp.android.Sdp
 import java.lang.Math.cos
 import java.lang.Math.sin
+import kotlin.math.roundToInt
 
 @Composable
 fun BoxParentContent(
@@ -293,15 +299,37 @@ fun Modifier.backgroundResource(
     alignment: Alignment = Alignment.Center,
     alpha: Float = 1f
 ): Modifier = composed {
-    this.paint(
-        painter = painterResource(id),
-        contentScale = contentScale,
-        alignment = alignment,
-        alpha = alpha
-    )
+    val painter = painterResource(id)
+    val layoutDirection = LocalLayoutDirection.current
+    this.drawWithContent {
+        val intrinsicSize = painter.intrinsicSize
+        if (size.width > 0f && size.height > 0f &&
+            intrinsicSize.isSpecified && intrinsicSize.width > 0f && intrinsicSize.height > 0f
+        ) {
+            val scaleFactor = contentScale.computeScaleFactor(
+                srcSize = intrinsicSize,
+                dstSize = size
+            )
+            val scaledSize = Size(
+                intrinsicSize.width * scaleFactor.scaleX,
+                intrinsicSize.height * scaleFactor.scaleY
+            )
+            val offset = alignment.align(
+                IntSize(scaledSize.width.roundToInt(), scaledSize.height.roundToInt()),
+                IntSize(size.width.roundToInt(), size.height.roundToInt()),
+                layoutDirection
+            )
+            clipRect {
+                translate(offset.x.toFloat(), offset.y.toFloat()) {
+                    with(painter) { draw(size = scaledSize, alpha = alpha) }
+                }
+            }
+        }
+        drawContent()
+    }
 }
 
-@Composable
+@Stable
 fun Modifier.dashedBorder(
     strokeWidth: Dp,
     color: Color,
@@ -555,7 +583,7 @@ fun Modifier.borderStart(
         })
 }
 
-@Composable
+@Stable
 fun Modifier.borderEnd(
     width: Dp = 1.5.dp, color: Color? = Color.Black, brush: Brush? = null
 ): Modifier = composed {
@@ -568,14 +596,14 @@ fun Modifier.borderEnd(
         })
 }
 
-@Composable
+@Stable
 fun Modifier.borderHorizontal(
     width: Dp = 1.5.dp, color: Color? = Color.Black, brush: Brush? = null
 ): Modifier = this
     .borderTop(width, color, brush)
     .borderBottom(width, color, brush)
 
-@Composable
+@Stable
 fun Modifier.borderVertical(
     width: Dp = 1.5.dp, color: Color? = Color.Black, brush: Brush? = null
 ): Modifier = this
@@ -856,14 +884,14 @@ fun GradientLinearProgressIndicator(
 fun IconView(
     item: Any,
     tint: Color? = null,
-    icSize: Int = 24,
+    icSize: Dp = 24.dp,
     mirrorForRtl: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     onclick: (() -> Unit)? = null
 ) {
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val iconModifier = Modifier
-        .size(icSize.dp)
+        .size(icSize)
         .then(if (mirrorForRtl && isRtl) Modifier.graphicsLayer { scaleX = -1f } else Modifier)
     Box(modifier = modifier.then(if (onclick != null) Modifier.onClick { onclick() } else Modifier),
         contentAlignment = Alignment.Center) {

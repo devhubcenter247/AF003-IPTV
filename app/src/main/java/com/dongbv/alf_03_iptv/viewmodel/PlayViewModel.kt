@@ -42,11 +42,19 @@ class PlayViewModel(private val repository: AppRepository) : ViewModel() {
 
     private var _searchQuery: String = ""
 
+    private var pendingChannelId: Long? = null
+
     fun loadChannelsByPlaylist(playlistId: Long) {
         viewModelScope.launch {
             repository.getChannelsByPlaylist(playlistId).collect { list ->
                 allChannels = list
                 _channels.value = list.filterBy(_searchQuery)
+                pendingChannelId?.let { id ->
+                    list.find { it.id == id }?.let {
+                        setCurrentChannel(it)
+                        pendingChannelId = null
+                    }
+                }
             }
         }
     }
@@ -57,8 +65,12 @@ class PlayViewModel(private val repository: AppRepository) : ViewModel() {
     }
 
     fun setCurrentChannelById(channelId: Long) {
-        val channel = allChannels.find { it.id == channelId } ?: return
-        setCurrentChannel(channel)
+        val channel = allChannels.find { it.id == channelId }
+        if (channel != null) {
+            setCurrentChannel(channel)
+        } else {
+            pendingChannelId = channelId
+        }
     }
 
     fun setCurrentChannel(channel: ChannelEntity) {

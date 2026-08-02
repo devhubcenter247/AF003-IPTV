@@ -15,19 +15,22 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -37,11 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.dongbv.alf_03_iptv.app.AppPreferences
-import com.dongbv.alf_03_iptv.app.ProjectApplication
+import com.dongbv.alf_03_iptv.ProjectApplication
 import com.dongbv.alf_03_iptv.app.observeNetworkConnectivity
 import com.dongbv.alf_03_iptv.app.openWifiSettings
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style.pxToDp
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.DialogNoInternet
 import com.sdp.ssp.android.Sdp
@@ -73,6 +75,8 @@ abstract class BaseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFullScreen()
+        window.hideSystemBar()
         enableEdgeToEdge()
         initialize()
         setContent { ComposeContent() }
@@ -119,12 +123,20 @@ abstract class BaseActivity : ComponentActivity() {
                         dismissOnClickOutside = false
                     )
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(32.Sdp),
-                        color = white,
-                        strokeWidth = 4.dp,
-                        strokeCap = StrokeCap.Round
-                    )
+                    Surface(
+                        shape = RoundedCornerShape(12.Sdp),
+                        color = Color.Black.copy(alpha = 0.75f),
+                        modifier = Modifier.size(72.Sdp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(32.Sdp),
+                                color = white,
+                                strokeWidth = 4.dp,
+                                strokeCap = StrokeCap.Round
+                            )
+                        }
+                    }
                 }
             }
 

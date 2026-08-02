@@ -15,12 +15,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,8 +46,13 @@ import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.paddingHorizontal
 import com.dongbv.alf_03_iptv.style.white
 import androidx.core.net.toUri
+import com.dongbv.alf_03_iptv.style.backgroundResource
+import com.dongbv.alf_03_iptv.style.opacity
+import com.dongbv.alf_03_iptv.style.paddingTop
+import com.dongbv.alf_03_iptv.ui.component.neonState
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
+import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
@@ -57,11 +65,12 @@ class AboutUsActivity : BaseActivity() {
             onBack = { finish() },
             modifier = Modifier
                 .fillMaxSize()
-                .background(IptvBgPrimary)
+
                 .padding(top = statusBarHeight)
         ) {
             AboutUsScreen(
                 onBack = { finish() },
+                modifier = Modifier.paddingTop(statusBarHeight),
                 onPrivacyPolicy = { openUrl(PRIVACY_POLICY_URL) },
                 onTermsOfService = { openUrl(TERMS_OF_SERVICE_URL) },
                 onShareApp = { shareApp() }
@@ -96,9 +105,9 @@ class AboutUsActivity : BaseActivity() {
 
     companion object {
         private const val PRIVACY_POLICY_URL =
-            "https://docs.google.com/document/d/e/2PACX-1vR4SqEYaVWrldLT2p8ExbJC_LkgBTjSYTuS818aZXRHSj80nUaz-dat0_vf_QbJqg/pub"
+            "https://docs.google.com/document/d/e/2PACX-1vSMQvsGiOECJC7PHKJHbApn2M5cErV1UM8YmRgxBPJxmWuom1kEv9hLaAN_3vv1kg/pub"
         private const val TERMS_OF_SERVICE_URL =
-            "https://docs.google.com/document/d/e/2PACX-1vTZexOUdGMrvfmr8vjNmReU_M9qQOa6TAjpAk6zwlbVg_bjdxmTw5yQGAREBZGM1g/pub"
+            "https://docs.google.com/document/d/e/2PACX-1vQV1qgRCFPaoknWVvUK0iogrLXmOT8UvWsak9QCD0Ahkb9V6v3gpeMPyv6SZrH7ig/pub"
         private const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id="
     }
 }
@@ -106,13 +115,17 @@ class AboutUsActivity : BaseActivity() {
 @Composable
 fun AboutUsScreen(
     onBack: () -> Unit,
+    modifier: Modifier = Modifier,
     onPrivacyPolicy: () -> Unit,
     onTermsOfService: () -> Unit,
     onShareApp: () -> Unit
 ) {
     val context: Context = LocalContext.current
     Column(
-        Modifier.fillMaxSize(),
+        Modifier
+            .fillMaxSize()
+            .backgroundResource(R.drawable.img_bg_app)
+            .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AboutTopBar(onBack)
@@ -125,22 +138,24 @@ fun AboutUsScreen(
         ) {
             SpaceH(32)
 
-           
+
             Image(
                 painter = painterResource(R.drawable.img_logo_splash),
                 contentDescription = "App Icon",
                 modifier = Modifier
                     .size(100.dp)
+                    .neonState(outerRadius = 6.Sdp, shape = RoundedCornerShape(10.Sdp))
+                    .clip(RoundedCornerShape(10.Sdp))
                     .align(Alignment.CenterHorizontally)
             )
 
             SpaceH(16)
 
-           
+
             TextView(
                 text = stringResource(R.string.app_name),
                 font = R.font.ss_700,
-                color = black,
+                color = IptvAccent,
                 textSize = 16.Ssp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
@@ -148,11 +163,11 @@ fun AboutUsScreen(
 
             SpaceH(8)
 
-           
+
             TextView(
                 text = stringResource(R.string.version_format, BuildConfig.VERSION_NAME),
                 font = R.font.ss_400,
-                color = gray,
+                color = white,
                 textSize = 12.Ssp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
@@ -160,11 +175,12 @@ fun AboutUsScreen(
 
             SpaceH(32)
 
-           
+
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .background(white, shape = RoundedCornerShape(20.dp))
+                    .neonState(true, shape = RoundedCornerShape(12.Sdp), outerRadius = 6.Sdp)
+                    .background(IptvBgPrimary, RoundedCornerShape(12.Sdp))
                     .padding(16.dp)
             ) {
                 AboutMenuItem(
@@ -188,7 +204,7 @@ fun AboutUsScreen(
 
             SpaceH(32)
 
-           
+
             TextView(
                 text = stringResource(R.string.copyright).replace(
                     "%s",
@@ -214,17 +230,25 @@ private fun AboutTopBar(onBack: () -> Unit) {
             .paddingHorizontal(8.Sdp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconView(
-            item = R.drawable.ic_app_back,
-            modifier = Modifier.size(34.Sdp),
-            icSize = 28,
-            tint = black
-        ) { onBack() }
+        Box(
+            modifier = Modifier
+                .size(26.Sdp)
+                .background(white.opacity(8), CircleShape)
+                .onClick(onClick = onBack),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_app_back),
+                contentDescription = null,
+                tint = IptvTextPrimary,
+                modifier = Modifier.size(14.Sdp)
+            )
+        }
 
         TextView(
             text = R.string.about_us,
             font = R.font.ss_700,
-            color = black,
+            color = white,
             textSize = 16.Ssp
         )
     }
@@ -252,7 +276,7 @@ private fun AboutMenuItem(
                 text = stringResource(label),
                 font = R.font.ss_400,
                 textSize = 12.Ssp,
-                color = black
+                color = white
             )
             Spacer(Modifier.weight(1f))
             IconView(
@@ -278,7 +302,7 @@ private fun AboutUsScreenPreview() {
 
     ) {
         AboutUsScreen(
-
+            modifier = Modifier.paddingTop(28.Sdp),
             onBack = {},
             onPrivacyPolicy = {},
             onTermsOfService = {},

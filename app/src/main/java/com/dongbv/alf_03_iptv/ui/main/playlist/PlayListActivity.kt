@@ -3,8 +3,10 @@ package com.dongbv.alf_03_iptv.ui.main.playlist
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.dongbv.alf_03_iptv.base.BaseActivity
+import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.ui.main.play.PlayChannelActivity
 
 class PlayListActivity : BaseActivity() {
@@ -28,6 +30,7 @@ class PlayListActivity : BaseActivity() {
     override fun ContentView(statusBarHeight: Dp) {
         PlayListScreen(
             playlistId = playlistId,
+            modifier = Modifier.paddingTop(statusBarHeight),
             onBack = { finish() },
             onOpenChannel = { channel ->
                 startActivity(

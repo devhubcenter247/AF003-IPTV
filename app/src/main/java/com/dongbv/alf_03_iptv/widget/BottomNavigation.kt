@@ -2,7 +2,6 @@ package com.dongbv.alf_03_iptv.widget
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,8 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -30,12 +27,12 @@ import androidx.navigation.NavHostController
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.style.gradientContent
 import com.dongbv.alf_03_iptv.style.gray
-import com.dongbv.alf_03_iptv.style.lightGrey
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.transparent
-import com.dongbv.alf_03_iptv.ui.component.ScreenRouter
+import com.dongbv.alf_03_iptv.ui.main.ScreenRouter
 import com.sdp.ssp.android.Sdp
 import androidx.compose.ui.res.stringResource
+import com.dongbv.alf_03_iptv.style.white
 
 enum class BottomNavItems(
     val index: Int = 0,
@@ -87,7 +84,7 @@ fun RowScope.NavItem(
                 softWrap = true,
                 fontSize = 14.sp,
                 fontFamily = FontFamily(Font(R.font.ss_500)),
-                color = if(selected) mainColor else gray,
+                color = if(selected) IptvAccent else gray,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false)
                 )

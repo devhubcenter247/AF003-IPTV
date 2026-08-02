@@ -173,7 +173,7 @@ fun PlaylistEntity.toHomeChannelItem(): HomeChannelItem {
     val sourceType = getSourceTypeEnum()
     val icon = when (sourceType) {
         SourceType.URL -> R.drawable.ic_app_url
-        SourceType.FILE -> R.drawable.ic_app_file
+        SourceType.FILE -> R.drawable.ic_app_video
         SourceType.GALLERY -> R.drawable.ic_app_storage
     }
 

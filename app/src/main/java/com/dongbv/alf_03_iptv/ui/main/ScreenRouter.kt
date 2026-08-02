@@ -1,4 +1,4 @@
-package com.dongbv.alf_03_iptv.ui.component
+package com.dongbv.alf_03_iptv.ui.main
 
 object
 ScreenRouter {

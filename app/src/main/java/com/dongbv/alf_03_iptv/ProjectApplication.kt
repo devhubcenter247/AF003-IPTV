@@ -1,4 +1,4 @@
-package com.dongbv.alf_03_iptv.app
+package com.dongbv.alf_03_iptv
 
 import android.app.Application
 import android.content.res.Resources
@@ -8,6 +8,8 @@ import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
+import com.dongbv.alf_03_iptv.app.dataModule
+import com.dongbv.alf_03_iptv.app.viewModelModule
 import okio.Path.Companion.toOkioPath
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

@@ -19,7 +19,21 @@
       "Bash(adb devices *)",
       "Bash(./gradlew assembleDevDebug --console=plain -q)",
       "Bash(adb *)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Read(//Users/dongdong/.gradle/caches/**)",
+      "Bash(mkdir -p /private/tmp/claude-501/-Volumes-Data-Android-AFL-003-IPTV/6c043407-033a-44f7-b1d7-7444edc3f761/scratchpad/aar_extract)",
+      "Bash(unzip -o /Users/dongdong/.gradle/caches/modules-2/files-2.1/com.github.dbv0610.ssp-sdp-compose/android/1.3.0/3d5f2f925ed1970ba391a74f399ea36205263567/android-1.3.0.aar -d .)",
+      "Bash(jadx -d jadx_out aar_extract/classes.jar)",
+      "Bash(find *)",
+      "Bash(unzip -p /Users/dongdong/.gradle/caches/modules-2/files-2.1/io.coil-kt.coil3/coil-compose-core-android/3.4.0/227317f80d0ba1789b8f7406068afd271144ad05/coil-compose-core-android-3.4.0-sources.jar coil3/compose/AsyncImagePainter.kt)",
+      "Bash(grep '\\\\.kt$')",
+      "Bash(grep *)",
+      "Bash(file /Volumes/Data/Android/AFL-003-IPTV/app/src/main/res/drawable/img_onboarding_*.webp)",
+      "Bash(mv img_onboarding_1.webp img_onboarding_1.webp.bak)",
+      "Bash(mv img_onboarding_2.webp img_onboarding_1.webp)",
+      "Bash(mv img_onboarding_3.webp img_onboarding_2.webp)",
+      "Bash(mv img_onboarding_4.webp img_onboarding_3.webp)",
+      "Bash(mv img_onboarding_1.webp.bak img_onboarding_1_unused_backup.webp)"
     ],
     "deny": [],
     "ask": []

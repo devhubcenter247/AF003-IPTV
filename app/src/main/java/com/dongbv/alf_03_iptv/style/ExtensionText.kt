@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
@@ -255,6 +256,7 @@ fun TextView(
     textSize: TextUnit = 12.Ssp,
     color: Color? = null,
     font: Font? = null,
+    brush: Brush? = null,
     maxLine: Int = 100,
     minLine: Int = 1,
     singleLine: Boolean = false,
@@ -270,7 +272,7 @@ fun TextView(
         maxLines = maxLine,
         minLines = minLine,
         overflow = if (singleLine) TextOverflow.Ellipsis else TextOverflow.Clip,
-        color = color ?: black,
+        color = if (brush != null) Color.Unspecified else (color ?: black),
         fontFamily = FontFamily(
             font ?: Font(
                 R.font.ss_400
@@ -279,7 +281,8 @@ fun TextView(
         style = TextStyle(
             platformStyle = PlatformTextStyle(
                 includeFontPadding = false
-            )
+            ),
+            brush = brush
         ),
         modifier = modifier.then(clickableModifier)
     )
@@ -296,9 +299,8 @@ fun TextView(
     minLine: Int = 1,
     singleLine: Boolean = false,
     textAlign: TextAlign = TextAlign.Start,
-    onclick: () -> Unit = {}
+    onclick: (() -> Unit)? = null
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     Text(
         text = stringResource(text),
         fontSize = textSize,
@@ -317,9 +319,7 @@ fun TextView(
                 includeFontPadding = false
             ), textAlign = textAlign
         ),
-        modifier = modifier.clickable(interactionSource, null) {
-            onclick.invoke()
-        }
+        modifier = if(onclick!= null) modifier.onClick { onclick.invoke() } else modifier
     )
 }
 
@@ -353,14 +353,14 @@ fun TextView(
     modifier = if(onclick!= null) modifier.onClick { onclick.invoke() } else modifier
 )
 
-@Composable
+@Stable
 fun TextStyle.fontPadding(enabled: Boolean): TextStyle {
     return this.copy(
         platformStyle = PlatformTextStyle(includeFontPadding = enabled)
     )
 }
 
-@Composable
+@Stable
 fun TextStyle.fontFamily(@FontRes fontId: Int): TextStyle {
     return this.copy(
         fontFamily = FontFamily(Font(fontId))

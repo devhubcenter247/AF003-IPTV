@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -41,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -55,6 +55,7 @@ import com.dongbv.alf_03_iptv.style.widthPercentDp
 import com.sdp.ssp.android.Sdp
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+
 @Composable
 fun AppBottomSheet(
     onDismiss: () -> Unit,
@@ -66,121 +67,147 @@ fun AppBottomSheet(
     if (dismissBack) BackHandler { onDismiss() }
     LaunchedEffect(Unit) { onAppear?.invoke() }
 
-    Dialog(
-        onDismissRequest = { if (dismissOutside || dismissBack) onDismiss() },
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = false,
-            dismissOnBackPress = dismissBack,
-            dismissOnClickOutside = dismissOutside
-        )
-    ) {
-        val view = LocalView.current
-        val dialogWindow = (view.parent as? DialogWindowProvider)?.window
+    val isPreview = LocalInspectionMode.current
 
-        LaunchedEffect(dialogWindow) {
-            dialogWindow?.let { win ->
-                win.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                win.setDimAmount(0f)
-                win.setWindowAnimations(0)
-                win.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                win.navigationBarColor = Color.Transparent.toArgb()
-                win.statusBarColor = Color.Transparent.toArgb()
-                WindowCompat.setDecorFitsSystemWindows(win, false)
-
-                val controller = WindowCompat.getInsetsController(win, win.decorView)
-                controller.systemBarsBehavior =
-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                controller.hide(WindowInsetsCompat.Type.navigationBars())
-            }
+    if (isPreview) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.35f))
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onDismiss() },
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Surface(
+                color = Color.White,
+                shape = RoundedCornerShape(topStart = 12.Sdp, topEnd = 12.Sdp),
+                tonalElevation = 8.Sdp,
+                modifier = Modifier.fillMaxWidth()
+            ) { content() }
         }
-
-        DisposableEffect(view) {
-            val listener = ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-                val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-                if (!imeVisible) {
-                    dialogWindow?.let { win ->
-                        WindowCompat.getInsetsController(win, win.decorView)
-                            .hide(WindowInsetsCompat.Type.navigationBars())
-                    }
-                }
-                insets
-            }
-            onDispose { }
-        }
-
-        var visible by remember { mutableStateOf(false) }
-        LaunchedEffect(Unit) { visible = true }
-
-        val overlayAlpha by animateFloatAsState(if (visible) 0.35f else 0f, tween(300))
-        val offsetY = remember { Animatable(0f) }
-        val scope = rememberCoroutineScope()
-        val screenHeightPx = with(LocalDensity.current) {
-            LocalConfiguration.current.screenHeightDp.dp.toPx()
-        }
-        val dismissInteraction = remember { MutableInteractionSource() }
-        val sheetInteraction = remember { MutableInteractionSource() }
-
-        val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
-
-        Box(Modifier.fillMaxSize()) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = overlayAlpha))
-                    .then(
-                        if (dismissOutside) Modifier.clickable(
-                            indication = null,
-                            interactionSource = dismissInteraction
-                        ) { onDismiss() } else Modifier
-                    )
+    } else {
+        Dialog(
+            onDismissRequest = { if (dismissOutside || dismissBack) onDismiss() },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                decorFitsSystemWindows = false,
+                dismissOnBackPress = dismissBack,
+                dismissOnClickOutside = dismissOutside
             )
+        ) {
+            val view = LocalView.current
+            val dialogWindow = (view.parent as? DialogWindowProvider)?.window
 
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .align(Alignment.BottomCenter)
-                    .offset { IntOffset(0, offsetY.value.roundToInt() - imeBottomPx) }
-                    .draggable(
-                        orientation = Orientation.Vertical,
-                        state = rememberDraggableState { delta ->
-                            scope.launch {
-                                offsetY.snapTo((offsetY.value + delta).coerceAtLeast(0f))
-                            }
-                        },
-                        onDragStopped = { velocity ->
-                            scope.launch {
-                                if (offsetY.value > screenHeightPx * 0.2f || velocity > 1000f) {
-                                    offsetY.animateTo(screenHeightPx, tween(250))
-                                    onDismiss()
-                                } else {
-                                    offsetY.animateTo(
-                                        0f,
-                                        spring(Spring.DampingRatioMediumBouncy, Spring.StiffnessMedium)
-                                    )
+            LaunchedEffect(dialogWindow) {
+                dialogWindow?.let { win ->
+                    win.setLayout(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    win.setDimAmount(0f)
+                    win.setWindowAnimations(0)
+                    win.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                    win.navigationBarColor = Color.Transparent.toArgb()
+                    win.statusBarColor = Color.Transparent.toArgb()
+                    WindowCompat.setDecorFitsSystemWindows(win, false)
+
+                    val controller = WindowCompat.getInsetsController(win, win.decorView)
+                    controller.systemBarsBehavior =
+                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                    controller.hide(WindowInsetsCompat.Type.navigationBars())
+                }
+            }
+
+            DisposableEffect(view) {
+                ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+                    val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+                    if (!imeVisible) {
+                        dialogWindow?.let { win ->
+                            WindowCompat.getInsetsController(win, win.decorView)
+                                .hide(WindowInsetsCompat.Type.navigationBars())
+                        }
+                    }
+                    insets
+                }
+                onDispose { }
+            }
+
+            var visible by remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) { visible = true }
+
+            val overlayAlpha by animateFloatAsState(if (visible) 0.35f else 0f, tween(300))
+            val offsetY = remember { Animatable(0f) }
+            val scope = rememberCoroutineScope()
+            val screenHeightPx = with(LocalDensity.current) {
+                LocalConfiguration.current.screenHeightDp.dp.toPx()
+            }
+            val dismissInteraction = remember { MutableInteractionSource() }
+            val sheetInteraction = remember { MutableInteractionSource() }
+
+            val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+
+            Box(Modifier.fillMaxSize()) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = overlayAlpha))
+                        .then(
+                            if (dismissOutside) Modifier.clickable(
+                                indication = null,
+                                interactionSource = dismissInteraction
+                            ) { onDismiss() } else Modifier
+                        )
+                )
+
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .align(Alignment.BottomCenter)
+                        .offset { IntOffset(0, offsetY.value.roundToInt() - imeBottomPx) }
+                        .draggable(
+                            orientation = Orientation.Vertical,
+                            state = rememberDraggableState { delta ->
+                                scope.launch {
+                                    offsetY.snapTo((offsetY.value + delta).coerceAtLeast(0f))
+                                }
+                            },
+                            onDragStopped = { velocity ->
+                                scope.launch {
+                                    if (offsetY.value > screenHeightPx * 0.2f || velocity > 1000f) {
+                                        offsetY.animateTo(screenHeightPx, tween(250))
+                                        onDismiss()
+                                    } else {
+                                        offsetY.animateTo(
+                                            0f,
+                                            spring(
+                                                Spring.DampingRatioMediumBouncy,
+                                                Spring.StiffnessMedium
+                                            )
+                                        )
+                                    }
                                 }
                             }
-                        }
-                    )
-                    .clickable(
-                        indication = null,
-                        interactionSource = sheetInteraction
-                    ) {}
-            ) {
-                Surface(
-                    color = Color.White,
-                    shape = RoundedCornerShape(topStart = 12.Sdp, topEnd = 12.Sdp),
-                    tonalElevation = 8.Sdp,
-                    modifier = Modifier.fillMaxWidth()
-                ) { content() }
+                        )
+                        .clickable(
+                            indication = null,
+                            interactionSource = sheetInteraction
+                        ) {}
+                ) {
+                    Surface(
+                        color = Color.White,
+                        shape = RoundedCornerShape(topStart = 12.Sdp, topEnd = 12.Sdp),
+                        tonalElevation = 8.Sdp,
+                        modifier = Modifier.fillMaxWidth()
+                    ) { content() }
+                }
             }
         }
     }
 }
+
 @Composable
 fun AppDialog(
     onDismiss: () -> Unit,
@@ -190,21 +217,40 @@ fun AppDialog(
     dialog: @Composable () -> Unit
 ) {
     LaunchedEffect(Unit) { onAppear?.invoke() }
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            dismissOnBackPress = dismissBack,
-            dismissOnClickOutside = dismissOutsize
-        )
-    ) {
-        Surface(
-            shape = RoundedCornerShape(12.Sdp),
-            color = Color.White,
-            tonalElevation = 8.Sdp,
-            modifier = Modifier.padding(horizontal = widthPercentDp(5f))
+    val isPreview = LocalInspectionMode.current
+    if (isPreview) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
         ) {
-            dialog.invoke()
+            Surface(
+                shape = RoundedCornerShape(12.Sdp),
+                color = Color.White,
+                tonalElevation = 8.Sdp,
+                modifier = Modifier.padding(horizontal = widthPercentDp(5f))
+            ) {
+                dialog()
+            }
+        }
+    } else {
+        Dialog(
+            onDismissRequest = onDismiss,
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnBackPress = dismissBack,
+                dismissOnClickOutside = dismissOutsize
+            )
+        ) {
+            Surface(
+                shape = RoundedCornerShape(12.Sdp),
+                color = Color.White,
+                tonalElevation = 8.Sdp,
+                modifier = Modifier.padding(horizontal = widthPercentDp(5f))
+            ) {
+                dialog()
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -25,28 +26,35 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -54,19 +62,30 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.ui.PlayerView
+import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
+import com.dongbv.alf_03_iptv.style.AppViewTheme
+import com.dongbv.alf_03_iptv.style.ResponsivePreview
+import com.dongbv.alf_03_iptv.style.onClick
+import com.dongbv.alf_03_iptv.style.opacity
+import com.dongbv.alf_03_iptv.style.white
+import com.dongbv.alf_03_iptv.ui.component.ChannelListItem
+import com.dongbv.alf_03_iptv.ui.component.ChannelSearchBar
+import com.dongbv.alf_03_iptv.ui.component.SleepTimerDialog
 import com.dongbv.alf_03_iptv.viewmodel.PlayViewModel
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
-import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
+import com.dongbv.alf_03_iptv.widget.IptvDivider
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
-import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.colorSecondary
 import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.headline600
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -128,6 +147,61 @@ class ChannelHorActivity : BaseActivity() {
         val channels by viewModel.channels.collectAsStateWithLifecycle()
         val currentChannel by viewModel.currentChannel.collectAsStateWithLifecycle()
         val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
+        val actions = remember(viewModel) {
+            object : ChannelHorActions {
+                override fun onPlayerViewReady(view: PlayerView) {
+                    _activePlayerView = view
+                    PlayerManager.attachToView(view)
+                    val currentId = PlayerManager.getCurrentChannelId()
+                    if (currentId != 0L && PlayerManager.getPlaybackState() != Player.STATE_IDLE) {
+                        viewModel.setCurrentChannelById(currentId)
+                    } else {
+                        PlayerManager.play(channelUrl, channelId, channelName)
+                    }
+                }
+
+                override fun onPlayerViewDisposed(view: PlayerView) {
+                    PlayerManager.detachFromView(view)
+                    if (_activePlayerView == view) _activePlayerView = null
+                }
+
+                override fun onBack() {
+                    finish()
+                }
+
+                override fun onMiniScreen() {
+                    goBackToPortrait()
+                }
+
+                override fun onPlayChannel(channel: ChannelEntity) {
+                    playChannel(channel)
+                }
+
+                override fun onToggleFavorite() {
+                    viewModel.toggleFavorite()
+                }
+
+                override fun onPrevious() {
+                    viewModel.getPreviousChannel()?.let { playChannel(it) }
+                }
+
+                override fun onNext() {
+                    viewModel.getNextChannel()?.let { playChannel(it) }
+                }
+
+                override fun onSearch(query: String) {
+                    viewModel.searchChannels(query)
+                }
+
+                override fun onCast() {
+                    PlayerManager.openSystemScreenCast(this@ChannelHorActivity)
+                }
+
+                override fun onEnterPip() {
+                    enterPipMode()
+                }
+            }
+        }
 
         ChannelHorScreen(
             statusBarHeight = statusBarHeight,
@@ -135,29 +209,7 @@ class ChannelHorActivity : BaseActivity() {
             currentChannelId = currentChannel?.id ?: channelId,
             currentChannelName = currentChannel?.name ?: channelName,
             isFavorite = isFavorite,
-            onPlayerViewReady = { view ->
-                _activePlayerView = view
-                PlayerManager.attachToView(view)
-                val currentId = PlayerManager.getCurrentChannelId()
-                if (currentId != 0L && PlayerManager.getPlaybackState() != Player.STATE_IDLE) {
-                    viewModel.setCurrentChannelById(currentId)
-                } else {
-                    PlayerManager.play(channelUrl, channelId, channelName)
-                }
-            },
-            onPlayerViewDisposed = { view ->
-                PlayerManager.detachFromView(view)
-                if (_activePlayerView == view) _activePlayerView = null
-            },
-            onBack = { finish() },
-            onMiniScreen = { goBackToPortrait() },
-            onPlayChannel = { channel -> playChannel(channel) },
-            onToggleFavorite = { viewModel.toggleFavorite() },
-            onPrevious = { viewModel.getPreviousChannel()?.let { playChannel(it) } },
-            onNext = { viewModel.getNextChannel()?.let { playChannel(it) } },
-            onSearch = { viewModel.searchChannels(it) },
-            onCast = { PlayerManager.openSystemScreenCast(this@ChannelHorActivity) },
-            onEnterPip = { enterPipMode() }
+            actions = actions
         )
     }
 
@@ -180,7 +232,6 @@ class ChannelHorActivity : BaseActivity() {
     }
 
     private fun enterPipMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             isEnteringPipMode = true
             val rect = Rect()
             _activePlayerView?.getGlobalVisibleRect(rect)
@@ -194,7 +245,6 @@ class ChannelHorActivity : BaseActivity() {
                 }
                 .build()
             enterPictureInPictureMode(params)
-        }
     }
 
     override fun onPictureInPictureModeChanged(isInPipMode: Boolean, newConfig: Configuration) {
@@ -240,6 +290,37 @@ class ChannelHorActivity : BaseActivity() {
 
 // ─── Fullscreen landscape UI ──────────────────────────────────────────────────
 
+@Stable
+interface ChannelHorActions {
+    fun onPlayerViewReady(view: PlayerView)
+    fun onPlayerViewDisposed(view: PlayerView)
+    fun onBack()
+    fun onMiniScreen()
+    fun onPlayChannel(channel: ChannelEntity)
+    fun onToggleFavorite()
+    fun onPrevious()
+    fun onNext()
+    fun onSearch(query: String)
+    fun onCast()
+    fun onEnterPip()
+
+    companion object {
+        val None = object : ChannelHorActions {
+            override fun onPlayerViewReady(view: PlayerView) = Unit
+            override fun onPlayerViewDisposed(view: PlayerView) = Unit
+            override fun onBack() = Unit
+            override fun onMiniScreen() = Unit
+            override fun onPlayChannel(channel: ChannelEntity) = Unit
+            override fun onToggleFavorite() = Unit
+            override fun onPrevious() = Unit
+            override fun onNext() = Unit
+            override fun onSearch(query: String) = Unit
+            override fun onCast() = Unit
+            override fun onEnterPip() = Unit
+        }
+    }
+}
+
 @SuppressLint("ClickableViewAccessibility")
 @Composable
 fun ChannelHorScreen(
@@ -248,17 +329,7 @@ fun ChannelHorScreen(
     currentChannelId: Long,
     currentChannelName: String,
     isFavorite: Boolean,
-    onPlayerViewReady: (PlayerView) -> Unit,
-    onPlayerViewDisposed: (PlayerView) -> Unit,
-    onBack: () -> Unit,
-    onMiniScreen: () -> Unit,
-    onPlayChannel: (ChannelEntity) -> Unit,
-    onToggleFavorite: () -> Unit,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit,
-    onSearch: (String) -> Unit,
-    onCast: () -> Unit,
-    onEnterPip: () -> Unit,
+    actions: ChannelHorActions = ChannelHorActions.None,
 ) {
     var isPlaying by remember { mutableStateOf(PlayerManager.isPlaying()) }
     var isBuffering by remember { mutableStateOf(false) }
@@ -266,15 +337,20 @@ fun ChannelHorScreen(
     var isLocked by remember { mutableStateOf(false) }
     var showChannelList by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
+    var showSleepTimerDialog by remember { mutableStateOf(false) }
+    var playbackErrorSequence by remember { mutableLongStateOf(0L) }
+    var activePlaybackErrorId by remember { mutableStateOf<Long?>(null) }
+    var isSleepTimerActive by remember { mutableStateOf(PlayerManager.isSleepTimerActive()) }
+    var sleepTimerRemainingMs by remember { mutableStateOf(PlayerManager.getSleepTimerRemainingMs()) }
     val playerViewRef = remember { mutableStateOf<PlayerView?>(null) }
 
     DisposableEffect(Unit) {
-        onDispose { playerViewRef.value?.let { onPlayerViewDisposed(it) } }
+        onDispose { playerViewRef.value?.let { actions.onPlayerViewDisposed(it) } }
     }
 
     LaunchedEffect(showControls, isPlaying, isLocked) {
         if (showControls && isPlaying && !isLocked) {
-            delay(4_000)
+            delay(4_000.milliseconds)
             showControls = false
         }
     }
@@ -291,10 +367,32 @@ fun ChannelHorScreen(
             override fun onPlayerError(error: PlaybackException) {
                 isBuffering = false
                 showControls = true
+                if (activePlaybackErrorId == null) {
+                    playbackErrorSequence += 1
+                    activePlaybackErrorId = playbackErrorSequence
+                }
             }
         }
         PlayerManager.setListener(listener)
         onDispose { PlayerManager.setListener(null) }
+    }
+
+    DisposableEffect(Unit) {
+        val sleepListener = object : PlayerManager.SleepTimerListener {
+            override fun onSleepTimerTick(remainingMs: Long) {
+                sleepTimerRemainingMs = remainingMs
+                isSleepTimerActive = true
+            }
+
+            override fun onSleepTimerFinish() {
+                sleepTimerRemainingMs = 0
+                isSleepTimerActive = false
+            }
+        }
+        PlayerManager.setSleepTimerListener(sleepListener)
+        isSleepTimerActive = PlayerManager.isSleepTimerActive()
+        sleepTimerRemainingMs = PlayerManager.getSleepTimerRemainingMs()
+        onDispose { PlayerManager.setSleepTimerListener(null) }
     }
 
     Box(
@@ -322,7 +420,7 @@ fun ChannelHorScreen(
                     )
                 }.also {
                     playerViewRef.value = it
-                    onPlayerViewReady(it)
+                    actions.onPlayerViewReady(it)
                 }
             },
             modifier = Modifier.fillMaxSize()
@@ -347,7 +445,7 @@ fun ChannelHorScreen(
                         .padding(horizontal = 16.Sdp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_back, onClick = onBack)
+                    PlayerCtrlButton(iconRes = R.drawable.ic_app_back, onClick = actions::onBack)
                     Spacer(Modifier.width(8.Sdp))
                     Text(
                         text = currentChannelName,
@@ -372,13 +470,13 @@ fun ChannelHorScreen(
                     horizontalArrangement = Arrangement.spacedBy(32.Sdp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_skip_prev, size = 36.Sdp, onClick = onPrevious)
+                    PlayerCtrlButton(iconRes = R.drawable.ic_app_skip_prev, size = 36.Sdp, onClick = actions::onPrevious)
                     PlayerCtrlButton(
                         iconRes = if (isPlaying) R.drawable.ic_app_pause else R.drawable.ic_app_play,
                         size = 48.Sdp,
                         onClick = { PlayerManager.togglePlayPause() }
                     )
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_skip_next, size = 36.Sdp, onClick = onNext)
+                    PlayerCtrlButton(iconRes = R.drawable.ic_app_skip_next, size = 36.Sdp, onClick = actions::onNext)
                 }
 
                
@@ -393,11 +491,11 @@ fun ChannelHorScreen(
                         iconRes = if (isFavorite) R.drawable.ic_app_favorite_minus
                                   else R.drawable.ic_app_favorite_add,
                         tint = if (isFavorite) IptvAccent else Color.White,
-                        onClick = onToggleFavorite
+                        onClick = actions::onToggleFavorite
                     )
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_minimize, onClick = onMiniScreen)
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_cast, onClick = onCast)
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_timer, onClick = { /* sleep timer */ })
+                    PlayerCtrlButton(iconRes = R.drawable.ic_app_minimize, onClick = actions::onMiniScreen)
+                    PlayerCtrlButton(iconRes = R.drawable.ic_app_cast, onClick = actions::onCast)
+                    PlayerCtrlButton(iconRes = R.drawable.ic_app_timer, onClick = { showSleepTimerDialog = true })
                     PlayerCtrlButton(
                         iconRes = R.drawable.ic_app_lock,
                         onClick = { isLocked = true; showControls = false }
@@ -463,23 +561,27 @@ fun ChannelHorScreen(
                     style = headline600(fontSize = 12.Ssp, color = IptvTextPrimary),
                     modifier = Modifier.padding(horizontal = 12.Sdp, vertical = 8.Sdp)
                 )
-                SearchBar(
+                ChannelSearchBar(
                     query = searchQuery,
-                    onQueryChange = {
+                    onQueryChanged = {
                         searchQuery = it
-                        onSearch(it)
-                    }
+                        actions.onSearch(it)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.Sdp, vertical = 8.Sdp)
                 )
                 LazyColumn(
                     state = rememberLazyListState(),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(channels, key = { it.id }) { channel ->
-                        HorChannelListItem(
+                        ChannelListItem(
                             channel = channel,
+                            isTablet = true,
                             isSelected = channel.id == currentChannelId,
                             onClick = {
-                                onPlayChannel(channel)
+                                actions.onPlayChannel(channel)
                                 showChannelList = false
                             }
                         )
@@ -488,39 +590,72 @@ fun ChannelHorScreen(
             }
         }
     }
+
+    SleepTimerDialog(
+        isShow = showSleepTimerDialog,
+        isActive = isSleepTimerActive,
+        remainingMs = sleepTimerRemainingMs,
+        onSetTimer = { hour, minute ->
+            PlayerManager.startSleepTimerAt(hour, minute)
+            isSleepTimerActive = true
+            sleepTimerRemainingMs = PlayerManager.getSleepTimerRemainingMs()
+            showSleepTimerDialog = false
+        },
+        onCancelTimer = {
+            PlayerManager.cancelSleepTimer()
+            isSleepTimerActive = false
+            sleepTimerRemainingMs = 0
+            showSleepTimerDialog = false
+        },
+        onDismiss = { showSleepTimerDialog = false }
+    )
+
+    PlaybackErrorDialog(
+        errorEventId = activePlaybackErrorId,
+        onPlayNext = { handledErrorId ->
+            if (activePlaybackErrorId == handledErrorId) {
+                activePlaybackErrorId = null
+                actions.onNext()
+            }
+        },
+    )
 }
 
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
-private fun HorChannelListItem(
-    channel: ChannelEntity,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .background(if (isSelected) IptvAccent.copy(alpha = 0.18f) else Color.Transparent)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 8.Sdp, vertical = 4.Sdp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = channel.name,
-            style = headline400(
-                fontSize = 10.Ssp,
-                color = if (isSelected) IptvAccent else IptvTextSecondary
-            ),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
-        if (isSelected) {
-            Icon(
-                painter = painterResource(R.drawable.ic_app_play),
-                contentDescription = null,
-                tint = IptvAccent,
-                modifier = Modifier.size(12.Sdp)
+private fun HorChannelListItemPreview() {
+    AppViewTheme {
+        Column(modifier = Modifier.width(300.Sdp)) {
+            ChannelListItem(
+                channel = ChannelEntity.fakeSingle(),
+                isTablet = true,
+                isSelected = true,
+                onClick = {}
+            )
+            ChannelListItem(
+                channel = ChannelEntity.fakeSingle().copy(id = 2, name = "Unselected Channel"),
+                isTablet = true,
+                isSelected = false,
+                onClick = {}
             )
         }
+    }
+}
+
+@ResponsivePreview
+@Composable
+private fun ChannelHorScreenPreview() {
+    val channels = ChannelEntity.fakeList()
+    val currentChannel = channels.first()
+
+    AppViewTheme {
+        ChannelHorScreen(
+            statusBarHeight = 0.dp,
+            channels = channels,
+            currentChannelId = currentChannel.id,
+            currentChannelName = currentChannel.name,
+            isFavorite = true,
+            actions = ChannelHorActions.None
+        )
     }
 }

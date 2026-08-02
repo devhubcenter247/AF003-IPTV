@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,8 +54,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -72,19 +71,31 @@ import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.dashedBorder
+import com.dongbv.alf_03_iptv.style.gradientContent
 import com.dongbv.alf_03_iptv.style.onClick
+import com.dongbv.alf_03_iptv.style.opacity
+import com.dongbv.alf_03_iptv.style.rememberToaster
+import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.AppNeonButton
+import com.dongbv.alf_03_iptv.ui.component.backgroundState
+import com.dongbv.alf_03_iptv.ui.component.neonState
 import com.dongbv.alf_03_iptv.viewmodel.AddItemViewModel
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
 import com.dongbv.alf_03_iptv.widget.IptvDivider
 import com.dongbv.alf_03_iptv.widget.IptvError
+import com.dongbv.alf_03_iptv.widget.IptvPrimaryGradient
 import com.dongbv.alf_03_iptv.widget.IptvSuccess
 import com.dongbv.alf_03_iptv.widget.IptvSurface
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
-import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.colorSecondary
 import com.dongbv.alf_03_iptv.widget.IptvTextTertiary
 import com.dongbv.alf_03_iptv.widget.IptvWarning
+import com.dongbv.alf_03_iptv.widget.headline400
+import com.dongbv.alf_03_iptv.widget.headline500
+import com.dongbv.alf_03_iptv.widget.headline600
+import com.dongbv.alf_03_iptv.widget.headline700
+import com.dongbv.alf_03_iptv.widget.mainColor
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
@@ -99,29 +110,64 @@ private data class Suggestion(
 )
 
 private val urlSuggestions = listOf(
-    Suggestion("Family TV",   "https://iptv-org.github.io/iptv/categories/family.m3u",  "👨‍👩‍👧", "Family-friendly content for all ages",       "~200 channels"),
-    Suggestion("Sports 24/7", "https://iptv-org.github.io/iptv/categories/sports.m3u",  "⚽",      "Live sports, matches & events worldwide",    "~300 channels"),
-    Suggestion("World News",  "https://iptv-org.github.io/iptv/categories/news.m3u",    "📰",      "International news in many languages",        "~500 channels"),
+    Suggestion(
+        "Family TV",
+        "https://iptv-org.github.io/iptv/categories/family.m3u",
+        "👨‍👩‍👧",
+        "Family-friendly content for all ages",
+        "~200 channels"
+    ),
+    Suggestion(
+        "Sports 24/7",
+        "https://iptv-org.github.io/iptv/categories/sports.m3u",
+        "⚽",
+        "Live sports, matches & events worldwide",
+        "~300 channels"
+    ),
+    Suggestion(
+        "World News",
+        "https://iptv-org.github.io/iptv/categories/news.m3u",
+        "📰",
+        "International news in many languages",
+        "~500 channels"
+    ),
 )
 
 private val fileSuggestions = listOf(
-    Suggestion("Vietnam IPTV", "https://iptv-org.github.io/iptv/countries/vn.m3u", "🇻🇳", "Vietnamese TV channels",         "~100 channels"),
-    Suggestion("Arabic IPTV",  "https://iptv-org.github.io/iptv/countries/sa.m3u", "🌙",  "Arabic content & entertainment", "~200 channels"),
-    Suggestion("India IPTV",   "https://iptv-org.github.io/iptv/countries/in.m3u", "🎬",  "Indian channels & movies",       "~500 channels"),
+    Suggestion(
+        "Vietnam IPTV",
+        "https://iptv-org.github.io/iptv/countries/vn.m3u",
+        "🇻🇳",
+        "Vietnamese TV channels",
+        "~100 channels"
+    ),
+    Suggestion(
+        "Arabic IPTV",
+        "https://iptv-org.github.io/iptv/countries/sa.m3u",
+        "🌙",
+        "Arabic content & entertainment",
+        "~200 channels"
+    ),
+    Suggestion(
+        "India IPTV",
+        "https://iptv-org.github.io/iptv/countries/in.m3u",
+        "🎬",
+        "Indian channels & movies",
+        "~500 channels"
+    ),
 )
 
-private val tabLabels    = listOf("URL",    "File",           "Gallery")
-private val tabIcons     = listOf(R.drawable.ic_app_url, R.drawable.ic_app_file, R.drawable.ic_app_storage)
+private val tabLabels = listOf("URL", "File", "Gallery")
+private val tabIcons =
+    listOf(R.drawable.ic_app_url, R.drawable.ic_app_video, R.drawable.ic_app_storage)
 private val tabSubtitles = listOf(
     "Paste an M3U link from the internet",
     "Import a local .m3u / .m3u8 file",
     "Add videos from your device gallery"
 )
 
-// ── Root composable (with ViewModel) ─────────────────────────────────────────
-
 @Composable
-fun AddScreen(
+fun AddSChanelcreen(
     viewModel: AddItemViewModel,
     statusBarHeight: Dp,
     onBack: () -> Unit,
@@ -130,43 +176,44 @@ fun AddScreen(
     onShowLoading: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-
+    val toaster = rememberToaster()
     LaunchedEffect(Unit) {
         viewModel.saveState.collect { state ->
             when (state) {
                 is AddItemViewModel.SaveState.Loading -> onShowLoading(true)
                 is AddItemViewModel.SaveState.Success -> {
                     onShowLoading(false)
-                    Toast.makeText(context, context.getString(R.string.playlist_saved_successfully), Toast.LENGTH_SHORT).show()
+                    toaster.show(R.string.playlist_saved_successfully)
                     onBack()
                 }
+
                 is AddItemViewModel.SaveState.Error -> {
                     onShowLoading(false)
-                    Toast.makeText(context, context.getString(state.messageResId), Toast.LENGTH_SHORT).show()
+                    toaster.show(state.messageResId)
                 }
             }
         }
     }
 
-    val selectedFileUri     by viewModel.selectedFileUri.collectAsStateWithLifecycle()
-    val selectedFileName    by viewModel.selectedFileName.collectAsStateWithLifecycle()
+    val selectedFileUri by viewModel.selectedFileUri.collectAsStateWithLifecycle()
+    val selectedFileName by viewModel.selectedFileName.collectAsStateWithLifecycle()
     val selectedSuggestionUrl by viewModel.selectedSuggestionUrl.collectAsStateWithLifecycle()
-    val galleryMedia        by viewModel.galleryMedia.collectAsStateWithLifecycle()
+    val galleryMedia by viewModel.galleryMedia.collectAsStateWithLifecycle()
 
     AddScreenContent(
-        statusBarHeight       = statusBarHeight,
-        selectedFileUri       = selectedFileUri,
-        selectedFileName      = selectedFileName,
+        statusBarHeight = statusBarHeight,
+        selectedFileUri = selectedFileUri,
+        selectedFileName = selectedFileName,
         selectedSuggestionUrl = selectedSuggestionUrl,
-        galleryMedia          = galleryMedia,
-        onBack                = onBack,
-        onPickFile            = onPickFile,
-        onPickGallery         = onPickGallery,
-        onClearSelectedFile   = { viewModel.clearSelectedFile() },
+        galleryMedia = galleryMedia,
+        onBack = onBack,
+        onPickFile = onPickFile,
+        onPickGallery = onPickGallery,
+        onClearSelectedFile = { viewModel.clearSelectedFile() },
         onSetSelectedSuggestion = { viewModel.setSelectedSuggestion(it) },
-        onRemoveGalleryMedia  = { viewModel.removeGalleryMedia(it) },
-        onSaveUrlPlaylist     = { name, url -> viewModel.saveUrlPlaylist(name, url) },
-        onSaveFilePlaylist    = { name ->
+        onRemoveGalleryMedia = { viewModel.removeGalleryMedia(it) },
+        onSaveUrlPlaylist = { name, url -> viewModel.saveUrlPlaylist(name, url) },
+        onSaveFilePlaylist = { name ->
             if (selectedSuggestionUrl != null) {
                 viewModel.saveUrlPlaylist(name, selectedSuggestionUrl!!, SourceType.FILE)
             } else {
@@ -196,25 +243,26 @@ fun AddScreenContent(
     onSaveFilePlaylist: (String) -> Unit,
     onSaveGalleryPlaylist: (String) -> Unit
 ) {
-    var selectedTab  by remember { mutableIntStateOf(0) }
+    var selectedTab by remember { mutableIntStateOf(0) }
     var playlistName by remember { mutableStateOf("") }
-    var urlInput     by remember { mutableStateOf("") }
+    var urlInput by remember { mutableStateOf("") }
 
-    val videoCount  = galleryMedia.filterNotNull().size
+    val videoCount = galleryMedia.filterNotNull().size
     val isAddEnabled = playlistName.isNotBlank() && when (selectedTab) {
-        0    -> urlInput.isNotBlank()
-        1    -> selectedFileUri != null || selectedSuggestionUrl != null
+        0 -> urlInput.isNotBlank()
+        1 -> selectedFileUri != null || selectedSuggestionUrl != null
         else -> videoCount > 0
     }
 
-   
+
     val missingHint: String? = when {
         isAddEnabled -> null
-        playlistName.isBlank() -> "Enter a playlist name to continue"
-        selectedTab == 0 && urlInput.isBlank() -> "Paste a URL or tap a suggestion below"
+        playlistName.isBlank() -> stringResource(R.string.enter_a_playlist_name_to_continue)
+        selectedTab == 0 && urlInput.isBlank() -> stringResource(R.string.paste_a_url_or_tap_a_suggestion_below)
         selectedTab == 1 && selectedFileUri == null && selectedSuggestionUrl == null ->
-            "Upload a file or tap a suggestion below"
-        selectedTab == 2 && videoCount == 0 -> "Select at least one video from your gallery"
+            stringResource(R.string.upload_a_file_or_tap_a_suggestion_below)
+
+        selectedTab == 2 && videoCount == 0 -> stringResource(R.string.select_at_least_one_video_from_your_gallery)
         else -> null
     }
 
@@ -225,12 +273,12 @@ fun AddScreenContent(
     ) {
         SpaceH(statusBarHeight)
 
-       
+
         AddHeader(title = stringResource(R.string.add_channel_to_playlist), onBack = onBack)
 
         SpaceH(12.Sdp)
 
-       
+
         AddTabBar(
             selectedTab = selectedTab,
             onTabSelected = { tab ->
@@ -244,7 +292,7 @@ fun AddScreenContent(
 
         SpaceH(8.Sdp)
 
-       
+
         AnimatedContent(
             targetState = selectedTab,
             transitionSpec = { fadeIn(tween(200)) togetherWith fadeOut(tween(150)) },
@@ -252,25 +300,24 @@ fun AddScreenContent(
         ) { tab ->
             Text(
                 text = tabSubtitles[tab],
-                fontSize = 11.Ssp,
-                color = IptvTextSecondary,
+                style = headline400(fontSize = 11.Ssp, color = colorSecondary),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 20.Sdp),
                 textAlign = TextAlign.Center
             )
         }
 
         SpaceH(12.Sdp)
 
-       
+
         AnimatedContent(
             targetState = selectedTab,
             modifier = Modifier.weight(1f),
             transitionSpec = {
                 val dir = if (targetState > initialState) 1 else -1
                 (slideInHorizontally(tween(260)) { it * dir } + fadeIn(tween(200))) togetherWith
-                    (slideOutHorizontally(tween(200)) { -it * dir } + fadeOut(tween(150)))
+                        (slideOutHorizontally(tween(200)) { -it * dir } + fadeOut(tween(150)))
             },
             label = "tab_content"
         ) { tab ->
@@ -282,15 +329,20 @@ fun AddScreenContent(
                     onUrlChange = { urlInput = it },
                     onSuggestionClick = { name, url -> playlistName = name; urlInput = url }
                 )
+
                 1 -> AddFileTab(
                     playlistName = playlistName,
                     selectedFileName = selectedFileName,
                     selectedSuggestionUrl = selectedSuggestionUrl,
                     onPlaylistNameChange = { playlistName = it },
                     onPickFile = onPickFile,
-                    onSuggestionClick = { name, url -> playlistName = name; onSetSelectedSuggestion(url) },
+                    onSuggestionClick = { name, url ->
+                        playlistName = name
+                        onSetSelectedSuggestion(url)
+                    },
                     onClearFile = onClearSelectedFile
                 )
+
                 else -> AddGalleryTab(
                     playlistName = playlistName,
                     galleryMedia = galleryMedia,
@@ -301,12 +353,13 @@ fun AddScreenContent(
             }
         }
 
-       
+
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(top = 8.dp, bottom = 20.dp),
+                .padding(horizontal = 12.Sdp)
+                .padding(top = 8.Sdp, bottom = 12.Sdp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AddButton(
@@ -315,8 +368,8 @@ fun AddScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 when (selectedTab) {
-                    0    -> onSaveUrlPlaylist(playlistName, urlInput)
-                    1    -> onSaveFilePlaylist(playlistName)
+                    0 -> onSaveUrlPlaylist(playlistName, urlInput)
+                    1 -> onSaveFilePlaylist(playlistName)
                     else -> onSaveGalleryPlaylist(playlistName)
                 }
             }
@@ -336,8 +389,7 @@ fun AddScreenContent(
                     SpaceW(4)
                     Text(
                         text = missingHint,
-                        fontSize = 11.Ssp,
-                        color = IptvTextTertiary,
+                        style = headline400(fontSize = 11.Ssp, color = IptvTextTertiary),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -353,14 +405,14 @@ private fun AddHeader(title: String, onBack: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
+            .padding(horizontal = 12.Sdp, vertical = 4.Sdp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(38.Sdp)
+                .size(28.Sdp)
                 .clip(CircleShape)
-                .background(IptvSurface)
+                .background(white.opacity(8f))
                 .onClick { onBack() },
             contentAlignment = Alignment.Center
         ) {
@@ -368,20 +420,17 @@ private fun AddHeader(title: String, onBack: () -> Unit) {
                 painter = painterResource(R.drawable.ic_app_back),
                 contentDescription = null,
                 tint = IptvTextPrimary,
-                modifier = Modifier.size(18.Sdp)
+                modifier = Modifier.size(16.Sdp)
             )
         }
 
+        Spacer(Modifier.width(10.Sdp))
+
         Text(
             text = title,
-            fontSize = 15.Ssp,
-            fontWeight = FontWeight.SemiBold,
-            color = IptvTextPrimary,
-            modifier = Modifier.weight(1f),
-            textAlign = TextAlign.Center
+            style = headline600(fontSize = 16.Ssp, color = IptvTextPrimary),
+            modifier = Modifier.weight(1f)
         )
-
-        Box(Modifier.size(38.Sdp))
     }
 }
 
@@ -392,26 +441,18 @@ private fun AddTabBar(selectedTab: Int, onTabSelected: (Int) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clip(RoundedCornerShape(14.Sdp))
-            .background(IptvSurface)
-            .padding(4.Sdp),
-        horizontalArrangement = Arrangement.spacedBy(4.Sdp)
+            .padding(horizontal = 12.Sdp),
+        horizontalArrangement = Arrangement.spacedBy(8.Sdp)
     ) {
         tabLabels.forEachIndexed { index, label ->
             val isSelected = index == selectedTab
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(11.Sdp))
-                    .background(
-                        if (isSelected)
-                            Brush.horizontalGradient(listOf(IptvAccent, Color(0xFFFF6B6B)))
-                        else
-                            Brush.horizontalGradient(listOf(Color.Transparent, Color.Transparent))
-                    )
+                    .neonState(neonEnabled = isSelected)
+                    .backgroundState(enabled = isSelected)
                     .onClick { onTabSelected(index) }
-                    .padding(vertical = 10.Sdp),
+                    .padding(vertical = 8.Sdp),
                 contentAlignment = Alignment.Center
             ) {
                 Row(
@@ -421,15 +462,18 @@ private fun AddTabBar(selectedTab: Int, onTabSelected: (Int) -> Unit) {
                     Icon(
                         painter = painterResource(tabIcons[index]),
                         contentDescription = null,
-                        tint = if (isSelected) Color.White else IptvTextTertiary,
-                        modifier = Modifier.size(13.Sdp)
+                        tint = white,
+                        modifier = Modifier
+                            .size(16.Sdp)
                     )
                     SpaceW(5)
                     Text(
                         text = label,
-                        fontSize = 12.Ssp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) Color.White else IptvTextSecondary
+                        style = if (isSelected) {
+                            headline600(fontSize = 12.Ssp, color = white)
+                        } else {
+                            headline400(fontSize = 12.Ssp, color = white.opacity(0.75f))
+                        }
                     )
                 }
             }
@@ -451,22 +495,22 @@ private fun AddUrlTab(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 12.Sdp)
     ) {
-       
+
         StepSection(step = "1", label = stringResource(R.string.playlist_name))
         SpaceH(8.Sdp)
         InputFieldWithIcon(
             value = playlistName,
-            hint = "e.g. My Sports Playlist",
+            hint = stringResource(R.string.e_g_my_sports_playlist),
             leadingIcon = R.drawable.ic_app_edit,
             onValueChange = onPlaylistNameChange
         )
 
         SpaceH(20.Sdp)
 
-       
-        StepSection(step = "2", label = "Paste your M3U URL")
+
+        StepSection(step = "2", label = stringResource(R.string.paste_your_m3u_url))
         SpaceH(8.Sdp)
         InputFieldWithIcon(
             value = urlInput,
@@ -478,7 +522,7 @@ private fun AddUrlTab(
 
         SpaceH(12.Sdp)
 
-        TipBox(text = "Search “public iptv m3u playlist” on Google to find free channel lists.")
+        TipBox(text = stringResource(R.string.search_public_iptv_m3u_playlist_on_google))
 
         SpaceH(20.Sdp)
 
@@ -491,7 +535,7 @@ private fun AddUrlTab(
                 isSelected = urlInput == s.url,
                 onClick = { onSuggestionClick(s.name, s.url) }
             )
-            if (i < urlSuggestions.lastIndex) SpaceH(10.Sdp)
+            if (i < urlSuggestions.lastIndex) SpaceH(12.Sdp)
         }
 
         SpaceH(32)
@@ -514,22 +558,22 @@ private fun AddFileTab(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 12.Sdp)
     ) {
-       
+
         StepSection(step = "1", label = stringResource(R.string.playlist_name))
         SpaceH(8.Sdp)
         InputFieldWithIcon(
             value = playlistName,
-            hint = "e.g. My Local Channels",
+            hint = stringResource(R.string.e_g_my_local_channels),
             leadingIcon = R.drawable.ic_app_edit,
             onValueChange = onPlaylistNameChange
         )
 
         SpaceH(20.Sdp)
 
-       
-        StepSection(step = "2", label = "Upload your playlist file")
+
+        StepSection(step = "2", label = stringResource(R.string.upload_your_playlist_file))
         SpaceH(8.Sdp)
 
         FileUploadZone(
@@ -540,11 +584,11 @@ private fun AddFileTab(
 
         SpaceH(12.Sdp)
 
-        TipBox(text = "Download an .m3u or .m3u8 file from your IPTV provider, then upload it here.")
+        TipBox(text = stringResource(R.string.download_an_m3u_or_m3u8_file_from))
 
         SpaceH(20.Sdp)
 
-        SectionDivider(label = "Or use a sample playlist")
+        SectionDivider(label = stringResource(R.string.or_use_a_sample_playlist))
         SpaceH(12.Sdp)
 
         fileSuggestions.forEachIndexed { i, s ->
@@ -553,7 +597,7 @@ private fun AddFileTab(
                 isSelected = selectedSuggestionUrl == s.url,
                 onClick = { onSuggestionClick(s.name, s.url) }
             )
-            if (i < fileSuggestions.lastIndex) SpaceH(10.Sdp)
+            if (i < fileSuggestions.lastIndex) SpaceH(12.Sdp)
         }
 
         SpaceH(32)
@@ -575,9 +619,9 @@ private fun AddGalleryTab(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 12.Sdp)
     ) {
-       
+
         StepSection(step = "1", label = stringResource(R.string.playlist_name))
         SpaceH(8.Sdp)
         InputFieldWithIcon(
@@ -589,12 +633,12 @@ private fun AddGalleryTab(
 
         SpaceH(20.Sdp)
 
-       
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            StepSection(step = "2", label = "Select your videos")
+            StepSection(step = "2", label = stringResource(R.string.select_your_videos))
             if (videoCount > 0) {
                 SpaceW(8)
                 Box(
@@ -604,10 +648,8 @@ private fun AddGalleryTab(
                         .padding(horizontal = 10.Sdp, vertical = 3.Sdp)
                 ) {
                     Text(
-                        text = "$videoCount selected",
-                        fontSize = 10.Ssp,
-                        color = IptvSuccess,
-                        fontWeight = FontWeight.SemiBold
+                        text = stringResource(R.string.selected_video, videoCount),
+                        style = headline600(fontSize = 10.Ssp, color = IptvSuccess)
                     )
                 }
             }
@@ -616,7 +658,7 @@ private fun AddGalleryTab(
         SpaceH(10.Sdp)
 
         TipBox(
-            text = "Tap the + card to open your gallery and pick multiple videos at once.",
+            text = stringResource(R.string.tap_the_card_to_open_your_gallery_and_pick_multiple_videos_at_once),
             color = IptvWarning
         )
 
@@ -627,7 +669,7 @@ private fun AddGalleryTab(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.Sdp),
             horizontalArrangement = Arrangement.spacedBy(8.Sdp),
-            contentPadding = PaddingValues(bottom = 16.dp)
+            contentPadding = PaddingValues(bottom = 16.Sdp)
         ) {
             itemsIndexed(galleryMedia) { _, item ->
                 if (item == null) GalleryAddButton(onPickGallery)
@@ -646,22 +688,20 @@ private fun StepSection(step: String, label: String) {
             modifier = Modifier
                 .size(20.Sdp)
                 .clip(CircleShape)
-                .background(Brush.horizontalGradient(listOf(IptvAccent, Color(0xFFFF6B6B)))),
+                .background(IptvAccent)
+                .border(1.dp, white, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = step,
-                fontSize = 10.Ssp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                style = headline600(fontSize = 12.Ssp, color = white)
             )
         }
         SpaceW(8)
         Text(
             text = label,
-            fontSize = 13.Ssp,
-            fontWeight = FontWeight.SemiBold,
-            color = IptvTextPrimary
+            style = headline500(fontSize = 12.Ssp, color = IptvTextPrimary),
+            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -677,15 +717,14 @@ private fun TipBox(
             .clip(RoundedCornerShape(10.Sdp))
             .background(color.copy(alpha = 0.08f))
             .border(1.dp, color.copy(alpha = 0.25f), RoundedCornerShape(10.Sdp))
-            .padding(horizontal = 12.Sdp, vertical = 10.Sdp),
+            .padding(horizontal = 10.Sdp, vertical = 8.Sdp),
         verticalAlignment = Alignment.Top
     ) {
         Text(text = "💡", fontSize = 13.Ssp)
         SpaceW(8)
         Text(
             text = text,
-            fontSize = 11.Ssp,
-            color = color.copy(alpha = 0.85f),
+            style = headline400(fontSize = 10.Ssp, color = color.copy(alpha = 0.85f)),
             lineHeight = 16.Ssp
         )
     }
@@ -705,9 +744,7 @@ private fun SectionDivider(label: String) {
         )
         Text(
             text = "  $label  ",
-            fontSize = 11.Ssp,
-            color = IptvTextTertiary,
-            fontWeight = FontWeight.Medium
+            style = headline600(fontSize = 11.Ssp, color = IptvTextTertiary)
         )
         Box(
             modifier = Modifier
@@ -735,13 +772,12 @@ private fun SuggestionCard(
                 shape = RoundedCornerShape(12.Sdp)
             )
             .onClick { onClick() }
-            .padding(12.Sdp)
+            .padding(10.Sdp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-           
             Box(
                 modifier = Modifier
-                    .size(42.Sdp)
+                    .size(32.Sdp)
                     .clip(RoundedCornerShape(10.Sdp))
                     .background(
                         if (isSelected) IptvAccent.copy(alpha = 0.2f)
@@ -757,50 +793,49 @@ private fun SuggestionCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = suggestion.name,
-                    fontSize = 13.Ssp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = if (isSelected) IptvAccent else IptvTextPrimary
+                    style = headline500(
+                        fontSize = 12.Ssp,
+                        color = if (isSelected) IptvAccent else IptvTextPrimary
+                    ),
+                    modifier = Modifier.fillMaxWidth(1f)
                 )
                 SpaceH(2)
                 Text(
-                    text = suggestion.description,
-                    fontSize = 11.Ssp,
-                    color = IptvTextSecondary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                SpaceH(4)
-                Text(
                     text = suggestion.channelHint,
-                    fontSize = 10.Ssp,
-                    color = if (isSelected) IptvAccent.copy(alpha = 0.7f) else IptvTextTertiary,
-                    fontWeight = FontWeight.Medium
+                    style = headline600(
+                        fontSize = 10.Ssp,
+                        color = if (isSelected) {
+                            IptvAccent.copy(alpha = 0.7f)
+                        } else {
+                            IptvTextTertiary
+                        }
+                    ),
+                    modifier = Modifier.fillMaxWidth(1f)
                 )
             }
-
             SpaceW(8)
-
-           
             Box(
                 modifier = Modifier
-                    .size(26.Sdp)
+                    .size(20.Sdp)
                     .clip(CircleShape)
                     .background(
                         if (isSelected) IptvAccent
-                        else IptvBgSecondary
+                        else white.opacity(0.25f)
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                if (isSelected) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_app_check),
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(14.Sdp)
-                    )
-                } else {
-                    Text(text = "›", fontSize = 16.Ssp, color = IptvTextTertiary)
-                }
+                Icon(
+                    painter = painterResource(
+                        if (isSelected) {
+                            R.drawable.ic_app_check
+                        } else {
+                            R.drawable.ic_arrow_right
+                        }
+                    ),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(14.Sdp).padding(2.Sdp)
+                )
             }
         }
     }
@@ -818,18 +853,18 @@ private fun FileUploadZone(
         modifier = Modifier
             .fillMaxWidth()
             .height(if (selectedFileName != null) 70.Sdp else 110.Sdp)
-            .clip(RoundedCornerShape(14.Sdp))
+            .clip(RoundedCornerShape(12.Sdp))
             .background(IptvSurface)
             .dashedBorder(
                 1.5.dp,
                 if (selectedFileName != null) IptvSuccess else IptvDivider,
-                14.Sdp
+                12.Sdp
             )
             .onClick(selectedFileName == null) { onPickFile() },
         contentAlignment = Alignment.Center
     ) {
         if (selectedFileName != null) {
-           
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -844,7 +879,7 @@ private fun FileUploadZone(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_app_file),
+                        painter = painterResource(R.drawable.ic_app_video),
                         contentDescription = null,
                         tint = IptvSuccess,
                         modifier = Modifier.size(20.Sdp)
@@ -854,16 +889,13 @@ private fun FileUploadZone(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = selectedFileName,
-                        fontSize = 13.Ssp,
-                        color = IptvTextPrimary,
-                        fontWeight = FontWeight.Medium,
+                        style = headline600(fontSize = 13.Ssp, color = IptvTextPrimary),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "Ready to import",
-                        fontSize = 10.Ssp,
-                        color = IptvSuccess
+                        text = stringResource(R.string.ready_to_import),
+                        style = headline400(fontSize = 10.Ssp, color = IptvSuccess)
                     )
                 }
                 SpaceW(8)
@@ -884,7 +916,7 @@ private fun FileUploadZone(
                 }
             }
         } else {
-           
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -906,15 +938,12 @@ private fun FileUploadZone(
                 SpaceH(10)
                 Text(
                     text = stringResource(R.string.click_to_upload_file),
-                    fontSize = 13.Ssp,
-                    color = IptvTextPrimary,
-                    fontWeight = FontWeight.Medium
+                    style = headline600(fontSize = 13.Ssp, color = IptvTextPrimary)
                 )
                 SpaceH(3)
                 Text(
-                    text = "Supports  .m3u  and  .m3u8  formats",
-                    fontSize = 10.Ssp,
-                    color = IptvTextTertiary
+                    text = stringResource(R.string.supports_m3u_and_m3u8_formats),
+                    style = headline400(fontSize = 10.Ssp, color = IptvTextTertiary)
                 )
             }
         }
@@ -951,9 +980,8 @@ private fun GalleryAddButton(onClick: () -> Unit) {
             }
             SpaceH(5)
             Text(
-                text = "Add\nvideos",
-                fontSize = 9.Ssp,
-                color = IptvTextSecondary,
+                text = stringResource(R.string.add_videos),
+                style = headline400(fontSize = 9.Ssp, color = colorSecondary),
                 textAlign = TextAlign.Center,
                 lineHeight = 13.Ssp
             )
@@ -969,7 +997,7 @@ private fun GalleryVideoItem(item: MediaModel, onRemove: (MediaModel) -> Unit) {
             .clip(RoundedCornerShape(10.Sdp))
             .background(IptvBgSecondary)
     ) {
-       
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -979,12 +1007,12 @@ private fun GalleryVideoItem(item: MediaModel, onRemove: (MediaModel) -> Unit) {
             Icon(
                 painter = painterResource(R.drawable.ic_app_play),
                 contentDescription = null,
-                tint = IptvTextSecondary.copy(alpha = 0.4f),
+                tint = colorSecondary.copy(alpha = 0.4f),
                 modifier = Modifier.size(22.Sdp)
             )
         }
 
-       
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -994,22 +1022,21 @@ private fun GalleryVideoItem(item: MediaModel, onRemove: (MediaModel) -> Unit) {
                         listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f))
                     )
                 )
-                .padding(horizontal = 6.dp, vertical = 5.dp)
+                .padding(horizontal = 6.Sdp, vertical = 5.Sdp)
         ) {
             Text(
                 text = item.name,
-                fontSize = 9.Ssp,
-                color = IptvTextPrimary,
+                style = headline400(fontSize = 9.Ssp, color = IptvTextPrimary),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
 
-       
+
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(4.dp)
+                .padding(4.Sdp)
                 .size(20.Sdp)
                 .clip(CircleShape)
                 .background(IptvError.copy(alpha = 0.9f))
@@ -1039,10 +1066,15 @@ private fun InputFieldWithIcon(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(42.Sdp)
             .clip(RoundedCornerShape(12.Sdp))
-            .background(IptvSurface)
-            .border(1.dp, IptvDivider, RoundedCornerShape(12.Sdp))
-            .padding(horizontal = 14.dp, vertical = 14.dp),
+            .background(white.opacity(7f))
+            .border(
+                1.dp,
+                if (value.isNotEmpty()) IptvAccent.copy(alpha = 0.5f) else IptvDivider,
+                RoundedCornerShape(12.Sdp)
+            )
+            .padding(horizontal = 12.Sdp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -1056,13 +1088,16 @@ private fun InputFieldWithIcon(
 
         Box(modifier = Modifier.weight(1f)) {
             if (value.isEmpty()) {
-                Text(text = hint, fontSize = 13.Ssp, color = IptvTextTertiary)
+                Text(
+                    text = hint,
+                    style = headline400(fontSize = 13.Ssp, color = IptvTextTertiary)
+                )
             }
             BasicTextField(
                 value = value,
                 onValueChange = onValueChange,
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = TextStyle(color = IptvTextPrimary, fontSize = 13.Ssp),
+                textStyle = headline400(fontSize = 13.Ssp, color = IptvTextPrimary),
                 cursorBrush = SolidColor(IptvAccent),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -1085,7 +1120,7 @@ private fun InputFieldWithIcon(
                 Icon(
                     Icons.Rounded.Close,
                     contentDescription = null,
-                    tint = IptvTextSecondary,
+                    tint = colorSecondary,
                     modifier = Modifier.size(11.Sdp)
                 )
             }
@@ -1106,8 +1141,8 @@ private fun AddButton(
         text = label,
         onClick = onClick,
         enabled = isEnabled,
-        textStyle = TextStyle(fontSize = 14.Ssp, fontWeight = FontWeight.Bold),
-        modifier = modifier.height(50.Sdp)
+        textStyle = headline600(fontSize = 13.Ssp, color = white),
+        modifier = modifier.height(42.Sdp)
     )
 }
 
@@ -1118,23 +1153,23 @@ private fun AddButton(
 private fun AddScreenPreview() {
     AppViewTheme {
         AddScreenContent(
-            statusBarHeight       = 24.dp,
-            selectedFileUri       = null,
-            selectedFileName      = null,
+            statusBarHeight = 24.dp,
+            selectedFileUri = null,
+            selectedFileName = null,
             selectedSuggestionUrl = null,
-            galleryMedia          = listOf(
+            galleryMedia = listOf(
                 null,
                 MediaModel(1, "Holiday Trip", 120_000, "/path/1", 10 * 1024 * 1024),
                 MediaModel(2, "Birthday Party", 300_000, "/path/2", 25 * 1024 * 1024)
             ),
-            onBack                = {},
-            onPickFile            = {},
-            onPickGallery         = {},
-            onClearSelectedFile   = {},
+            onBack = {},
+            onPickFile = {},
+            onPickGallery = {},
+            onClearSelectedFile = {},
             onSetSelectedSuggestion = {},
-            onRemoveGalleryMedia  = {},
-            onSaveUrlPlaylist     = { _, _ -> },
-            onSaveFilePlaylist    = {},
+            onRemoveGalleryMedia = {},
+            onSaveUrlPlaylist = { _, _ -> },
+            onSaveFilePlaylist = {},
             onSaveGalleryPlaylist = {}
         )
     }

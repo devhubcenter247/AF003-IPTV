@@ -40,6 +40,8 @@ import com.dongbv.alf_03_iptv.data.local.entity.listCategoryModel
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.ColumnParentContent
 import com.dongbv.alf_03_iptv.style.TextView
+import com.dongbv.alf_03_iptv.style.backgroundResource
+import com.dongbv.alf_03_iptv.style.black
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.paddingBottom
 import com.dongbv.alf_03_iptv.style.paddingHorizontal
@@ -47,14 +49,17 @@ import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.paddingVertical
 import com.dongbv.alf_03_iptv.style.transparent
 import com.dongbv.alf_03_iptv.style.white
+import com.dongbv.alf_03_iptv.ui.component.backgroundState
+import com.dongbv.alf_03_iptv.ui.component.borderState
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
 import com.dongbv.alf_03_iptv.viewmodel.PersonalizationViewModel
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
-import com.dongbv.alf_03_iptv.widget.IptvTextSecondary
+import com.dongbv.alf_03_iptv.widget.colorSecondary
 import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.headline600
+import com.dongbv.alf_03_iptv.widget.mainColor
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -85,16 +90,16 @@ class PersonalizationActivity : BaseActivity() {
                 listFeatureContent = listFeatureContent,
                 isLoading = saveState is PersonalizationViewModel.SaveState.Loading,
                 modifier = Modifier
-                    .background(IptvBgPrimary)
+                
                     .fillMaxSize()
                     .paddingTop(statusBarHeight),
-                onSelectContent = { model ->
-                    listFeatureContent = listFeatureContent.map {
-                        if (it.index == model.index) it.copy(select = !it.select) else it
-                    }
-                },
                 onNextAction = {
                     viewModel.saveSelectedCategories(listFeatureContent.filter { it.select })
+                },
+                onSelectContent = { content ->
+                    listFeatureContent = listFeatureContent.map {
+                        if (it.index == content.index) it.copy(select = !it.select) else it
+                    }
                 },
             )
         }
@@ -106,12 +111,14 @@ fun FeatureScreen(
     listFeatureContent: List<CategoryModel>,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
-    onSelectContent: (CategoryModel) -> Unit = {},
     onNextAction: () -> Unit = {},
+    onSelectContent: (CategoryModel) -> Unit = {},
 ) {
     val context = LocalContext.current
     Column(
-        modifier = modifier,
+        modifier = Modifier
+            .backgroundResource(R.drawable.img_bg_app)
+            .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -210,7 +217,7 @@ private fun ContinueButton(
         } else {
             Text(
                 text = stringResource(R.string.continues),
-                style = headline600(if (isEnable) IptvTextPrimary else IptvTextSecondary),
+                style = headline600(if (isEnable) IptvAccent else colorSecondary),
             )
         }
     }
@@ -225,14 +232,8 @@ fun ItemFeatureContent(
 ) {
     Box(
         modifier = modifier
-            .background(
-                color = if (isSelect) IptvAccent else transparent, CircleShape
-            )
-            .border(
-                width = 1.Sdp,
-                color = if (isSelect) IptvAccent else IptvTextSecondary.copy(alpha = 0.5f),
-                CircleShape
-            )
+            .borderState(enabled = isSelect)
+            .backgroundState(enabled = isSelect)
             .onClick {
                 onSelectContent(feature)
             }
@@ -242,8 +243,8 @@ fun ItemFeatureContent(
         TextView(
             feature.title,
             textSize = 12.Ssp,
-            color =  white,
-            font = R.font.ss_400,
+            color = white,
+            font = R.font.ss_500,
             maxLine = 1,
             modifier = Modifier.wrapContentSize()
         )
@@ -259,7 +260,6 @@ fun GreetingPreview() {
             listFeatureContent = listFeatureContent,
             modifier = Modifier
                 .fillMaxSize()
-                .background(IptvBgPrimary)
                 .paddingTop(28.Sdp)
         )
     }

@@ -1,9 +1,13 @@
 package com.dongbv.alf_03_iptv.ui.main.home
 
+import android.R.attr.maxWidth
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +15,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,8 +45,15 @@ import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.FullPreview
 import com.dongbv.alf_03_iptv.style.*
 import com.dongbv.alf_03_iptv.ui.component.RatingDialog
+import com.dongbv.alf_03_iptv.ui.component.borderState
+import com.dongbv.alf_03_iptv.ui.component.neonState
 import com.dongbv.alf_03_iptv.ui.language.LanguageItem
 import com.dongbv.alf_03_iptv.ui.language.getLanguageArray
+import com.dongbv.alf_03_iptv.widget.IptvAccent
+import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
+import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
+import com.dongbv.alf_03_iptv.widget.headline600
+import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
 @FullPreview
@@ -48,6 +63,7 @@ private fun SettingScreenPreview() {
     AppViewTheme {
         Surface(color = Color.White) {
             SettingScreen(
+                modifier = Modifier.backgroundResource(R.drawable.img_bg_app),
                 gotoLangSetting = { /* no-op in preview */ },
                 onBack = { /* no-op */ }
             )
@@ -62,6 +78,7 @@ private fun ScanSettingPreview() {
         Box(
             Modifier
                 .fillMaxSize()
+                .backgroundResource(R.drawable.img_bg_app)
                 .background(Color(0xFFF5F7FA))
         ) {
         }
@@ -84,65 +101,93 @@ private fun SettingItemPreview() {
 fun SettingScreen(
     modifier: Modifier = Modifier,
     gotoLangSetting: () -> Unit = {},
-    gotoSettingTheme: () -> Unit = {},
     gotoAboutUs: () -> Unit = {},
+    gotoHowToAddChannel: () -> Unit = {},
     onBack: () -> Unit = {}
 ) {
     val isPreview = LocalInspectionMode.current
     val currentLanguage by remember {
-        mutableStateOf(getLanguageArray().find { it ->
-            it.code == (if(isPreview) "en" else AppPreferences.languageCode)
-        } ?: getLanguageArray()[0])
+        mutableStateOf(
+            if (isPreview) {
+                getLanguageArray().find { it.code == "en" } ?: getLanguageArray()[0]
+            } else {
+                getLanguageArray().find { it.code == AppPreferences.languageCode }
+                    ?: getLanguageArray()[0]
+            }
+        )
     }
-    val isRateApp by AppPreferences.isRatingApp.collectAsStateWithLifecycle()
+    val isRateApp by if (isPreview) {
+        remember { mutableStateOf(false) }
+    } else {
+        AppPreferences.isRatingApp.collectAsStateWithLifecycle()
+    }
     var isShowRating by remember {
         mutableStateOf(false)
     }
-    BoxParentContent(
-        onBack = {
-            onBack.invoke()
-        }, modifier = modifier.fillMaxSize()
-    ) {
-        VerScrollView(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(horizontal = 16.dp)
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val isTablet = maxWidth >= 600.dp
+        ColumnParentContent(
+            onBack = {
+                onBack.invoke()
+            }, modifier = modifier.fillMaxSize()
         ) {
-            TextView(
-                R.string.setting,
-                font = R.font.ss_600,
-                color = black,
-                textSize = 18.Ssp,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
+            Text(
+                text = stringResource(R.string.setting),
+                style = headline600(
+                    fontSize = if (isTablet) 20.Ssp else 18.Ssp,
+                    color = IptvTextPrimary
+                ),
+                modifier = Modifier.weight(1f)
             )
-            SpaceH(16)
-
-
-            Column(
+            VerScrollView(
                 Modifier
                     .fillMaxWidth()
-                    .background(white, shape = RoundedCornerShape(20.dp))
-                    .padding(16.dp)
+                    .fillMaxHeight()
+                    .padding(horizontal = 16.dp)
             ) {
-                LangSettingItem(currentLanguage) {
-                    gotoLangSetting.invoke()
-                }
-                if (!isRateApp) {
-                    SettingItem(R.drawable.ic_setting_rate, R.string.rate_us) {
-                        isShowRating = true
+                TextView(
+                    R.string.setting,
+                    font = R.font.ss_600,
+                    color = white,
+                    textSize = 18.Ssp,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start
+                )
+                SpaceH(16)
+
+
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+
+                ) {
+                    LangSettingItem(currentLanguage) {
+                        gotoLangSetting.invoke()
                     }
-                }
-                SettingItem(R.drawable.ic_setting_info, R.string.about_us) {
-                    gotoAboutUs.invoke()
+                    if (!isRateApp) {
+                        SettingItem(R.drawable.ic_setting_rate, R.string.rate_us) {
+                            isShowRating = true
+                        }
+                    }
+                    SpaceH(12)
+                    SettingItem(R.drawable.ic_app_how_use, R.string.how_to_add_new_channel) {
+                        gotoHowToAddChannel.invoke()
+                    }
+                    SpaceH(12)
+                    SettingItem(R.drawable.ic_setting_info, R.string.about_us) {
+                        gotoAboutUs.invoke()
+                    }
                 }
             }
         }
     }
     RatingDialog(isShowRating, { isShowRating = false }, {
         isShowRating = false
-        AppPreferences.isRatingApp.value = true
+        if (!isPreview) {
+            AppPreferences.isRatingApp.value = true
+        }
     }) {
     }
 }
@@ -154,31 +199,35 @@ fun LangSettingItem(
 ) {
     Box(Modifier.padding(vertical = 12.dp)) {
         Row(
-            Modifier.fillMaxWidth(),
+            Modifier
+                .fillMaxWidth()
+                .borderState(enabled = true, shape = RoundedCornerShape(12.Sdp))
+                .background(IptvBgPrimary, RoundedCornerShape(12.Sdp))
+                .padding(12.Sdp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconView(
                 item = R.drawable.ic_setting_lang,
-                modifier = Modifier
+                modifier = Modifier.size(26.Sdp)
             )
             SpaceW(12)
             TextView(
                 text = R.string.language,
                 font = R.font.ss_400,
                 textSize = 12.Ssp,
-                color = black
+                color = white
             )
             Spacer(Modifier.weight(1f))
             TextView(
                 text = currentLanguage.name,
                 font = R.font.ss_500,
                 textSize = 12.Ssp,
-                color = burgundy
+                color = IptvAccent
             )
             SpaceW(8)
             IconView(
                 item = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                tint = textColor,
+                tint = IptvAccent,
                 modifier = Modifier
             )
         }
@@ -191,28 +240,28 @@ fun LangSettingItem(
 
 @Composable
 fun SettingItem(@DrawableRes icon: Int, @StringRes label: Int, action: () -> Unit) {
-    Box(Modifier.padding(vertical = 12.dp)) {
-        Row(
-            Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconView(
-                item = icon,
-                modifier = Modifier
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .borderState(enabled = true, shape = RoundedCornerShape(12.Sdp))
+            .background(IptvBgPrimary, RoundedCornerShape(12.Sdp))
+            .padding(12.Sdp)
+            .onClick {
+                action.invoke()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconView(
+            item = icon,
+            modifier = Modifier.size(26.Sdp)
+        )
+        SpaceW(12)
+        TextView(
+            color = white,
+            text = stringResource(label),
+            txtStyle = TextStyle.Default.fontFamily(R.font.ss_500).fontPadding(false).copy(
+                color = white, fontSize = 11.Ssp
             )
-            SpaceW(12)
-            TextView(
-                text = stringResource(label),
-                txtStyle = TextStyle.Default.fontFamily(R.font.ss_500).fontPadding(false).copy(
-                    color = black, fontSize = 11.Ssp
-                )
-            )
-        }
-        Box(
-            Modifier
-                .matchParentSize()
-                .onClick {
-                    action.invoke()
-                })
+        )
     }
 }

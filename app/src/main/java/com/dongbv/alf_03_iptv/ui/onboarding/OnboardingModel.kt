@@ -1,4 +1,4 @@
-package com.dongbv.alf_03_iptv.ui.intro
+package com.dongbv.alf_03_iptv.ui.onboarding
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -24,5 +24,10 @@ val listIntroModel: List<IntroModel>
             imageRes = R.drawable.img_onboarding_3,
             title = R.string.intro_title_3,
             content = R.string.intro_content_3
+        ),
+        IntroModel(
+            imageRes = R.drawable.img_onboarding_4,
+            title = R.string.intro_title_4,
+            content = R.string.intro_content_4
         ),
     )

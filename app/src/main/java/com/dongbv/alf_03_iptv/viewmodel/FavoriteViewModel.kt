@@ -48,10 +48,10 @@ class FavoriteViewModel(private val repository: AppRepository) : ViewModel() {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val availableGroups: StateFlow<List<String>> = combine(
-        favoriteChannels, historyChannels, allChannels, _selectedTab
-    ) { favorites, history, all, tab ->
+        rawFavorites, rawHistory, rawAll, _searchQuery, _selectedTab
+    ) { favorites, history, all, q, tab ->
         val list = when (tab) { 0 -> favorites; 1 -> history; else -> all }
-        list.mapNotNull { it.groupName }.distinct().sorted()
+        list.filterBy(q, group = null).mapNotNull { it.groupName }.distinct().sorted()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     fun setTab(tab: Int) {

@@ -1,19 +1,16 @@
 package com.dongbv.alf_03_iptv.ui.language
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.background
+import android.app.ActivityOptions
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -22,57 +19,90 @@ import androidx.compose.material.icons.rounded.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style.BoxParentContent
+import com.dongbv.alf_03_iptv.style.ColumnParentContent
 import com.dongbv.alf_03_iptv.style.IconView
 import com.dongbv.alf_03_iptv.style.ResponsivePreview
 import com.dongbv.alf_03_iptv.style.TextView
+import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.paddingTop
-import com.dongbv.alf_03_iptv.style.white
-import com.dongbv.alf_03_iptv.ui.component.LanguageItem
-import com.dongbv.alf_03_iptv.ui.intro.IntroActivity
-import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
-import com.dongbv.alf_03_iptv.widget.mainColor
+import com.dongbv.alf_03_iptv.ui.component.LanguageViewItem
+import com.dongbv.alf_03_iptv.ui.onboarding.IntroActivity
+import com.dongbv.alf_03_iptv.widget.colorSecondary
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
-class LanguageActivity : BaseActivity() {
-    override fun initialize() = Unit
+abstract class LanguageActivity : BaseActivity() {
+    companion object {
+        private const val SCREEN_OFFSET = "screen_offset"
+        var savedIndex: Int = 0
+        var savedOffset: Int = 0
+        var currentLanguage by mutableStateOf<LanguageItem?>(null)
+        val listLanguages = getLanguageArray().toList()
+
+        fun startLanguage(context: Context, screenType: LanguageScreenType, screenOffset: Int = 0) {
+            val clazz = if (screenType == LanguageScreenType.Language1) {
+                Language1Activity::class.java
+            } else Language2Activity::class.java
+            val intent = Intent(context, clazz)
+            intent.putExtra(SCREEN_OFFSET, screenOffset)
+            val options = ActivityOptions.makeCustomAnimation(
+                context,
+                0,
+                0
+            )
+            context.startActivity(intent, options.toBundle())
+        }
+    }
+
+    abstract val screenType: LanguageScreenType
+
+    override fun initialize() {
+    }
+
     override fun isFinishFirstFlow() = false
+
     @Composable
     override fun ContentView(statusBarHeight: Dp) {
-        val languages = remember { getLanguageArray().toList() }
-        var selected by rememberSaveable { mutableStateOf<LanguageItem?>(null) }
-        BoxParentContent(onBack = { finish() }) {
-            Column(Modifier.fillMaxSize()) {
-                LanguageScreen(
-                    languages = languages,
-                    selected = selected,
-                    modifier = Modifier
-                        .background(IptvBgPrimary)
-                        .fillMaxWidth()
-                        .padding(top = statusBarHeight)
-                        .weight(1f),
-                    onSelect = { selected = it },
-                    onConfirm = {
-                        val code = selected?.code ?: "en"
-                        AppPreferences.setLocale(code)
-                        launchAndClearTask<IntroActivity>()
+        val lazyListState = rememberLazyListState(
+            initialFirstVisibleItemIndex = savedIndex,
+            initialFirstVisibleItemScrollOffset = savedOffset
+        )
+        ColumnParentContent(onBack = { finish() }) {
+            LanguageScreen(
+                languages = listLanguages,
+                selected = currentLanguage,
+                lazyListState = lazyListState,
+                nativeAd = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = statusBarHeight)
+                    .weight(1f),
+                onSelect = {
+                    currentLanguage = it
+                    if (screenType == LanguageScreenType.Language1) {
+                        savedIndex = lazyListState.firstVisibleItemIndex
+                        savedOffset = lazyListState.firstVisibleItemScrollOffset
+                        startLanguage(this@LanguageActivity, LanguageScreenType.Language2)
+                        finish()
                     }
-                )
-            }
+                },
+                onConfirm = {
+                    val code = currentLanguage?.code ?: "en"
+                    AppPreferences.setLocale(code)
+                    launchActivity<IntroActivity>()
+                    finish()
+                }
+            )
         }
     }
 }
@@ -87,84 +117,66 @@ fun GreetingPreview() {
             selected = listLanguages[0],
             modifier =
                 Modifier
-                    .paddingTop(6.Sdp)
-                    .background(white),
-            {}
-        ) {}
+                    .paddingTop(28.Sdp),
+            onSelect = {},
+            onConfirm = {},
+        )
     }
 }
 
-@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun LanguageScreen(
     languages: List<LanguageItem>,
     selected: LanguageItem?,
+    nativeAd: @Composable () -> Unit = {},
+    lazyListState: LazyListState = rememberLazyListState(),
     modifier: Modifier = Modifier,
     onSelect: (LanguageItem) -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
 ) {
-    val listState = rememberLazyListState()
-    val isTablet = LocalConfiguration.current.screenWidthDp >= 600
-    Column(modifier.background(IptvBgPrimary)) {
+    Column(
+        Modifier
+            .backgroundResource(R.drawable.img_bg_app)
+            .then(modifier)
+    ) {
         Row(
             Modifier.padding(horizontal = 12.Sdp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextView(
                 text = R.string.language,
-                font = R.font.ss_700,
+                font = R.font.ss_600,
                 textSize = 18.Ssp,
-                color = mainColor
+                color = Color.White,
             )
             Spacer(Modifier.weight(1f))
             IconView(
                 item = if (selected != null) Icons.Rounded.Done else Icons.Default.Done,
-                icSize = 32,
-                tint = if (selected != null) mainColor else Color.Transparent,
+                icSize = 26.Sdp,
+                tint = if (selected != null) colorSecondary else Color.Transparent,
             ) {
                 if (selected != null) onConfirm()
             }
         }
 
-        if (isTablet) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 12.Sdp)
-                    .paddingTop(12.Sdp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(
-                    items = languages,
-                    key = { it.code }
-                ) { item ->
-                    LanguageItem(currentLanguage = selected, item = item) { chosen ->
-                        onSelect(chosen)
-                    }
-                }
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 12.Sdp)
-                    .paddingTop(12.Sdp),
-                state = listState,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                this.items(
-                    items = languages,
-                    key = { it.code }
-                ) { item ->
-                    LanguageItem(currentLanguage = selected, item = item) { chosen ->
-                        onSelect(chosen)
-                    }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 12.Sdp)
+                .paddingTop(12.Sdp),
+            state = lazyListState,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            this.items(
+                items = languages,
+                key = { it.code }
+            ) { item ->
+                LanguageViewItem(currentLanguage = selected, item = item) { chosen ->
+                    onSelect(chosen)
                 }
             }
         }
+        nativeAd()
     }
 }

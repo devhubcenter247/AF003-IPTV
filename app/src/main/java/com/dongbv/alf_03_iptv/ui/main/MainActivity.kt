@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,15 +35,16 @@ import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
+import com.dongbv.alf_03_iptv.style.ConstraintParentContent
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.ui.component.DialogQuitApp
-import com.dongbv.alf_03_iptv.ui.component.ScreenRouter
 import com.dongbv.alf_03_iptv.ui.main.home.ChannelScreen
 import com.dongbv.alf_03_iptv.ui.main.home.FavoriteScreen
 import com.dongbv.alf_03_iptv.ui.main.home.HomeScreen
 import com.dongbv.alf_03_iptv.ui.main.home.SettingScreen
 import com.dongbv.alf_03_iptv.ui.main.add.AddChannelActivity
+import com.dongbv.alf_03_iptv.ui.main.guide.HowToAddChannelActivity
 import com.dongbv.alf_03_iptv.ui.main.play.PlayChannelActivity
 import com.dongbv.alf_03_iptv.ui.main.playlist.PlayListActivity
 import com.dongbv.alf_03_iptv.ui.main.setting.AboutUsActivity
@@ -93,52 +96,53 @@ class MainActivity : BaseActivity() {
         var isShowQuitDialog by rememberSaveable { mutableStateOf(false) }
         val navController = rememberNavController()
 
-        Box(
-            Modifier
-                .fillMaxSize()
-                .backgroundResource(R.drawable.img_bg_app)
-                /*.background(
-                    Brush.verticalGradient(
-                        listOf(
-
-                            Color(0xFF1A0533),
-                            Color(0xFF0D0D1A),
-                            Color(0xFF1A1A2E)
-                        )
-                    )
-                )*/
-            , contentAlignment = Alignment.BottomCenter
-        ) {
-            Box(
+        ConstraintLayout(
+            modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(bottom = 40.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                NavHost(
-                    modifier = Modifier.matchParentSize(),
-                    navController = navController,
-                    startDestination = ScreenRouter.MainScreen.HomeScreen.route
-
-                ) {
-                    animComposable(ScreenRouter.MainScreen.HomeScreen.route) {
-                        HomeScreen(
-                            modifier = Modifier.paddingTop(statusBarHeight),
-                            viewModel = viewModel,
-                            onWatchNow = { launchActivity<WatchNowActivity>() },
-                            onOpenChannel = { item ->
-                                startActivity(
-                                    PlayListActivity.newIntent(this@MainActivity, item.id.toLong())
-                                )
-                            },
-                            onAddPlaylist = { launchActivity<AddChannelActivity>() }
-                        )
+                    .backgroundResource(R.drawable.img_bg_app)
+        ) {
+            val (layout, nav, banner) = createRefs()
+            NavHost(
+                modifier = Modifier.constrainAs(layout) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(nav.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    height = Dimension.fillToConstraints
+                },
+                navController = navController,
+                startDestination = ScreenRouter.MainScreen.HomeScreen.route
+            )
+            {
+                animComposable(ScreenRouter.MainScreen.HomeScreen.route) {
+                    HomeScreen(
+                        modifier = Modifier.paddingTop(statusBarHeight),
+                        viewModel = viewModel,
+                        onWatchNow = { launchActivity<WatchNowActivity>() },
+                        onOpenChannel = { item ->
+                            startActivity(
+                                PlayListActivity.newIntent(this@MainActivity, item.id.toLong())
+                            )
+                        },
+                        onAddPlaylist = { launchActivity<AddChannelActivity>() },
+                        onHowToAddChannel = { launchActivity<HowToAddChannelActivity>() }
+                    ) {
+                        isShowQuitDialog = true
                     }
-                    animComposable(ScreenRouter.MainScreen.ChannelScreen.route) {
-                        ChannelScreen()
+                }
+                animComposable(ScreenRouter.MainScreen.ChannelScreen.route) {
+                    ChannelScreen(
+                        statusBarHeight = statusBarHeight
+                    ) {
+                        isShowQuitDialog = true
                     }
-                    animComposable(ScreenRouter.MainScreen.FavoriteScreen.route) {
-                        FavoriteScreen( openChanel = {cn->
+                }
+                animComposable(ScreenRouter.MainScreen.FavoriteScreen.route) {
+                    FavoriteScreen(
+                        modifier = Modifier.paddingTop(statusBarHeight),
+                        onBack = { isShowQuitDialog = true },
+                        openChanel = { cn ->
                             val newIntent = PlayChannelActivity.newIntent(
                                 this@MainActivity,
                                 cn.id,
@@ -149,30 +153,40 @@ class MainActivity : BaseActivity() {
                             )
                             startActivity(newIntent)
                         })
-                    }
-                    animComposable(ScreenRouter.MainScreen.SettingScreen.route) {
-                        SettingScreen(
-                            gotoLangSetting = { launchActivity<LanguageSettingActivity>() },
-                            gotoAboutUs = { launchActivity<AboutUsActivity>() }
-                        ) { }
+
+                }
+                animComposable(ScreenRouter.MainScreen.SettingScreen.route) {
+                    SettingScreen(
+                        modifier = Modifier.paddingTop(statusBarHeight),
+                        gotoLangSetting = { launchActivity<LanguageSettingActivity>() },
+                        gotoAboutUs = { launchActivity<AboutUsActivity>() },
+                        gotoHowToAddChannel = { launchActivity<HowToAddChannelActivity>() }
+                    ) {
+                        isShowQuitDialog = true
                     }
                 }
-
             }
-
             BottomNavigationBar(
                 navHostController = navController, modifier = Modifier
+                    .constrainAs(nav) {
+                        bottom.linkTo(banner.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
                     .fillMaxWidth()
-                    .height(80.dp)
+                    .height(66.Sdp)
                     .background(IptvBgSecondary)
             )
+            Box(Modifier.constrainAs(banner) {
+                bottom.linkTo(parent.bottom)
+            }) {}
         }
+
         DialogQuitApp(
             isShowDialog = isShowQuitDialog,
-            onDismiss = { isShowQuitDialog = false }
-        ) {
-            finishAffinity()
-        }
+            onDismiss =
+                { isShowQuitDialog = false }
+        ) { finishAffinity() }
     }
 }
 
