@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "319901188496",
-    "project_id": "alf03-iptv",
-    "storage_bucket": "alf03-iptv.firebasestorage.app"
+    "project_number": "472615085571",
+    "project_id": "iptv-smartplayer-alf03",
+    "storage_bucket": "iptv-smartplayer-alf03.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319901188496:android:df5b3cbd13f2003e44b315",
+        "mobilesdk_app_id": "1:472615085571:android:7a617d1ee535cb963a9036",
         "android_client_info": {
-          "package_name": "com.dongbv.alf_03_iptv"
+          "package_name": "com.stream.itpv.live.m3u.smartplayer"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCoaCH2fQN46Qc53lr11boosZsSsqmJk6g"
+          "current_key": "AIzaSyCqdDWxhiyOx_fQZhQ7qtQU4FxQihDRjq8"
         }
       ],
       "services": {

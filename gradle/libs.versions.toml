@@ -26,8 +26,13 @@ reviewKtx = "2.0.2"
 constraintlayoutCompose ="1.1.2"
 firebaseCrashlytics = "20.1.0"
 googleFirebaseCrashlytics = "3.0.7"
-
+adlib = "1.0.0"
+inappupdate = "1.0.1"
 [libraries]
+
+adlib = { module = "com.lib:gmasdk", version.ref = "adlib" }
+inappupdate = { module = "com.github.dong0610:inappupdate", version.ref = "inappupdate" }
+
 android = { module = "com.github.dbv0610.ssp-sdp-compose:android", version.ref = "android" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

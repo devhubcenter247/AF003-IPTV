@@ -31,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.base.AppDialog
+import com.dongbv.alf_03_iptv.style.AppViewTheme
+import com.dongbv.alf_03_iptv.style.PhonePreview
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
 import com.dongbv.alf_03_iptv.widget.IptvDivider
@@ -135,3 +137,14 @@ internal fun PlaybackErrorDialog(
 }
 
 internal const val PLAYBACK_ERROR_AUTO_ADVANCE_MILLIS = 2_000L
+
+@PhonePreview
+@Composable
+private fun PlaybackErrorDialogPreview() {
+    AppViewTheme {
+        PlaybackErrorDialog(
+            errorEventId = 1L,
+            onPlayNext = {}
+        )
+    }
+}

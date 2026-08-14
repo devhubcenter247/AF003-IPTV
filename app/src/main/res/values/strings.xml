@@ -142,7 +142,9 @@
     <string name="guide_faq_a3">Yes — repeat the steps above as many times as you like. Each playlist is saved separately and all channels appear together on the Home screen.</string>
     <string name="guide_faq_q4">How do I remove a playlist I no longer want?</string>
     <string name="guide_faq_a4">Go to the Channel tab, open the playlist, and use the delete option to remove it from your library.</string>
-
+    <string name="new_ver_avaliable">New Update Available</string>
+    <string name="please_update_to_use">Please update to the latest version to continue using the app.</string>
+    <string name="update_now">Update Now</string>
     <string name="guide_cta_button">Add a channel now</string>
     <string name="playlist_name">Playlist name</string>
     <string name="click_to_upload_file">Click to upload file</string>
@@ -152,6 +154,7 @@
     <string name="failed_to_save_playlist">Failed to save playlist</string>
     <string name="no_file_selected">No file selected</string>
     <string name="no_channels_found">No channels found in file</string>
+    <string name="invalid_file_type">Please select a valid .m3u or .m3u8 file</string>
     <string name="failed_to_parse_file">Failed to parse file</string>
     <string name="url_required">URL is required</string>
     <string name="failed_to_parse_url">Failed to parse URL</string>
@@ -177,7 +180,7 @@
     <string name="add_videos">Add\nvideos</string>
     <string name="supports_m3u_and_m3u8_formats">Supports  .m3u  and  .m3u8  formats</string>
     <string name="e_g_my_local_channels">e.g. My Local Channels</string>
-    <string name="search_channels">Search channels...</string>
+    <string name="search_channels">Search channels…</string>
     <string name="channels">Channels</string>
     <string name="watch_history_title">Watch History</string>
     <string name="all_channels_title">All Channels</string>
@@ -195,4 +198,6 @@
     <string name="time_days_ago">%dd ago</string>
     <string name="sleep_timer_hour_label">Hour</string>
     <string name="sleep_timer_minute_label">Min</string>
+    <string name="sound">Sound</string>
+    <string name="latter">Later</string>
 </resources>

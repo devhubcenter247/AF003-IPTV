@@ -8,7 +8,7 @@
     <cache-path name="cache" path="." />
     <cache-path name="captured" path="captured_images/" />
 
-    <!-- External cache & files (nếu cần) -->
+    <!-- External cache &amp; files (nếu cần) -->
     <external-cache-path name="external_cache" path="." />
     <external-files-path name="pictures" path="Pictures/" />
 </paths>

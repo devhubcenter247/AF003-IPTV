@@ -52,6 +52,8 @@ import com.dongbv.alf_03_iptv.ui.language.getLanguageArray
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
+import com.dongbv.alf_03_iptv.widget.grdEnd
+import com.dongbv.alf_03_iptv.widget.grdStart
 import com.dongbv.alf_03_iptv.widget.headline600
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
@@ -208,7 +210,9 @@ fun LangSettingItem(
         ) {
             IconView(
                 item = R.drawable.ic_setting_lang,
-                modifier = Modifier.size(26.Sdp)
+                modifier = Modifier.size(26.Sdp).gradientContent(
+                    listOf(grdStart, grdEnd)
+                )
             )
             SpaceW(12)
             TextView(
@@ -253,7 +257,9 @@ fun SettingItem(@DrawableRes icon: Int, @StringRes label: Int, action: () -> Uni
     ) {
         IconView(
             item = icon,
-            modifier = Modifier.size(26.Sdp)
+            modifier = Modifier.size(26.Sdp).gradientContent(
+                listOf(grdStart, grdEnd)
+            )
         )
         SpaceW(12)
         TextView(

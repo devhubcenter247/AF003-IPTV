@@ -16,7 +16,7 @@ android {
         applicationId = "com.dongbv.alf_03_iptv"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -26,7 +26,7 @@ android {
     }
     signingConfigs {
         create("release") {
-            keyAlias = "alf02"
+            keyAlias = "af003"
             keyPassword = "blueleft"
             storeFile = rootProject.file("keystore/keystore.jks")
             storePassword = "blueleft"
@@ -82,7 +82,7 @@ android {
         }
 
         create("product") {
-            applicationId = "com.qr.scanner.barcode.creator.edit"
+            applicationId = "com.stream.itpv.live.m3u.smartplayer"
             manifestPlaceholders["ad_app_id"] = "ca-app-pub-3940256099942544~3347511713"
             buildConfigField("boolean", "build_debug", "false")
         }
@@ -93,6 +93,9 @@ android {
                 srcDirs("src/main/assets")
             }
         }
+    }
+    lint {
+        disable.add("NullSafeMutableLiveData")
     }
 
 }
@@ -137,6 +140,8 @@ dependencies {
     implementation(libs.coil3.coil.compose)
     implementation(libs.coil3.network.okhttp)
 
+    implementation(libs.adlib)
+    implementation(libs.inappupdate)
 
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)

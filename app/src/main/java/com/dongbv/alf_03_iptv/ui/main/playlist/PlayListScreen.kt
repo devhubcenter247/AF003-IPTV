@@ -61,6 +61,8 @@ import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.AppNeonButton
 import com.dongbv.alf_03_iptv.ui.component.ChannelSearchBar
 import com.dongbv.alf_03_iptv.ui.component.LayoutToggle
+import com.dongbv.alf_03_iptv.ui.component.backgroundState
+import com.dongbv.alf_03_iptv.ui.component.borderState
 import com.dongbv.alf_03_iptv.viewmodel.PlayListViewModel
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvDivider
@@ -372,15 +374,15 @@ private fun PlayListChannelGridCard(
                     .align(Alignment.TopEnd)
                     .padding(6.Sdp)
                     .size(22.Sdp)
-                    .background(if (channel.isFavorite) IptvAccent else white, CircleShape)
+                    .backgroundState(false)
                     .onClick(onClick = onToggleFavorite),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add),
                     contentDescription = null,
-                    tint = if (channel.isFavorite) white else Color(0xFF555555),
-                    modifier = Modifier.size( 15.Sdp)
+                    tint = if (channel.isFavorite) Color.Red else Color(0xBFFFFFFF),
+                    modifier = Modifier.size( 13.Sdp)
                 )
             }
         }
@@ -501,23 +503,16 @@ private fun PlayListChannelListRow(
 
         Box(
             modifier = Modifier
-                .size(if (isTablet) 34.dp else 36.Sdp)
-                .background(
-                    if (channel.isFavorite) IptvAccent.copy(alpha = 0.12f) else white.opacity(8),
-                    CircleShape
-                )
-                .border(
-                    1.dp,
-                    if (channel.isFavorite) IptvAccent.copy(alpha = 0.3f) else IptvDivider,
-                    CircleShape
-                )
+                .size(if (isTablet) 24.dp else 28.Sdp)
+                .borderState(false)
+                .backgroundState(false)
                 .onClick(onClick = onToggleFavorite),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = painterResource(if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add),
                 contentDescription = null,
-                tint = if (channel.isFavorite) IptvAccent else colorSecondary,
+                tint = if (channel.isFavorite) Color.Red else white.opacity(75f),
                 modifier = Modifier.size(if (isTablet) 15.dp else 16.Sdp)
             )
         }

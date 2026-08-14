@@ -37,6 +37,13 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.net.URLConnection
 
+private fun Bitmap.CompressFormat.isWebpFormat(): Boolean {
+    if (this == Bitmap.CompressFormat.WEBP) return true
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+        (this == Bitmap.CompressFormat.WEBP_LOSSY ||
+            this == Bitmap.CompressFormat.WEBP_LOSSLESS)
+}
+
 fun saveImageToInternalStorage(context: Context, bitmap: Bitmap, fileName: String): String? {
     val directory = context.filesDir
     val file = File(directory, "$fileName.png")
@@ -118,9 +125,9 @@ suspend fun saveBitmapToInternalStorage(
     subDir: String? = null  
 ): File?  = withContext(Dispatchers.IO){
     return@withContext try {
-        val ext = when (format) {
-            Bitmap.CompressFormat.JPEG -> "jpg"
-            Bitmap.CompressFormat.WEBP, Bitmap.CompressFormat.WEBP_LOSSY, Bitmap.CompressFormat.WEBP_LOSSLESS -> "webp"
+        val ext = when {
+            format == Bitmap.CompressFormat.JPEG -> "jpg"
+            format.isWebpFormat() -> "webp"
             else -> "png"
         }
         val baseDir = if (subDir.isNullOrBlank()) {
@@ -160,9 +167,9 @@ suspend fun saveBitmapToCache(
     subDir: String? = null
 ): File? = withContext(Dispatchers.IO){
     return@withContext try {
-        val ext = when (format) {
-            Bitmap.CompressFormat.JPEG -> "jpg"
-            Bitmap.CompressFormat.WEBP, Bitmap.CompressFormat.WEBP_LOSSY, Bitmap.CompressFormat.WEBP_LOSSLESS -> "webp"
+        val ext = when {
+            format == Bitmap.CompressFormat.JPEG -> "jpg"
+            format.isWebpFormat() -> "webp"
             else -> "png"
         }
         val baseDir = if (subDir.isNullOrBlank()) {
@@ -524,9 +531,9 @@ fun saveBitmapToStorage(
 ): Uri? {
     var mime = guessMime(destFileName)
     if (mime == "application/octet-stream") {
-        mime = when (format) {
-            Bitmap.CompressFormat.JPEG -> "image/jpeg"
-            Bitmap.CompressFormat.WEBP, Bitmap.CompressFormat.WEBP_LOSSY, Bitmap.CompressFormat.WEBP_LOSSLESS -> "image/webp"
+        mime = when {
+            format == Bitmap.CompressFormat.JPEG -> "image/jpeg"
+            format.isWebpFormat() -> "image/webp"
             else -> "image/png"
         }
     }
@@ -1279,4 +1286,3 @@ private fun Cursor.getLongOrNull(columnIndex: Int): Long? {
         null
     }
 }
-

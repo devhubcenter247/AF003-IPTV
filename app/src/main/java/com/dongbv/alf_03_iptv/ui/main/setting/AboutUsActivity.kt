@@ -47,12 +47,15 @@ import com.dongbv.alf_03_iptv.style.paddingHorizontal
 import com.dongbv.alf_03_iptv.style.white
 import androidx.core.net.toUri
 import com.dongbv.alf_03_iptv.style.backgroundResource
+import com.dongbv.alf_03_iptv.style.gradientContent
 import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.ui.component.neonState
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
+import com.dongbv.alf_03_iptv.widget.grdEnd
+import com.dongbv.alf_03_iptv.widget.grdStart
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
@@ -65,8 +68,6 @@ class AboutUsActivity : BaseActivity() {
             onBack = { finish() },
             modifier = Modifier
                 .fillMaxSize()
-
-                .padding(top = statusBarHeight)
         ) {
             AboutUsScreen(
                 onBack = { finish() },
@@ -105,9 +106,9 @@ class AboutUsActivity : BaseActivity() {
 
     companion object {
         private const val PRIVACY_POLICY_URL =
-            "https://docs.google.com/document/d/e/2PACX-1vSMQvsGiOECJC7PHKJHbApn2M5cErV1UM8YmRgxBPJxmWuom1kEv9hLaAN_3vv1kg/pub"
+            "https://docs.google.com/document/d/e/2PACX-1vTtE7wku1uWM9XM-FQsxZzYRFH6UIDjFMrE_EWfO0KkWuR6PQWtr4H-ZFnKo7_xMQ/pub"
         private const val TERMS_OF_SERVICE_URL =
-            "https://docs.google.com/document/d/e/2PACX-1vQV1qgRCFPaoknWVvUK0iogrLXmOT8UvWsak9QCD0Ahkb9V6v3gpeMPyv6SZrH7ig/pub"
+            "https://docs.google.com/document/d/e/2PACX-1vQfRYn2prW_SefAtJXzzjFkV_EeJI5YE-KM3EHoMJI5kHR-7AvJgrF5QrKzPML_Iw/pub"
         private const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id="
     }
 }
@@ -120,7 +121,6 @@ fun AboutUsScreen(
     onTermsOfService: () -> Unit,
     onShareApp: () -> Unit
 ) {
-    val context: Context = LocalContext.current
     Column(
         Modifier
             .fillMaxSize()
@@ -184,7 +184,7 @@ fun AboutUsScreen(
                     .padding(16.dp)
             ) {
                 AboutMenuItem(
-                    icon = R.drawable.ic_setting_privacy,
+                    icon = R.drawable.ic_setting_policy,
                     label = R.string.privacy_policy,
                     onClick = onPrivacyPolicy
                 )
@@ -244,7 +244,7 @@ private fun AboutTopBar(onBack: () -> Unit) {
                 modifier = Modifier.size(14.Sdp)
             )
         }
-
+SpaceW(12.Sdp)
         TextView(
             text = R.string.about_us,
             font = R.font.ss_700,
@@ -269,7 +269,9 @@ private fun AboutMenuItem(
             IconView(
                 item = icon,
                 tint = IptvAccent,
-                modifier = Modifier
+                modifier = Modifier.gradientContent(
+                    listOf(grdStart, grdEnd)
+                )
             )
             SpaceW(12)
             TextView(

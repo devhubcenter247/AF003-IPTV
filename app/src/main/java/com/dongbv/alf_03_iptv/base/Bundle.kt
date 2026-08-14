@@ -85,26 +85,6 @@ fun Bundle.putAnySafe(key: String, value: Any?) {
         is Bundle -> putBundle(key, value)
         is Parcelable -> putParcelable(key, value)
         is Serializable -> putSerializable(key, value)
-        is IntArray -> putIntArray(key, value)
-        is LongArray -> putLongArray(key, value)
-        is BooleanArray -> putBooleanArray(key, value)
-        is FloatArray -> putFloatArray(key, value)
-        is DoubleArray -> putDoubleArray(key, value)
-        is ByteArray -> putByteArray(key, value)
-        is CharArray -> putCharArray(key, value)
-        is ShortArray -> putShortArray(key, value)
-        is Array<*> -> when {
-            value.isArrayOf<String>() -> {
-                putStringArray(key, value as Array<String>)
-            }
-            value.isArrayOf<CharSequence>() -> putCharSequenceArray(
-                key,
-                value as Array<CharSequence>
-            )
-            value.isArrayOf<Parcelable>() ->
-                putParcelableArray(key, value as Array<Parcelable>)
-            else -> putSerializable(key, value as Serializable?)
-        }
         is List<*> -> {
             when {
                 value.isEmpty() -> putStringArrayList(key, arrayListOf())
@@ -155,32 +135,6 @@ fun Intent.putExtraSmart(key: String, v: Any?) {
         is Bundle -> putExtra(key, v)
         is Parcelable -> putExtra(key, v)
         is Serializable -> putExtra(key, v)
-        is IntArray -> putExtra(key, v)
-        is LongArray -> putExtra(key, v)
-        is BooleanArray -> putExtra(key, v)
-        is FloatArray -> putExtra(key, v)
-        is DoubleArray -> putExtra(key, v)
-        is ByteArray -> putExtra(key, v)
-        is CharArray -> putExtra(key, v)
-        is ShortArray -> putExtra(key, v)
-        is Array<*> -> when {
-            v.isArrayOf<String>() -> putExtra(key, v as Array<String>)
-            v.isArrayOf<CharSequence>() -> putExtra(key, v as Array<CharSequence>)
-            v.isArrayOf<Parcelable>() -> putExtra(key, v as Array<*>)
-            else -> putExtra(key, v as Serializable?)
-        }
-        is List<*> -> when {
-            v.isEmpty() -> putStringArrayListExtra(key, arrayListOf())
-            v.all { it is Parcelable } ->
-                putParcelableArrayListExtra(key, ArrayList(v as List<Parcelable>))
-            v.all { it is String } ->
-                putStringArrayListExtra(key, ArrayList(v as List<String>))
-            v.all { it is CharSequence } ->
-                putCharSequenceArrayListExtra(key, ArrayList(v as List<CharSequence>))
-            v.all { it is Serializable } ->
-                putExtra(key, ArrayList(v as List<Serializable>))
-            else -> throw IllegalArgumentException("Unsupported mixed List for key=\"$key\"")
-        }
         else -> throw IllegalArgumentException("Unsupported extra type for key=\"$key\": ${v::class.java}")
     }
 }

@@ -46,7 +46,12 @@ class AddChannelActivity : BaseActivity (){
             onBack = ::finish,
             onPickFile = {
                 filePickerLauncher.launch(
-                    arrayOf("application/x-mpegurl", "audio/x-mpegurl", "*/*")
+                    arrayOf(
+                        "application/x-mpegurl",
+                        "audio/x-mpegurl",
+                        "application/vnd.apple.mpegurl",
+                        "application/octet-stream"
+                    )
                 )
             },
             onPickGallery = {

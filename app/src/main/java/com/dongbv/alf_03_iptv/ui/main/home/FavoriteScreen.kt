@@ -38,7 +38,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -55,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
@@ -68,6 +71,7 @@ import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.backgroundState
+import com.dongbv.alf_03_iptv.ui.component.borderState
 import com.dongbv.alf_03_iptv.ui.component.neonState
 import com.dongbv.alf_03_iptv.viewmodel.FavoriteViewModel
 import com.dongbv.alf_03_iptv.widget.IptvAccent
@@ -87,9 +91,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import androidx.compose.ui.platform.LocalLocale
 
 @Stable
-private interface FavoriteScreenActions {
+interface FavoriteScreenActions {
     fun onTabSelected(tab: Int)
     fun onSearchQueryChanged(query: String)
     fun onGroupSelected(group: String?)
@@ -109,7 +114,6 @@ private interface FavoriteScreenActions {
     }
 }
 
-// ─── Entry point ─────────────────────────────────────────────────────────────
 
 @Composable
 fun FavoriteScreen(
@@ -170,10 +174,9 @@ fun FavoriteScreen(
     )
 }
 
-// ─── Stateless content ───────────────────────────────────────────────────────
 
 @Composable
-private fun FavoriteScreenContent(
+fun FavoriteScreenContent(
     modifier: Modifier = Modifier,
     selectedTab: Int = 0,
     searchQuery: String = "",
@@ -215,7 +218,10 @@ private fun FavoriteScreenContent(
                 }
                 Text(
                     text = title,
-                    style = headline600(fontSize = if (isTablet) 20.Ssp else 18.Ssp, color = IptvTextPrimary),
+                    style = headline600(
+                        fontSize = if (isTablet) 20.Ssp else 18.Ssp,
+                        color = IptvTextPrimary
+                    ),
                     modifier = Modifier.weight(1f)
                 )
                 if (currentList.isNotEmpty()) {
@@ -231,7 +237,9 @@ private fun FavoriteScreenContent(
                 } else {
                     LayoutToggle(
                         isGridView = isGridView,
-                        modifier = Modifier.alpha(0f).width(0.dp),
+                        modifier = Modifier
+                            .alpha(0f)
+                            .width(0.dp),
                         onToggle = {}
                     )
                 }
@@ -328,6 +336,16 @@ private fun FavoriteScreenContent(
                         openChanel = onOpenChannel
                     )
 
+                    isGridView -> FavoriteHistoryGrid(
+                        channels = list,
+                        isHistory = tab == 1,
+                        isTablet = isTablet,
+                        horizontalPadding = horizontalPadding,
+                        onToggleFavorite = actions::onToggleFavorite,
+                        onRemoveFromHistory = actions::onRemoveFromHistory,
+                        openChanel = onOpenChannel
+                    )
+
                     else -> FavoriteHistoryList(
                         channels = list,
                         isHistory = tab == 1,
@@ -343,7 +361,6 @@ private fun FavoriteScreenContent(
     }
 }
 
-// ─── Tab bar ─────────────────────────────────────────────────────────────────
 
 @Composable
 private fun FavoriteTabBar(
@@ -356,7 +373,7 @@ private fun FavoriteTabBar(
         Triple(R.drawable.ic_nav_channel, stringResource(R.string.all), 2),
         Triple(R.drawable.ic_nav_favorite, stringResource(R.string.favorites), 0),
         Triple(R.drawable.ic_app_timer, stringResource(R.string.history), 1),
-        )
+    )
     Box(modifier = modifier, contentAlignment = Alignment.CenterStart) {
         Row(
             modifier = Modifier
@@ -371,7 +388,11 @@ private fun FavoriteTabBar(
                     modifier = Modifier
                         .then(if (isTablet) Modifier.width(132.dp) else Modifier.weight(1f))
                         .height(if (isTablet) 28.Sdp else 38.Sdp)
-                        .neonState(neonEnabled = isSelected, outerRadius = 8.Sdp, shape = RoundedCornerShape(50))
+                        .neonState(
+                            neonEnabled = isSelected,
+                            outerRadius = 6.Sdp,
+                            shape = RoundedCornerShape(50)
+                        )
                         .backgroundState(enabled = isSelected, CircleShape)
                         .clip(RoundedCornerShape(50))
                         .onClick { onTabSelected(index) },
@@ -401,7 +422,6 @@ private fun FavoriteTabBar(
     }
 }
 
-// ─── Group chips ─────────────────────────────────────────────────────────────
 
 @Composable
 private fun GroupFilterRow(
@@ -451,7 +471,6 @@ private fun GroupChip(label: String, isSelected: Boolean, onClick: () -> Unit) {
     }
 }
 
-// ─── Favorites / History list ─────────────────────────────────────────────────
 
 @Composable
 private fun FavoriteHistoryList(
@@ -465,7 +484,12 @@ private fun FavoriteHistoryList(
 ) {
     LazyVerticalGrid(
         columns = if (isTablet) GridCells.Adaptive(minSize = 300.dp) else GridCells.Fixed(1),
-        contentPadding = PaddingValues(start = horizontalPadding, end = horizontalPadding, top = 4.Sdp, bottom = 90.dp),
+        contentPadding = PaddingValues(
+            start = horizontalPadding,
+            end = horizontalPadding,
+            top = 4.Sdp,
+            bottom = 90.dp
+        ),
         horizontalArrangement = Arrangement.spacedBy(10.Sdp),
         verticalArrangement = Arrangement.spacedBy(8.Sdp),
         modifier = Modifier.fillMaxSize()
@@ -513,22 +537,24 @@ private fun ChannelListCard(
                 .clip(RoundedCornerShape(10.dp)),
             contentAlignment = Alignment.Center
         ) {
-            if (!channel.logo.isNullOrBlank()) {
+            var isLogoLoadError by remember(channel.logo) { mutableStateOf(false) }
+            if (!channel.logo.isNullOrBlank() && !isLogoLoadError) {
                 AsyncImage(
                     model = channel.logo,
                     contentDescription = null,
-                    contentScale = ContentScale.None,
-                    error = painterResource(R.drawable.ic_nav_channel),
+                    contentScale = ContentScale.Fit,
+                    onState = { state -> isLogoLoadError = state is AsyncImagePainter.State.Error },
                     modifier = Modifier
                         .size(if (isTablet) 40.dp else 44.Sdp)
                         .clip(RoundedCornerShape(8.dp))
+
                 )
             } else {
                 Icon(
                     painter = painterResource(R.drawable.ic_nav_channel),
                     contentDescription = null,
                     tint = colorSecondary,
-                    modifier = Modifier.size(if (isTablet) 22.dp else 26.Sdp)
+                    modifier = Modifier.size(if (isTablet) 22.Sdp else 26.Sdp)
                 )
             }
         }
@@ -537,7 +563,10 @@ private fun ChannelListCard(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 channel.name,
-                style = headline600(fontSize = if (isTablet) 13.sp else 13.Ssp, color = IptvTextPrimary),
+                style = headline600(
+                    fontSize = if (isTablet) 13.sp else 13.Ssp,
+                    color = IptvTextPrimary
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -557,14 +586,20 @@ private fun ChannelListCard(
                     ) {
                         Text(
                             channel.groupName,
-                            style = headline400(fontSize = if (isTablet) 9.sp else 9.Ssp, color = IptvAccent)
+                            style = headline400(
+                                fontSize = if (isTablet) 9.sp else 9.Ssp,
+                                color = IptvAccent
+                            )
                         )
                     }
                 }
                 if (isHistory && channel.lastWatched != null) {
                     Text(
                         relativeTime(channel.lastWatched),
-                        style = headline400(fontSize = if (isTablet) 10.sp else 10.Ssp, color = IptvTextTertiary)
+                        style = headline400(
+                            fontSize = if (isTablet) 10.sp else 10.Ssp,
+                            color = IptvTextTertiary
+                        )
                     )
                 }
             }
@@ -601,7 +636,125 @@ private fun ChannelListCard(
     }
 }
 
-// ─── All Channels grid ────────────────────────────────────────────────────────
+@Composable
+private fun FavoriteHistoryGrid(
+    channels: List<ChannelEntity>,
+    isHistory: Boolean,
+    isTablet: Boolean,
+    horizontalPadding: Dp = 16.Sdp,
+    onToggleFavorite: (Long) -> Unit,
+    onRemoveFromHistory: (Long) -> Unit,
+    openChanel: (ChannelEntity) -> Unit
+) {
+    LazyVerticalGrid(
+        columns = if (isTablet) GridCells.Adaptive(minSize = 150.dp) else GridCells.Fixed(2),
+        contentPadding = PaddingValues(
+            start = horizontalPadding,
+            end = horizontalPadding,
+            top = 4.Sdp,
+            bottom = 90.dp
+        ),
+        horizontalArrangement = Arrangement.spacedBy(10.Sdp),
+        verticalArrangement = Arrangement.spacedBy(14.Sdp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(channels, key = { it.id }) { channel ->
+            FavoriteHistoryGridCard(
+                channel = channel,
+                isHistory = isHistory,
+                isTablet = isTablet,
+                onToggleFavorite = { onToggleFavorite(channel.id) },
+                onRemoveFromHistory = { onRemoveFromHistory(channel.id) },
+                openChanel = { openChanel(channel) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun FavoriteHistoryGridCard(
+    channel: ChannelEntity,
+    isHistory: Boolean,
+    isTablet: Boolean = false,
+    onToggleFavorite: () -> Unit,
+    onRemoveFromHistory: () -> Unit,
+    openChanel: () -> Unit
+) {
+    Column(
+        modifier = Modifier.onClick(onClick = openChanel)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 10f)
+                .clip(RoundedCornerShape(10.dp))
+                .background(white.opacity(10))
+        ) {
+
+            var isLogoLoadError by remember(channel.logo) { mutableStateOf(false) }
+            if (!channel.logo.isNullOrBlank() && !isLogoLoadError) {
+                AsyncImage(
+                    model = channel.logo,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    onState = { state -> isLogoLoadError = state is AsyncImagePainter.State.Error },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(2.Sdp)
+
+                )
+            } else {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_nav_channel),
+                        contentDescription = null,
+                        tint = colorSecondary,
+                        modifier = Modifier.size(if (isTablet) 28.dp else 32.Sdp)
+                    )
+                }
+            }
+
+            val actionIcon =
+                if (isHistory) R.drawable.ic_app_delete else if (channel.isFavorite) R.drawable.ic_app_favorite_add else R.drawable.ic_app_favorite_minus
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(7.dp)
+                    .size(if (isTablet) 20.dp else 24.Sdp)
+                    .backgroundState(false,CircleShape)
+                    .onClick(onClick = if (isHistory) onRemoveFromHistory else onToggleFavorite),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(actionIcon),
+                    contentDescription = null,
+                    tint = if (channel.isFavorite && !isHistory) Color.Red else Color(0xFF555555),
+                    modifier = Modifier.size(if (isTablet) 13.dp else 15.Sdp)
+                )
+            }
+        }
+        Spacer(Modifier.height(6.dp))
+        Text(
+            channel.name,
+            style = headline600(
+                fontSize = if (isTablet) 11.sp else 11.Ssp,
+                color = IptvTextPrimary
+            ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        if (isHistory && channel.lastWatched != null) {
+            Text(
+                relativeTime(channel.lastWatched),
+                style = headline400(
+                    fontSize = if (isTablet) 9.sp else 9.Ssp,
+                    color = IptvTextTertiary
+                )
+            )
+        }
+    }
+}
+
 
 @Composable
 private fun AllChannelsGrid(
@@ -613,7 +766,12 @@ private fun AllChannelsGrid(
 ) {
     LazyVerticalGrid(
         columns = if (isTablet) GridCells.Adaptive(minSize = 150.dp) else GridCells.Fixed(2),
-        contentPadding = PaddingValues(start = horizontalPadding, end = horizontalPadding, top = 4.Sdp, bottom = 90.dp),
+        contentPadding = PaddingValues(
+            start = horizontalPadding,
+            end = horizontalPadding,
+            top = 4.Sdp,
+            bottom = 90.dp
+        ),
         horizontalArrangement = Arrangement.spacedBy(10.Sdp),
         verticalArrangement = Arrangement.spacedBy(14.Sdp),
         modifier = Modifier.fillMaxSize()
@@ -646,12 +804,17 @@ private fun AllChannelGridCard(
                 .clip(RoundedCornerShape(10.dp))
                 .background(white.opacity(10))
         ) {
-            if (!channel.logo.isNullOrBlank()) {
+            var isLogoLoadError by remember(channel.logo) { mutableStateOf(false) }
+            if (!channel.logo.isNullOrBlank() && !isLogoLoadError) {
                 AsyncImage(
                     model = channel.logo,
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    contentScale = ContentScale.Fit,
+                    onState = { state -> isLogoLoadError = state is AsyncImagePainter.State.Error },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(2.Sdp)
+
                 )
             } else {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -668,15 +831,15 @@ private fun AllChannelGridCard(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(7.dp)
-                    .size(if (isTablet) 26.dp else 30.Sdp)
-                    .background(if (channel.isFavorite) IptvAccent else white, CircleShape)
+                    .size(if (isTablet) 20.dp else 24.Sdp)
+                    .backgroundState(false,CircleShape)
                     .onClick(onClick = onToggleFavorite),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add),
                     contentDescription = null,
-                    tint = if (channel.isFavorite) white else Color(0xFF555555),
+                    tint = if (channel.isFavorite) Color.Red else Color(0xFF555555),
                     modifier = Modifier.size(if (isTablet) 13.dp else 15.Sdp)
                 )
             }
@@ -703,7 +866,10 @@ private fun AllChannelGridCard(
         Spacer(Modifier.height(6.dp))
         Text(
             channel.name,
-            style = headline600(fontSize = if (isTablet) 11.sp else 11.Ssp, color = IptvTextPrimary),
+            style = headline600(
+                fontSize = if (isTablet) 11.sp else 11.Ssp,
+                color = IptvTextPrimary
+            ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -711,7 +877,6 @@ private fun AllChannelGridCard(
     }
 }
 
-// ─── All Channels list ────────────────────────────────────────────────────────
 
 @Composable
 private fun AllChannelsList(
@@ -723,7 +888,12 @@ private fun AllChannelsList(
 ) {
     LazyVerticalGrid(
         columns = if (isTablet) GridCells.Adaptive(minSize = 300.dp) else GridCells.Fixed(1),
-        contentPadding = PaddingValues(start = horizontalPadding, end = horizontalPadding, top = 4.Sdp, bottom = 90.dp),
+        contentPadding = PaddingValues(
+            start = horizontalPadding,
+            end = horizontalPadding,
+            top = 4.Sdp,
+            bottom = 90.dp
+        ),
         horizontalArrangement = Arrangement.spacedBy(10.Sdp),
         verticalArrangement = Arrangement.spacedBy(8.Sdp),
         modifier = Modifier.fillMaxSize()
@@ -766,12 +936,17 @@ private fun AllChannelListRow(
                 .clip(RoundedCornerShape(8.dp)),
             contentAlignment = Alignment.Center
         ) {
-            if (!channel.logo.isNullOrBlank()) {
+            var isLogoLoadError by remember(channel.logo) { mutableStateOf(false) }
+            if (!channel.logo.isNullOrBlank() && !isLogoLoadError) {
                 AsyncImage(
                     model = channel.logo,
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxSize()
+                    onState = { state -> isLogoLoadError = state is AsyncImagePainter.State.Error },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(2.Sdp)
+
                 )
             } else {
                 Icon(
@@ -786,7 +961,10 @@ private fun AllChannelListRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 channel.name,
-                style = headline600(fontSize = if (isTablet) 13.sp else 13.Ssp, color = IptvTextPrimary),
+                style = headline600(
+                    fontSize = if (isTablet) 13.sp else 13.Ssp,
+                    color = IptvTextPrimary
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -802,7 +980,10 @@ private fun AllChannelListRow(
                 ) {
                     Text(
                         channel.groupName,
-                        style = headline400(fontSize = if (isTablet) 9.sp else 9.Ssp, color = IptvAccent)
+                        style = headline400(
+                            fontSize = if (isTablet) 9.sp else 9.Ssp,
+                            color = IptvAccent
+                        )
                     )
                 }
             }
@@ -810,25 +991,17 @@ private fun AllChannelListRow(
 
         Box(
             modifier = Modifier
-                .size(if (isTablet) 34.dp else 36.Sdp)
-                .background(
-                    if (channel.isFavorite) IptvAccent.copy(alpha = 0.12f) else white.opacity(
-                        8
-                    ), CircleShape
-                )
-                .border(
-                    1.dp,
-                    if (channel.isFavorite) IptvAccent.copy(alpha = 0.3f) else IptvDivider,
-                    CircleShape
-                )
+                .padding(7.dp)
+                .size(if (isTablet) 20.dp else 24.Sdp)
+                .backgroundState(false,CircleShape)
                 .onClick(onClick = onToggleFavorite),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = painterResource(if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add),
                 contentDescription = null,
-                tint = if (channel.isFavorite) IptvAccent else colorSecondary,
-                modifier = Modifier.size(if (isTablet) 15.dp else 16.Sdp)
+                tint = if (channel.isFavorite) Color.Red else Color(0xFF555555),
+                modifier = Modifier.size(if (isTablet) 13.dp else 15.Sdp)
             )
         }
 
@@ -849,12 +1022,11 @@ private fun AllChannelListRow(
     }
 }
 
-// ─── Empty state ──────────────────────────────────────────────────────────────
 
 @Composable
 private fun FavoriteEmptyState(tab: Int, hasFilter: Boolean) {
     val icon = when (tab) {
-        0 -> R.drawable.ic_nav_favorite; 1 -> R.drawable.ic_app_timer; else -> R.drawable.ic_nav_channel
+        0 -> R.drawable.ic_app_favorite_add; 1 -> R.drawable.ic_app_timer; else -> R.drawable.ic_nav_channel
     }
     val title = when {
         hasFilter -> stringResource(R.string.no_results_found)
@@ -900,21 +1072,31 @@ private fun FavoriteEmptyState(tab: Int, hasFilter: Boolean) {
     }
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 @Composable
 private fun relativeTime(timestamp: Long): String {
     val diff = System.currentTimeMillis() - timestamp
     return when {
         diff < TimeUnit.MINUTES.toMillis(1) -> stringResource(R.string.time_just_now)
-        diff < TimeUnit.HOURS.toMillis(1) -> stringResource(R.string.time_minutes_ago, TimeUnit.MILLISECONDS.toMinutes(diff))
-        diff < TimeUnit.DAYS.toMillis(1) -> stringResource(R.string.time_hours_ago, TimeUnit.MILLISECONDS.toHours(diff))
-        diff < TimeUnit.DAYS.toMillis(7) -> stringResource(R.string.time_days_ago, TimeUnit.MILLISECONDS.toDays(diff))
-        else -> SimpleDateFormat("MMM d", Locale.getDefault()).format(Date(timestamp))
+        diff < TimeUnit.HOURS.toMillis(1) -> stringResource(
+            R.string.time_minutes_ago,
+            TimeUnit.MILLISECONDS.toMinutes(diff)
+        )
+
+        diff < TimeUnit.DAYS.toMillis(1) -> stringResource(
+            R.string.time_hours_ago,
+            TimeUnit.MILLISECONDS.toHours(diff)
+        )
+
+        diff < TimeUnit.DAYS.toMillis(7) -> stringResource(
+            R.string.time_days_ago,
+            TimeUnit.MILLISECONDS.toDays(diff)
+        )
+
+        else -> SimpleDateFormat("MMM d", LocalLocale.current.platformLocale).format(Date(timestamp))
     }
 }
 
-// ─── Previews ─────────────────────────────────────────────────────────────────
 
 @ResponsivePreview
 @Composable

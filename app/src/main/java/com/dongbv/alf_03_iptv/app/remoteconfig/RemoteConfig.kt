@@ -1,5 +1,8 @@
 package com.dongbv.alf_03_iptv.app.remoteconfig
 
+import com.app.inappupdate.RemoteUpdateConfig
+import com.app.inappupdate.UpdateMode
+
 val remoteConfig get() = RemoteConfig.Instance
 
 class RemoteConfig : RemoteConfigBase() {
@@ -8,10 +11,24 @@ class RemoteConfig : RemoteConfigBase() {
         val Instance: RemoteConfig by lazy { RemoteConfig() }
     }
 
+    private var updateMode: UpdateMode by remote("update_mode", UpdateMode.SMOOTH)
     private val defaultTimeNotiLock = listOf(3 to 0, 8 to 0, 13 to 0, 18 to 0, 23 to 0)
     val timeNotiLock by remoteCustom("time_noti_reminder", defaultTimeNotiLock) { raw ->
         notiTimesRemoteConfig(raw, defaultTimeNotiLock)
     }
+
+    fun buildUpdateConfig(
+        defaultTitle: String,
+        defaultMessage: String,
+        defaultUpdateText: String,
+        defaultDismissText: String,
+    ) = RemoteUpdateConfig(
+        updateMode = updateMode,
+        dialogTitle = defaultTitle,
+        dialogMessage = defaultMessage,
+        updateButtonText = defaultUpdateText,
+        dismissButtonText = defaultDismissText,
+    )
 
     private fun notiTimesRemoteConfig(
         rawValue: String,

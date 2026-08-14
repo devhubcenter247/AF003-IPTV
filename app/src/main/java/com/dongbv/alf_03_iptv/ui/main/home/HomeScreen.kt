@@ -74,7 +74,6 @@ import com.sdp.ssp.android.Ssp
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(),
-    gotoInfo: () -> Unit = {},
     onWatchNow: () -> Unit = {},
     onAddPlaylist: () -> Unit = {},
     onOpenChannel: (HomeChannelItem) -> Unit = {},
@@ -88,7 +87,6 @@ fun HomeScreen(
         currentSelectedType = currentSelectedType,
         listHomeChannel = listHomeChannel,
         filterChanner = { type -> viewModel.selectContent(type) },
-        gotoInfo = gotoInfo,
         onWatchNow = onWatchNow,
         onAddPlaylist = onAddPlaylist,
         onOpenChannel = { homeChannelItem ->
@@ -106,7 +104,6 @@ fun HomeScreenContent(
     listHomeChannel: List<HomeChannelItem> = emptyList(),
     filterChanner: (ContentType) -> Unit = {},
     onWatchNow: () -> Unit = {},
-    gotoInfo: () -> Unit = {},
     onAddPlaylist: () -> Unit = {},
     onOpenChannel: (HomeChannelItem) -> Unit = {},
     onHowToAddChannel: () -> Unit = {},
@@ -114,9 +111,7 @@ fun HomeScreenContent(
 ) {
     ColumnParentContent(
         onBack = onBack,
-        modifier = Modifier
-            .backgroundResource(R.drawable.img_bg_app)
-
+        modifier = modifier
     ) {
         BoxWithConstraints(
             modifier = Modifier
@@ -127,8 +122,8 @@ fun HomeScreenContent(
             Column(modifier = Modifier.fillMaxSize()) {
                 HomeHeader(
                     isTablet = isTablet,
-                    gotoInfo = gotoInfo,
-                    modifier = Modifier.then(if(isTablet) Modifier else modifier)
+                    gotoInfo = onHowToAddChannel,
+                    modifier = Modifier
                 )
 
                 if (isTablet) {
@@ -182,7 +177,7 @@ private fun HomeHeader(
             modifier = Modifier.weight(1f)
         )
         IconView(
-            item = R.drawable.ic_app_info,
+            item = R.drawable.ic_app_help,
             icSize = 20.Sdp,
             modifier = Modifier.size(if (isTablet) 36.dp else 28.Sdp),
             tint = white,
@@ -347,7 +342,7 @@ private fun HomeActionBar(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ButtonAction(
-                icon = R.drawable.ic_rounded_add,
+                icon = R.drawable.ic_app_add,
                 isAdded = true,
                 label = stringResource(R.string.add_new),
                 modifier = Modifier.wrapContentWidth(),
@@ -381,7 +376,7 @@ private fun HomeActionBar(
     } else {
         Row(modifier = modifier.fillMaxWidth()) {
             ButtonAction(
-                icon = R.drawable.ic_rounded_add,
+                icon = R.drawable.ic_app_add,
                 isAdded = true,
                 label = stringResource(R.string.add_new),
                 modifier = Modifier.wrapContentWidth(),
@@ -503,6 +498,9 @@ private fun HomeChannelContent(
                     index = index,
                     modifier = Modifier.onClick { onOpenChannel(item) }
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.heightPercent(10f))
             }
         }
     }
@@ -685,7 +683,7 @@ fun ButtonAction(
         Text(
             text = label,
             fontSize = 12.Ssp,
-            color = if (isSelect) white else white.opacity(if (isAdded) 1f else 0.75f),
+            color = if (isSelect) IptvAccent else white.opacity(if (isAdded) 1f else 0.75f),
             modifier = Modifier.paddingStart(6.Sdp)
         )
     }
@@ -695,7 +693,7 @@ fun ButtonAction(
 @Composable
 fun HomeScreenMainPreview() {
     AppViewTheme {
-        HomeScreenContent(listHomeChannel = listDemoContent, modifier = Modifier.paddingTop(28.Sdp))
+        HomeScreenContent(listHomeChannel = listDemoContent, modifier = Modifier.backgroundResource(R.drawable.img_bg_app).paddingTop(28.Sdp))
     }
 }
 

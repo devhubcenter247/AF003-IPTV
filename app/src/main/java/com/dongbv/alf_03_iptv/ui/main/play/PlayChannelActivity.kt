@@ -532,8 +532,8 @@ fun PlayChannelScreen(
 
                 LazyColumn(
                     state = rememberLazyListState(),
-                    contentPadding = PaddingValues(horizontal = 12.Sdp, vertical = 8.Sdp),
-                    verticalArrangement = Arrangement.spacedBy(8.Sdp),
+                    contentPadding = PaddingValues( bottom = 8.Sdp),
+                    verticalArrangement = Arrangement.spacedBy(4.Sdp),
                     modifier = Modifier
                         .fillMaxSize()
 
@@ -640,7 +640,7 @@ private fun PlayerSurface(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .background(IptvBgPrimary)
+                    .background(IptvBgPrimary.opacity(0.5f))
             ) {
                 Row(
                     modifier = Modifier
@@ -649,7 +649,20 @@ private fun PlayerSurface(
                         .padding(horizontal = 8.Sdp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_back, onClick = onBack)
+                    Box(
+                        modifier = Modifier
+                            .size(26.Sdp)
+                            .background(white.opacity(8), CircleShape)
+                            .onClick(onClick = onBack),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_app_back),
+                            contentDescription = null,
+                            tint = IptvTextPrimary,
+                            modifier = Modifier.size(14.Sdp)
+                        )
+                    }
                     Spacer(Modifier.width(8.Sdp))
                     Text(
                         text = currentChannelName,

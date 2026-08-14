@@ -153,7 +153,7 @@ fun encodeFileToBase64(
 suspend fun downloadUrlAsBase64(
     url: String,
     maxDimPx: Int = 512,
-    format: Bitmap.CompressFormat = Bitmap.CompressFormat.WEBP_LOSSY,
+    format: Bitmap.CompressFormat = defaultWebpCompressFormat(),
     quality: Int = 85,
     maxSizeKB: Int? = null
 ): String? = withContext(Dispatchers.IO) {
@@ -165,6 +165,15 @@ suspend fun downloadUrlAsBase64(
         }
     }.getOrNull()
 }
+
+@Suppress("DEPRECATION")
+private fun defaultWebpCompressFormat(): Bitmap.CompressFormat =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        Bitmap.CompressFormat.WEBP_LOSSY
+    } else {
+        Bitmap.CompressFormat.WEBP
+    }
+
 // ------------- Core helpers --------------------------------------------------
 private fun decodeResourceScaled(
     context: Context,

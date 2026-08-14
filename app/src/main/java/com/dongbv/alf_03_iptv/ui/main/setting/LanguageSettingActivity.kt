@@ -3,15 +3,19 @@ package com.dongbv.alf_03_iptv.ui.main.setting
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -34,6 +39,9 @@ import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.BoxParentContent
+import com.dongbv.alf_03_iptv.style.backgroundResource
+import com.dongbv.alf_03_iptv.style.onClick
+import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.LanguageViewItem
@@ -41,6 +49,7 @@ import com.dongbv.alf_03_iptv.ui.language.LanguageItem
 import com.dongbv.alf_03_iptv.ui.language.getLanguageArray
 import com.dongbv.alf_03_iptv.ui.main.MainActivity
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
+import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
 import com.dongbv.alf_03_iptv.widget.mainColor
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
@@ -62,7 +71,7 @@ class LanguageSettingActivity : BaseActivity() {
                 languages = languages,
                 selected = selected,
                 modifier = Modifier
-                
+                    .backgroundResource(R.drawable.img_bg_app)
                     .fillMaxSize(1f)
                     .padding(top = statusBarHeight),
                 onSelect = { selected = it },
@@ -84,22 +93,26 @@ fun GreetingPreview() {
     val listLanguages = getLanguageArray()
     AppViewTheme {
         LanguageSettingScreen(
-            listLanguages, listLanguages[0], modifier =
+            listLanguages,
+            listLanguages[0],
+            modifier =
                 Modifier
-                    .paddingTop(6.Sdp)
-                    .background(white), onSelect = {}, onConfirm = {}, onBack = {}
+                    .backgroundResource(R.drawable.img_bg_app),
+            onSelect = {},
+            onConfirm = {},
+            onBack = {}
         )
     }
 }
 
 @Composable
 fun LanguageSettingScreen(
-      languages: List<LanguageItem>,
-      selected: LanguageItem?,
-      @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-      onSelect: (LanguageItem) -> Unit,
-      onConfirm: () -> Unit,
-      onBack: () -> Unit = {}
+    languages: List<LanguageItem>,
+    selected: LanguageItem?,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+    onSelect: (LanguageItem) -> Unit,
+    onConfirm: () -> Unit,
+    onBack: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     LaunchedEffect(Unit) {
@@ -110,24 +123,32 @@ fun LanguageSettingScreen(
             Modifier.padding(horizontal = 12.Sdp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconView(
-                item = R.drawable.ic_app_back,
-                icSize = 28.Sdp, tint = mainColor,
+            Box(
+                modifier = Modifier
+                    .size(26.Sdp)
+                    .background(white.opacity(8), CircleShape)
+                    .onClick(onClick = onBack),
+                contentAlignment = Alignment.Center
             ) {
-                onBack()
+                Icon(
+                    painter = painterResource(R.drawable.ic_app_back),
+                    contentDescription = null,
+                    tint = IptvTextPrimary,
+                    modifier = Modifier.size(14.Sdp)
+                )
             }
-            SpaceW(4.Sdp)
+            SpaceW(10.Sdp)
             TextView(
                 text = R.string.language,
-                font = R.font.ss_700,
-                textSize = 18.Ssp,
-                color = mainColor
+                font = R.font.ss_600,
+                textSize = 17.Ssp,
+                color = white
             )
             Spacer(Modifier.weight(1f))
             IconView(
                 item = R.drawable.ic_app_check,
                 icSize = 28.Sdp,
-                tint = mainColor,
+                tint = white,
             ) {
                 if (selected != null) onConfirm()
             }
@@ -146,7 +167,7 @@ fun LanguageSettingScreen(
                 items = languages,
                 key = { it.code }
             ) { item ->
-                LanguageViewItem(currentLanguage = selected,item = item) { chosen ->
+                LanguageViewItem(currentLanguage = selected, item = item) { chosen ->
                     onSelect(chosen)
                 }
             }

@@ -348,22 +348,22 @@ private fun ChannelReelPage(
                         .align(Alignment.CenterEnd)
                         .padding(end = 12.Sdp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(24.Sdp)
+                    verticalArrangement = Arrangement.spacedBy(16.Sdp)
                 ) {
                     ActionButton(
                         iconRes = if (isFavorite) R.drawable.ic_app_favorite_minus
                         else R.drawable.ic_app_favorite_add,
-                        tint = if (isFavorite) IptvAccent else IptvTextPrimary,
-                        label = if (isFavorite) "Saved" else "Save",
+                        tint = if (isFavorite) Color.Red else white,
+                        label = stringResource(R.string.favorite),
                         onClick = {
                             isFavorite = !isFavorite
                             actions.onToggleFavorite(channel.id)
                         }
                     )
                     ActionButton(
-                        iconRes = if (isMuted) R.drawable.ic_app_question else R.drawable.ic_app_info,
+                        iconRes = if (isMuted) R.drawable.ic_app_volume_off else R.drawable.ic_app_volume_on,
                         tint = IptvTextPrimary,
-                        label = if (isMuted) "Unmute" else "Mute",
+                        label = stringResource(R.string.sound),
                         onClick = actions::onToggleMute
                     )
                 }
@@ -427,7 +427,8 @@ private fun ChannelAvatar(logoUrl: String?) {
                 contentDescription = null,
                 contentScale = ContentScale.None,
                 onState = { state -> isLogoLoadError = state is AsyncImagePainter.State.Error },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .padding(2.Sdp)
 
             )
@@ -453,12 +454,12 @@ private fun ActionButton(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.Sdp),
+        verticalArrangement = Arrangement.spacedBy(3.Sdp),
         modifier = Modifier.onClick(onClick = onClick)
     ) {
         Box(
             modifier = Modifier
-                .size(37.Sdp)
+                .size(32.Sdp)
                 .background(Color.White.copy(alpha = 0.12f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
@@ -466,7 +467,7 @@ private fun ActionButton(
                 painter = painterResource(iconRes),
                 contentDescription = label,
                 tint = tint,
-                modifier = Modifier.size(24.Sdp)
+                modifier = Modifier.padding(8.Sdp)
             )
         }
         Text(

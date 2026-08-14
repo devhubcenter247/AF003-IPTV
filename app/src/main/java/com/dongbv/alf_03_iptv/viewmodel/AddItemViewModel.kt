@@ -118,6 +118,12 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
     val selectedSuggestionUrl: StateFlow<String?> = _selectedSuggestionUrl.asStateFlow()
 
     fun setSelectedFile(uri: Uri?, fileName: String?) {
+        if (uri != null && fileName?.lowercase()?.let { it.endsWith(".m3u") || it.endsWith(".m3u8") } != true) {
+            viewModelScope.launch {
+                _saveState.emit(SaveState.Error(R.string.invalid_file_type))
+            }
+            return
+        }
         _selectedFileUri.value = uri
         _selectedFileName.value = fileName
         _selectedSuggestionUrl.value = null

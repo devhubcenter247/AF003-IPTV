@@ -2,7 +2,6 @@
 <resources>
 
     <style name="Base.Theme.AppTheme" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
 

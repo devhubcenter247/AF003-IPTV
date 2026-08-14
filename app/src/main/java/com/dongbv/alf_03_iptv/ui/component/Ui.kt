@@ -60,6 +60,8 @@ import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.gray
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.opacity
+import com.dongbv.alf_03_iptv.style.paddingHorizontal
+import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.transparent
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.language.LanguageItem
@@ -227,7 +229,7 @@ fun ChannelSearchBar(
                     .onClick { onQueryChanged("") }, contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_app_delete),
+                    painter = painterResource(R.drawable.ic_app_clear),
                     contentDescription = null,
                     tint = colorSecondary,
                     modifier = Modifier.size(12.Sdp)
@@ -283,6 +285,8 @@ fun ChannelListItem(
 ) {
     Row(
         modifier = Modifier
+            .paddingHorizontal(12.Sdp)
+            .paddingTop(8.Sdp)
             .onClick(onClick = onClick)
             .fillMaxWidth()
             .background(

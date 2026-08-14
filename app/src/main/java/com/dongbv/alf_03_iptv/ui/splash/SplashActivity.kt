@@ -28,8 +28,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
+import com.dongbv.alf_03_iptv.BuildConfig
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.app.AppPreferences
+import com.dongbv.alf_03_iptv.app.remoteconfig.remoteConfig
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.BoxParentContent
@@ -51,6 +53,8 @@ import com.dongbv.alf_03_iptv.widget.mainColor
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -59,7 +63,10 @@ import kotlin.time.Duration.Companion.milliseconds
 class SplashActivity : BaseActivity() {
     override fun initialize() {
         lifecycleScope.launch(Dispatchers.Main) {
-            delay(3000.milliseconds)
+            awaitAll(
+                async { remoteConfig.setupRemoteConfig(BuildConfig.DEBUG) }
+            )
+            delay(1500.milliseconds)
             goNextPage()
         }
     }

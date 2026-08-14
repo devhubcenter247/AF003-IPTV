@@ -445,7 +445,20 @@ fun ChannelHorScreen(
                         .padding(horizontal = 16.Sdp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    PlayerCtrlButton(iconRes = R.drawable.ic_app_back, onClick = actions::onBack)
+                    Box(
+                        modifier = Modifier
+                            .size(26.Sdp)
+                            .background(white.opacity(8), CircleShape)
+                            .onClick(onClick = actions::onBack),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_app_back),
+                            contentDescription = null,
+                            tint = IptvTextPrimary,
+                            modifier = Modifier.size(14.Sdp)
+                        )
+                    }
                     Spacer(Modifier.width(8.Sdp))
                     Text(
                         text = currentChannelName,

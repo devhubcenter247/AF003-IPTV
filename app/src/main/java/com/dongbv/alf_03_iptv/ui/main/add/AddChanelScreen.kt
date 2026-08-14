@@ -159,7 +159,7 @@ private val fileSuggestions = listOf(
 
 private val tabLabels = listOf("URL", "File", "Gallery")
 private val tabIcons =
-    listOf(R.drawable.ic_app_url, R.drawable.ic_app_video, R.drawable.ic_app_storage)
+    listOf(R.drawable.ic_app_url, R.drawable.ic_app_file, R.drawable.ic_app_video)
 private val tabSubtitles = listOf(
     "Paste an M3U link from the internet",
     "Import a local .m3u / .m3u8 file",
