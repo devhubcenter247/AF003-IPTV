@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">mín.</string>
     <string name="sound">Sonido</string>
     <string name="latter">Más tarde</string>
+
+    <string name="free_playlist_limit_reached">Has utilizado las 3 importaciones de listas de reproducción gratuitas. Actualice a Premium para agregar listas de reproducción ilimitadas.</string>
+    <string name="free_playlist_limit_reached_title">Se alcanzó el límite de listas de reproducción gratuitas</string>
+    <string name="free_playlist_limit_reward_message">Mire un anuncio recompensado para desbloquear una importación de lista de reproducción más o actualice a Premium para importaciones ilimitadas.</string>
+    <string name="watch_ad_to_continue">Ver anuncio</string>
+    <string name="go_premium">Ir Premium</string>
+    <string name="skip">Saltar</string>
+    <string name="provider_url_blocked">Esta URL está bloqueada por la lista de restricción de proveedores. Utilice una fuente autorizada.</string>
+    <string name="all_channels_blocked">Todos los canales de esta lista de reproducción coinciden con la lista de restricciones del proveedor. No se importó nada.</string>
+    <string name="playlist_saved_with_blocked_channels">Lista de reproducción guardada.  Se excluyeron los canales restringidos de%1$d.</string>
+    <string name="restricted_channels_excluded">Se excluyeron %1$d canales restringidos de las categorías seleccionadas.</string>
+    <string name="copyright_notice_title">Responsabilidad de contenido y derechos de autor.</string>
+    <string name="copyright_notice_message">Solo importe o mire contenido que sea de su propiedad o al que esté autorizado a acceder. Usted es responsable de las fuentes que agrega y de obtener los permisos necesarios. La aplicación no autoriza el acceso a contenido de terceros ni respalda la infracción de derechos de autor. La aplicación y sus desarrolladores renuncian a toda responsabilidad por el contenido agregado por el usuario en la medida permitida por la ley aplicable. El filtrado de proveedores no puede verificar los permisos de derechos de autor. Al continuar, confirmas que tienes los derechos necesarios para utilizar el contenido.</string>
+    <string name="copyright_notice_accept">entiendo y estoy de acuerdo</string>
+    <string name="subscribe_now">Suscríbete ahora</string>
+    <string name="auto_renewable_cancel_anytime">Auto renovable. Cancele en cualquier momento.</string>
+    <string name="free_playlist_limit_reward_only_message">Mire un anuncio recompensado para desbloquear una importación de lista de reproducción más.</string>
+    <string name="reward_ad_not_ready">No hay ningún anuncio disponible en este momento. Inténtelo de nuevo más tarde.</string>
+    <string name="watch_ad_and_add_playlist">Ver anuncio y agregar lista de reproducción</string>
+    <string name="rating_feedback_reason">Tus comentarios</string>
+    <string name="rating_feedback_reason_required">Por favor comparta lo que sucedió o lo que podríamos mejorar.</string>
+    <string name="rating_send_feedback">Continuar enviando un correo electrónico</string>
+    <string name="rating_select_stars">Seleccione una calificación de estrellas.</string>
+    <string name="rating_feedback_subject">Comentarios -%1$s</string>
+    <string name="rating_feedback_body">Calificación:%1$d/5 estrellas
+Comentarios y sugerencias:%2$s</string>
+    <string name="rating_no_email_app">No se encontró ninguna aplicación de correo electrónico. Instale una aplicación de correo electrónico para enviar comentarios.</string>
+    <string name="rating_feedback_hint">Por ejemplo: un problema de reproducción, problemas para agregar una lista de reproducción o una función que necesita.</string>
 </resources>

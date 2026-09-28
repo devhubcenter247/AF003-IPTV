@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">最小</string>
     <string name="sound">聲音</string>
     <string name="latter">之後</string>
+
+    <string name="free_playlist_limit_reached">您已使用全部 3 個免費播放清單匯入。升級到高級版可新增無限的播放清單。</string>
+    <string name="free_playlist_limit_reached_title">已達到免費播放清單限制</string>
+    <string name="free_playlist_limit_reward_message">觀看一則激勵廣告即可解鎖另一份播放清單匯入，或升級至高級版以無限匯入。</string>
+    <string name="watch_ad_to_continue">觀看廣告</string>
+    <string name="go_premium">升級至高級版</string>
+    <string name="skip">跳過</string>
+    <string name="provider_url_blocked">該 URL 被提供者限制清單阻止。請使用授權來源。</string>
+    <string name="all_channels_blocked">此播放清單中的所有頻道均符合提供者限制清單。沒有進口任何東西。</string>
+    <string name="playlist_saved_with_blocked_channels">播放清單已儲存。%1$d限制通道被排除。</string>
+    <string name="restricted_channels_excluded">已從你選擇的分類中排除 %1$d 個受限頻道。</string>
+    <string name="copyright_notice_title">內容和版權責任</string>
+    <string name="copyright_notice_message">僅匯入或觀看您擁有或有權存取的內容。您對您新增的來源以及取得任何所需的權限負責。該應用程式不授權存取第三方內容或認可侵犯版權。在適用法律允許的範圍內，該應用程式及其開發人員對使用者新增的內容不承擔任何責任。提供者過濾無法驗證版權權限。透過繼續，您確認您擁有使用該內容的必要權利。</string>
+    <string name="copyright_notice_accept">我理解並同意</string>
+    <string name="subscribe_now">立即訂閱</string>
+    <string name="auto_renewable_cancel_anytime">自動再生。隨時取消。</string>
+    <string name="free_playlist_limit_reward_only_message">觀看一則激勵廣告即可解鎖另一份播放清單匯入。</string>
+    <string name="reward_ad_not_ready">目前沒有廣告。請稍後重試。</string>
+    <string name="watch_ad_and_add_playlist">觀看廣告並添加播放列表</string>
+    <string name="rating_feedback_reason">您的回饋</string>
+    <string name="rating_feedback_reason_required">請分享發生了什麼事或我們可以改進的地方。</string>
+    <string name="rating_send_feedback">繼續發送電子郵件</string>
+    <string name="rating_select_stars">請選擇星級。</string>
+    <string name="rating_feedback_subject">回饋 -%1$s</string>
+    <string name="rating_feedback_body">評分：%1$d/5 星
+回饋與建議：%2$s</string>
+    <string name="rating_no_email_app">找不到電子郵件應用程式。請安裝電子郵件應用程式來發送回饋。</string>
+    <string name="rating_feedback_hint">例如：播放問題、新增播放清單時遇到問題或您需要的功能。</string>
 </resources>

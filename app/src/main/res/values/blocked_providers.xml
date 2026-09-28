@@ -1,0 +1,64 @@
+<resources>
+    <string-array name="blocked_provider_keywords" translatable="false">
+        <item>canalplus</item>
+        <item>canal+</item>
+        <item>canalplus.fr</item>
+        <item>sky</item>
+        <item>skysport</item>
+        <item>skysports</item>
+        <item>sky.de</item>
+        <item>sky.it</item>
+        <item>sky.uk</item>
+        <item>skysky</item>
+        <item>beinsport</item>
+        <item>bein-sport</item>
+        <item>beinsports</item>
+        <item>beinsports.com</item>
+        <item>bein</item>
+        <item>dazn</item>
+        <item>dazn.com</item>
+        <item>dazn.es</item>
+        <item>dazn.de</item>
+        <item>dazn.it</item>
+        <item>espn</item>
+        <item>espn+</item>
+        <item>espnplus</item>
+        <item>disney</item>
+        <item>disney+</item>
+        <item>disneyplus</item>
+        <item>disneyplus.com</item>
+        <item>movistar</item>
+        <item>movistarplus</item>
+        <item>movistarlaliga</item>
+        <item>movistar+</item>
+        <item>orange</item>
+        <item>ocs</item>
+        <item>premier</item>
+        <item>bundesliga</item>
+        <item>paramount</item>
+        <item>paramount+</item>
+        <item>paramountplus</item>
+        <item>showtime</item>
+        <item>peacock</item>
+        <item>peacocktv</item>
+        <item>nbc</item>
+        <item>hulu</item>
+        <item>appletv</item>
+        <item>tv.apple</item>
+        <item>crunchyroll</item>
+        <item>funimation</item>
+        <item>seriea</item>
+        <item>laliga</item>
+        <item>eurosport</item>
+        <item>discovery</item>
+        <item>hbomax</item>
+        <item>max</item>
+        <item>max.com</item>
+        <item>rakuten</item>
+        <item>viaplay</item>
+        <item>amazon</item>
+        <item>primevideo</item>
+        <item>prime video</item>
+        <item>amazon prime</item>
+    </string-array>
+</resources>

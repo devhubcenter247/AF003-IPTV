@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Мин</string>
     <string name="sound">Звук</string>
     <string name="latter">по-късно</string>
+
+    <string name="free_playlist_limit_reached">Използвали сте всичките 3 безплатни импортирания на плейлисти. Надстройте до Premium, за да добавите неограничени плейлисти.</string>
+    <string name="free_playlist_limit_reached_title">Лимитът за безплатни плейлисти е достигнат</string>
+    <string name="free_playlist_limit_reward_message">Гледайте една възнаградена реклама, за да отключите още едно импортиране на плейлисти, или надстройте до Premium за неограничен импорт.</string>
+    <string name="watch_ad_to_continue">Гледайте реклама</string>
+    <string name="go_premium">Отидете на Premium</string>
+    <string name="skip">Пропускане</string>
+    <string name="provider_url_blocked">Този URL е блокиран от списъка с ограничения на доставчика. Моля, използвайте оторизиран източник.</string>
+    <string name="all_channels_blocked">Всички канали в този плейлист отговарят на списъка с ограничения на доставчика. Нищо не беше внесено.</string>
+    <string name="playlist_saved_with_blocked_channels">Плейлистът е запазен.  Ограничените канали на%1$dбяха изключени.</string>
+    <string name="restricted_channels_excluded">%1$d ограничени канала бяха изключени от избраните категории.</string>
+    <string name="copyright_notice_title">Отговорност за съдържание и авторско право</string>
+    <string name="copyright_notice_message">Импортирайте или гледайте само съдържание, което притежавате или имате право за достъп. Вие носите отговорност за източниците, които добавяте, и за получаването на всички необходими разрешения. Приложението не разрешава достъп до съдържание на трети страни и не одобрява нарушаване на авторски права. Приложението и неговите разработчици отказват да носят отговорност за добавено от потребителите съдържание до степента, разрешена от приложимото законодателство. Филтрирането на доставчика не може да провери разрешенията за авторски права. Продължавайки, вие потвърждавате, че имате необходимите права за използване на съдържанието.</string>
+    <string name="copyright_notice_accept">Разбирам и съм съгласен</string>
+    <string name="subscribe_now">Абонирайте се сега</string>
+    <string name="auto_renewable_cancel_anytime">Автоматично подновяема. Отказ по всяко време.</string>
+    <string name="free_playlist_limit_reward_only_message">Гледайте една наградена реклама, за да отключите още едно импортиране на плейлисти.</string>
+    <string name="reward_ad_not_ready">В момента няма налична реклама. Моля, опитайте отново по-късно.</string>
+    <string name="watch_ad_and_add_playlist">Гледайте реклама и добавете плейлист</string>
+    <string name="rating_feedback_reason">Вашето мнение</string>
+    <string name="rating_feedback_reason_required">Моля, споделете какво се случи или какво можем да подобрим.</string>
+    <string name="rating_send_feedback">Продължете към имейл</string>
+    <string name="rating_select_stars">Моля, изберете оценка със звезди.</string>
+    <string name="rating_feedback_subject">Обратна връзка -%1$s</string>
+    <string name="rating_feedback_body">Оценка:%1$d/5 звезди
+Отзиви и предложения:%2$s</string>
+    <string name="rating_no_email_app">Няма намерено приложение за имейл. Please install an email app to send feedback.</string>
+    <string name="rating_feedback_hint">Например: проблем с възпроизвеждането, проблем с добавянето на плейлист или функция, от която се нуждаете.</string>
 </resources>

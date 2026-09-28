@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Sunet</string>
     <string name="latter">Mai târziu</string>
+
+    <string name="free_playlist_limit_reached">Ați folosit toate cele 3 importuri gratuite de liste de redare. Faceți upgrade la Premium pentru a adăuga liste de redare nelimitate.</string>
+    <string name="free_playlist_limit_reached_title">Limita listei de redare gratuite a fost atinsă</string>
+    <string name="free_playlist_limit_reward_message">Urmăriți un anunț cu recompensă pentru a debloca încă un import de playlist sau treceți la Premium pentru importuri nelimitate.</string>
+    <string name="watch_ad_to_continue">Urmăriți anunțul</string>
+    <string name="go_premium">Treci Premium</string>
+    <string name="skip">Sari peste</string>
+    <string name="provider_url_blocked">Această adresă URL este blocată de lista de restricții pentru furnizori. Vă rugăm să utilizați o sursă autorizată.</string>
+    <string name="all_channels_blocked">Toate canalele din această listă de redare corespund listei de restricții ale furnizorului. Nu s-a importat nimic.</string>
+    <string name="playlist_saved_with_blocked_channels">Lista de redare a fost salvată.  Canalele restricționate%1$dau fost excluse.</string>
+    <string name="restricted_channels_excluded">%1$d canale restricționate au fost excluse din categoriile selectate.</string>
+    <string name="copyright_notice_title">Conținut și responsabilitatea drepturilor de autor</string>
+    <string name="copyright_notice_message">Importați sau vizionați numai conținut pe care îl dețineți sau pe care sunteți autorizat să îl accesați. Sunteți responsabil pentru sursele pe care le adăugați și pentru obținerea oricăror permisiuni necesare. Aplicația nu autorizează accesul la conținut de la terți și nu aprobă încălcarea drepturilor de autor. Aplicația și dezvoltatorii săi își declină responsabilitatea pentru conținutul adăugat de utilizator în măsura permisă de legea aplicabilă. Filtrarea furnizorului nu poate verifica permisiunile pentru drepturi de autor. Continuând, confirmați că aveți drepturile necesare pentru a utiliza conținutul.</string>
+    <string name="copyright_notice_accept">Înțeleg și sunt de acord</string>
+    <string name="subscribe_now">Abonați-vă acum</string>
+    <string name="auto_renewable_cancel_anytime">Reînnoibilă automat. Anulați oricând.</string>
+    <string name="free_playlist_limit_reward_only_message">Urmăriți un anunț cu recompensă pentru a debloca încă un import de playlist.</string>
+    <string name="reward_ad_not_ready">Niciun anunț nu este disponibil momentan. Vă rugăm să încercați din nou mai târziu.</string>
+    <string name="watch_ad_and_add_playlist">Urmăriți anunțul și adăugați playlist</string>
+    <string name="rating_feedback_reason">Feedback-ul dvs</string>
+    <string name="rating_feedback_reason_required">Vă rugăm să împărtășiți ce sa întâmplat sau ce am putea îmbunătăți.</string>
+    <string name="rating_send_feedback">Continuați să trimiteți e-mail</string>
+    <string name="rating_select_stars">Vă rugăm să selectați o evaluare cu stele.</string>
+    <string name="rating_feedback_subject">Feedback -%1$s</string>
+    <string name="rating_feedback_body">Evaluare:%1$d/5 stele
+Feedback și sugestii:%2$s</string>
+    <string name="rating_no_email_app">Nu a fost găsită nicio aplicație de e-mail. Instalați o aplicație de e-mail pentru a trimite feedback.</string>
+    <string name="rating_feedback_hint">De exemplu: o problemă de redare, probleme la adăugarea unei liste de redare sau o funcție de care aveți nevoie.</string>
 </resources>

@@ -1,50 +1,25 @@
-package com.dongbv.alf_03_iptv.app.remoteconfig
-
+package com.dongbv.alf_03_iptv.app.remote
 import android.util.Log
 import com.dongbv.alf_03_iptv.app.SharedPreference
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
 import com.google.gson.reflect.TypeToken
-import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.context.GlobalContext
 import java.lang.reflect.Type
 import kotlin.getValue
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-object RemoteInitializer {
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val started = AtomicBoolean(false)
-    private val fetchResult = CompletableDeferred<Boolean>()
-
-    fun startFetch(isDebug: Boolean) {
-        if (!started.compareAndSet(false, true)) return
-        scope.launch {
-            val success = runCatching { remoteConfig.setupRemoteConfig(isDebug) }
-                .getOrDefault(false)
-            fetchResult.complete(success)
-        }
-    }
-
-    suspend fun awaitFetch(timeoutMs: Long = DEFAULT_SPLASH_TIMEOUT_MS): Boolean? {
-        return withTimeoutOrNull(timeoutMs.milliseconds) { fetchResult.await() }
-    }
-
-    const val DEFAULT_SPLASH_TIMEOUT_MS = 30_000L
-}
 abstract class RemoteConfigBase : KoinComponent {
 
     companion object {
@@ -60,7 +35,14 @@ abstract class RemoteConfigBase : KoinComponent {
     @PublishedApi
     internal val missingKeys = mutableListOf<String>()
 
-    suspend fun setupRemoteConfig(isDebug: Boolean): Boolean {
+    @Volatile
+    private var fetchDeferred: Deferred<Unit>? = null
+
+    @Synchronized
+    fun fetchRemoteConfigAsync(scope: CoroutineScope, isDebug: Boolean): Deferred<Unit> =
+        fetchDeferred ?: scope.async { setupRemoteConfig(isDebug) }.also { fetchDeferred = it }
+
+    suspend fun setupRemoteConfig(isDebug: Boolean) {
         val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = FirebaseRemoteConfigSettings.Builder()
             .setFetchTimeoutInSeconds(30L)
@@ -76,7 +58,6 @@ abstract class RemoteConfigBase : KoinComponent {
         } else if (isDebug) {
             Log.w(TAG, "fetch thất bại — dùng giá trị đã lưu/default")
         }
-        return isSuccess
     }
 
     fun syncRemote(remoteConfig: FirebaseRemoteConfig) {
@@ -157,11 +138,20 @@ abstract class RemoteConfigBase : KoinComponent {
             }
         }
         return object : ReadWriteProperty<Any?, T> {
-            override fun getValue(thisRef: Any?, property: KProperty<*>): T =
-                sharedPreference.readRuntime(key, default, type).also { block?.invoke(it) }
+            override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+                val value = if (GlobalContext.getOrNull() == null) {
+                    default
+                } else {
+                    sharedPreference.readRuntime(key, default, type)
+                }
+                return value.also { block?.invoke(it) }
+            }
 
-            override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) =
-                sharedPreference.writeRuntime(key, value)
+            override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+                if (GlobalContext.getOrNull() != null) {
+                    sharedPreference.writeRuntime(key, value)
+                }
+            }
         }
     }
 
@@ -193,10 +183,17 @@ abstract class RemoteConfigBase : KoinComponent {
         }
         return object : ReadWriteProperty<Any?, T> {
             override fun getValue(thisRef: Any?, property: KProperty<*>): T =
-                sharedPreference.readRuntime(key, default, type)
+                if (GlobalContext.getOrNull() == null) {
+                    default
+                } else {
+                    sharedPreference.readRuntime(key, default, type)
+                }
 
-            override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) =
-                sharedPreference.writeRuntime(key, value)
+            override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+                if (GlobalContext.getOrNull() != null) {
+                    sharedPreference.writeRuntime(key, value)
+                }
+            }
         }
     }
 }

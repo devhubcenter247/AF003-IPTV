@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">મિનિ</string>
     <string name="sound">ધ્વનિ</string>
     <string name="latter">બાદમાં</string>
+
+    <string name="free_playlist_limit_reached">તમે તમામ 3 મફત પ્લેલિસ્ટ આયાતનો ઉપયોગ કર્યો છે. અમર્યાદિત પ્લેલિસ્ટ ઉમેરવા માટે પ્રીમિયમ પર અપગ્રેડ કરો.</string>
+    <string name="free_playlist_limit_reached_title">મફત પ્લેલિસ્ટ મર્યાદા પહોંચી</string>
+    <string name="free_playlist_limit_reward_message">એક વધુ પ્લેલિસ્ટ આયાતને અનલૉક કરવા માટે એક પુરસ્કૃત જાહેરાત જુઓ અથવા અમર્યાદિત આયાત માટે પ્રીમિયમમાં અપગ્રેડ કરો.</string>
+    <string name="watch_ad_to_continue">જાહેરાત જુઓ</string>
+    <string name="go_premium">પ્રીમિયમ પર જાઓ</string>
+    <string name="skip">છોડો</string>
+    <string name="provider_url_blocked">આ URL પ્રદાતા પ્રતિબંધ સૂચિ દ્વારા અવરોધિત છે. કૃપા કરીને અધિકૃત સ્ત્રોતનો ઉપયોગ કરો.</string>
+    <string name="all_channels_blocked">આ પ્લેલિસ્ટમાંની બધી ચેનલો પ્રદાતા પ્રતિબંધ સૂચિ સાથે મેળ ખાય છે. કંઈપણ આયાત કરવામાં આવ્યું ન હતું.</string>
+    <string name="playlist_saved_with_blocked_channels">પ્લેલિસ્ટ સાચવ્યું.%1$dપ્રતિબંધિત ચેનલોને બાકાત રાખવામાં આવી હતી.</string>
+    <string name="restricted_channels_excluded">તમારી પસંદ કરેલી કેટેગરીમાંથી %1$d પ્રતિબંધિત ચેનલો બાકાત રાખવામાં આવી.</string>
+    <string name="copyright_notice_title">સામગ્રી અને કૉપિરાઇટ જવાબદારી</string>
+    <string name="copyright_notice_message">ફક્ત તમારી માલિકીની અથવા ઍક્સેસ કરવા માટે અધિકૃત હોય તેવી સામગ્રીને આયાત કરો અથવા જુઓ. તમે ઉમેરેલા સ્ત્રોતો માટે અને કોઈપણ જરૂરી પરવાનગીઓ મેળવવા માટે તમે જવાબદાર છો. એપ્લિકેશન તૃતીય-પક્ષ સામગ્રીની ઍક્સેસને અધિકૃત કરતી નથી અથવા કૉપિરાઇટ ઉલ્લંઘનને સમર્થન આપતી નથી. એપ્લિકેશન અને તેના ડેવલપર્સ લાગુ કાયદા દ્વારા મંજૂર મર્યાદા સુધી વપરાશકર્તા દ્વારા ઉમેરાયેલ સામગ્રી માટેની જવાબદારીને અસ્વીકાર કરે છે. પ્રદાતા ફિલ્ટરિંગ કૉપિરાઇટ પરવાનગીઓને ચકાસી શકતું નથી. ચાલુ રાખીને, તમે પુષ્ટિ કરો છો કે તમારી પાસે સામગ્રીનો ઉપયોગ કરવાના જરૂરી અધિકારો છે.</string>
+    <string name="copyright_notice_accept">હું સમજું છું અને સંમત છું</string>
+    <string name="subscribe_now">હમણાં સબ્સ્ક્રાઇબ કરો</string>
+    <string name="auto_renewable_cancel_anytime">ઓટો રિન્યુએબલ. કોઈપણ સમયે રદ કરો.</string>
+    <string name="free_playlist_limit_reward_only_message">એક વધુ પ્લેલિસ્ટ આયાતને અનલૉક કરવા માટે એક પુરસ્કૃત જાહેરાત જુઓ.</string>
+    <string name="reward_ad_not_ready">અત્યારે કોઈ જાહેરાત ઉપલબ્ધ નથી. કૃપા કરીને પછીથી ફરી પ્રયાસ કરો.</string>
+    <string name="watch_ad_and_add_playlist">જાહેરાત જુઓ અને પ્લેલિસ્ટ ઉમેરો</string>
+    <string name="rating_feedback_reason">તમારો પ્રતિભાવ</string>
+    <string name="rating_feedback_reason_required">કૃપા કરીને શું થયું અથવા અમે શું સુધારી શકીએ તે શેર કરો.</string>
+    <string name="rating_send_feedback">ઇમેઇલ કરવાનું ચાલુ રાખો</string>
+    <string name="rating_select_stars">કૃપા કરીને સ્ટાર રેટિંગ પસંદ કરો.</string>
+    <string name="rating_feedback_subject">પ્રતિસાદ -%1$s</string>
+    <string name="rating_feedback_body">રેટિંગ:%1$d/5 સ્ટાર્સ
+પ્રતિસાદ અને સૂચનો:%2$s</string>
+    <string name="rating_no_email_app">કોઈ ઇમેઇલ એપ્લિકેશન મળી નથી. પ્રતિસાદ મોકલવા માટે કૃપા કરીને ઇમેઇલ ઍપ ઇન્સ્ટોલ કરો.</string>
+    <string name="rating_feedback_hint">ઉદાહરણ તરીકે: પ્લેબેક સમસ્યા, પ્લેલિસ્ટ ઉમેરવામાં મુશ્કેલી અથવા તમને જોઈતી સુવિધા.</string>
 </resources>

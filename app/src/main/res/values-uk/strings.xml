@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Хв</string>
     <string name="sound">Звук</string>
     <string name="latter">Пізніше</string>
+
+    <string name="free_playlist_limit_reached">Ви використали всі 3 безкоштовні імпорти списків відтворення. Перейдіть на Premium, щоб додати необмежену кількість списків відтворення.</string>
+    <string name="free_playlist_limit_reached_title">Досягнуто ліміту безкоштовного списку відтворення</string>
+    <string name="free_playlist_limit_reward_message">Перегляньте одну рекламу з винагородою, щоб розблокувати ще один імпорт списків відтворення, або перейдіть на Premium для необмеженого імпорту.</string>
+    <string name="watch_ad_to_continue">Дивитися рекламу</string>
+    <string name="go_premium">Перейти на Premium</string>
+    <string name="skip">Пропустити</string>
+    <string name="provider_url_blocked">Ця URL-адреса заблокована списком обмежень провайдера. Будь ласка, використовуйте авторизоване джерело.</string>
+    <string name="all_channels_blocked">Усі канали в цьому списку відтворення відповідають списку обмежень провайдера. Нічого не імпортували.</string>
+    <string name="playlist_saved_with_blocked_channels">Список відтворення збережено.  Заборонені канали%1$dбули виключені.</string>
+    <string name="restricted_channels_excluded">З вибраних категорій виключено обмежених каналів: %1$d.</string>
+    <string name="copyright_notice_title">Відповідальність за вміст і авторські права</string>
+    <string name="copyright_notice_message">Імпортуйте та дивіться лише вміст, яким ви володієте або маєте доступ до нього. Ви несете відповідальність за джерела, які ви додаєте, і за отримання будь-яких необхідних дозволів. Програма не дозволяє доступ до стороннього вмісту та не схвалює порушення авторських прав. Програма та її розробники відмовляються від відповідальності за вміст, доданий користувачами, у межах, дозволених чинним законодавством. Фільтрування постачальника не може перевірити дозволи авторського права. Продовжуючи, ви підтверджуєте, що маєте необхідні права на використання вмісту.</string>
+    <string name="copyright_notice_accept">Я розумію і погоджуюсь</string>
+    <string name="subscribe_now">Підпишіться зараз</string>
+    <string name="auto_renewable_cancel_anytime">Автоматичне поновлення. Скасувати будь-коли.</string>
+    <string name="free_playlist_limit_reward_only_message">Перегляньте одну рекламу з винагородою, щоб розблокувати ще один імпорт списку відтворення.</string>
+    <string name="reward_ad_not_ready">Зараз немає доступних оголошень. Спробуйте пізніше.</string>
+    <string name="watch_ad_and_add_playlist">Перегляньте рекламу та додайте список відтворення</string>
+    <string name="rating_feedback_reason">Ваш відгук</string>
+    <string name="rating_feedback_reason_required">Поділіться, будь ласка, тим, що сталося, або що ми могли б покращити.</string>
+    <string name="rating_send_feedback">Продовжити електронною поштою</string>
+    <string name="rating_select_stars">Будь ласка, виберіть рейтинг.</string>
+    <string name="rating_feedback_subject">Відгук -%1$s</string>
+    <string name="rating_feedback_body">Рейтинг:%1$d/5 зірок
+Відгуки та пропозиції:%2$s</string>
+    <string name="rating_no_email_app">Не знайдено програми електронної пошти. Щоб надіслати відгук, установіть програму електронної пошти.</string>
+    <string name="rating_feedback_hint">Наприклад: проблема з відтворенням, проблема з додаванням списку відтворення або потрібна функція.</string>
 </resources>

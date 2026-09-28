@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">دقيقة</string>
     <string name="sound">صوت</string>
     <string name="latter">لاحقاً</string>
+
+    <string name="free_playlist_limit_reached">لقد استخدمت جميع الواردات الثلاثة المجانية لقائمة التشغيل. قم بالترقية إلى Premium لإضافة قوائم تشغيل غير محدودة.</string>
+    <string name="free_playlist_limit_reached_title">تم الوصول إلى الحد الأقصى لقائمة التشغيل المجانية</string>
+    <string name="free_playlist_limit_reward_message">شاهد إعلانًا بمكافأة لتتمكن من استيراد قائمة تشغيل أخرى، أو قم بالترقية إلى Premium للحصول على عدد غير محدود من الواردات.</string>
+    <string name="watch_ad_to_continue">شاهد الإعلان</string>
+    <string name="go_premium">اذهب إلى الإصدار المميز</string>
+    <string name="skip">يتخطى</string>
+    <string name="provider_url_blocked">تم حظر عنوان URL هذا بواسطة قائمة قيود الموفر. يرجى استخدام مصدر معتمد.</string>
+    <string name="all_channels_blocked">تتطابق جميع القنوات الموجودة في قائمة التشغيل هذه مع قائمة قيود الموفر. لم يتم استيراد أي شيء.</string>
+    <string name="playlist_saved_with_blocked_channels">تم حفظ قائمة التشغيل.  تم استبعاد القنوات المقيدة%1$d.</string>
+    <string name="restricted_channels_excluded">تم استبعاد %1$d قناة مقيدة من الفئات التي اخترتها.</string>
+    <string name="copyright_notice_title">مسؤولية المحتوى وحقوق النشر</string>
+    <string name="copyright_notice_message">قم باستيراد أو مشاهدة المحتوى الذي تملكه أو المصرح لك بالوصول إليه فقط. أنت مسؤول عن المصادر التي تضيفها وعن الحصول على أي أذونات مطلوبة. لا يسمح التطبيق بالوصول إلى محتوى جهة خارجية أو يؤيد انتهاك حقوق الطبع والنشر. يتنصل التطبيق ومطوروه من المسؤولية عن المحتوى المضاف بواسطة المستخدم إلى الحد الذي يسمح به القانون المعمول به. لا يمكن لتصفية الموفر التحقق من أذونات حقوق النشر. من خلال المتابعة، فإنك تؤكد أن لديك الحقوق اللازمة لاستخدام المحتوى.</string>
+    <string name="copyright_notice_accept">أنا أفهم وأوافق</string>
+    <string name="subscribe_now">اشترك الآن</string>
+    <string name="auto_renewable_cancel_anytime">قابلة للتجديد تلقائيًا. إلغاء في أي وقت.</string>
+    <string name="free_playlist_limit_reward_only_message">شاهد إعلانًا بمكافأة لتتمكن من استيراد قائمة تشغيل أخرى.</string>
+    <string name="reward_ad_not_ready">لا يوجد إعلان متاح الآن. يرجى المحاولة مرة أخرى لاحقا.</string>
+    <string name="watch_ad_and_add_playlist">شاهد الإعلان وأضف قائمة التشغيل</string>
+    <string name="rating_feedback_reason">ملاحظاتك</string>
+    <string name="rating_feedback_reason_required">يرجى مشاركة ما حدث أو ما يمكننا تحسينه.</string>
+    <string name="rating_send_feedback">الاستمرار في البريد الإلكتروني</string>
+    <string name="rating_select_stars">الرجاء تحديد تصنيف النجوم.</string>
+    <string name="rating_feedback_subject">ردود الفعل -%1$s</string>
+    <string name="rating_feedback_body">التقييم:%1$d/5 نجوم
+التعليقات والاقتراحات:%2$s</string>
+    <string name="rating_no_email_app">لم يتم العثور على تطبيق البريد الإلكتروني. الرجاء تثبيت تطبيق البريد الإلكتروني لإرسال التعليقات.</string>
+    <string name="rating_feedback_hint">على سبيل المثال: مشكلة في التشغيل، أو مشكلة في إضافة قائمة تشغيل، أو ميزة تحتاجها.</string>
 </resources>

@@ -172,8 +172,9 @@ fun SettingScreen(
                         SettingItem(R.drawable.ic_setting_rate, R.string.rate_us) {
                             isShowRating = true
                         }
+                        SpaceH(12)
                     }
-                    SpaceH(12)
+
                     SettingItem(R.drawable.ic_app_how_use, R.string.how_to_add_new_channel) {
                         gotoHowToAddChannel.invoke()
                     }

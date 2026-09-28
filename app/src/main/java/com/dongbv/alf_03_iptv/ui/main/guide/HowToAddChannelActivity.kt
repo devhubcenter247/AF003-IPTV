@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.main.guide
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +37,7 @@ import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.opacity
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.AppNeonButton
 import com.dongbv.alf_03_iptv.ui.main.add.AddChannelActivity
@@ -49,21 +53,30 @@ import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.headline500
 import com.dongbv.alf_03_iptv.widget.headline600
 import com.dongbv.alf_03_iptv.widget.headline700
+import com.lib.ads.gma.ads.billing.AppPurchase
+import com.lib.ads.gma.ads.helper.banner.params.BannerAdConfig
+import com.dongbv.alf_03_iptv.ads.wrapper.banner.BannerPlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.banner.rememberBannerPlacement
+import com.lib.ads.gma.ads.helper.banner.preload.BannerAdCard
+import com.lib.ads.gma.ads.helper.banner.preload.rememberBannerAd
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
 class HowToAddChannelActivity : BaseActivity() {
+    override val analyticsScreen = AppScreen.HOW_TO_ADD_CHANNEL
+
 
     override fun initialize() = Unit
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
+    override fun ContentView() {
         HowToAddChannelScreen(
-            statusBarHeight = statusBarHeight,
             onBack = ::finish,
             onGetStarted = {
-                launchActivity<AddChannelActivity>()
-                finish()
+                navigateWithInterstitial {
+                    launchActivity<AddChannelActivity>()
+                    finish()
+                }
             }
         )
     }
@@ -148,10 +161,11 @@ private fun guideFaqs(): List<GuideFaq> = listOf(
 )
 
 // ── Screen ────────────────────────────────────────────────────────────────────
-
+// slide cần bấm save mới hiện slilde đã thêm, file xlsx  khi bấm bằng ở ô input -> chọn vaule trong ô sheet thì không có action gì, filde doc khi hiện bàn phím office view bị đè không cuộn xuống được cuối trang, khó chọn text để  bôi đen, triển khai thên tất cả các ui tính năng mà moduklde hỗ trợ để có thể làm, bấm lưu chưa lưu vào bộ nhớ nogaif
+// docx có hỗ trợ thêm bảng không, chèn thêm ảnh, xlsx có hỗ trợ resize cột, hàng không,
+// có thể thêm ảnh ... trong ppt khônng, thêm full các tính năng mà modudel hỗ trợ vào app
 @Composable
 fun HowToAddChannelScreen(
-    statusBarHeight: Dp,
     onBack: () -> Unit,
     onGetStarted: () -> Unit
 ) {
@@ -159,8 +173,8 @@ fun HowToAddChannelScreen(
         Modifier
             .fillMaxSize()
             .backgroundResource(R.drawable.img_bg_app)
+            .statusBarPadding()
     ) {
-        SpaceH(statusBarHeight)
         GuideHeader(onBack = onBack)
 
         Column(
@@ -189,6 +203,13 @@ fun HowToAddChannelScreen(
         }
 
         GuideBottomBar(onGetStarted = onGetStarted)
+
+        BannerAdCard(
+            holder = rememberBannerPlacement(BannerPlacement.BannerAll),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+        )
     }
 }
 
@@ -479,7 +500,6 @@ private fun GuideBottomBar(onGetStarted: () -> Unit) {
 private fun HowToAddChannelScreenPreview() {
     AppViewTheme {
         HowToAddChannelScreen(
-            statusBarHeight = 24.dp,
             onBack = {},
             onGetStarted = {}
         )

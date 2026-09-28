@@ -1,5 +1,7 @@
 package com.dongbv.alf_03_iptv.ui.main.home
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
+import com.dongbv.alf_03_iptv.analytics.TrackScreen
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
@@ -124,6 +126,13 @@ fun FavoriteScreen(
 ) {
     BackHandler(true, onBack)
     val selectedTab by viewModel.selectedTab.collectAsStateWithLifecycle()
+    TrackScreen(
+        when (selectedTab) {
+            0 -> AppScreen.FAVORITE_SAVED
+            1 -> AppScreen.FAVORITE_HISTORY
+            else -> AppScreen.FAVORITE_ALL
+        }
+    )
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val selectedGroup by viewModel.selectedGroup.collectAsStateWithLifecycle()
     val isGridView by viewModel.isGridView.collectAsStateWithLifecycle()
@@ -494,6 +503,9 @@ private fun FavoriteHistoryList(
         verticalArrangement = Arrangement.spacedBy(8.Sdp),
         modifier = Modifier.fillMaxSize()
     ) {
+        item(key = "native_ad_view") {
+
+        }
         items(channels, key = { it.id }) { channel ->
             ChannelListCard(
                 channel = channel,

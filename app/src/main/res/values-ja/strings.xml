@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">分</string>
     <string name="sound">音</string>
     <string name="latter">後で</string>
+
+    <string name="free_playlist_limit_reached">3 つの無料プレイリスト インポートをすべて使用しました。プレミアムにアップグレードすると、無制限のプレイリストを追加できます。</string>
+    <string name="free_playlist_limit_reached_title">無料プレイリストの制限に達しました</string>
+    <string name="free_playlist_limit_reward_message">リワード広告を 1 つ視聴すると、プレイリストのインポートをさらに 1 つロック解除できます。または、プレミアムにアップグレードして無制限にインポートできます。</string>
+    <string name="watch_ad_to_continue">広告を見る</string>
+    <string name="go_premium">プレミアムに行く</string>
+    <string name="skip">スキップ</string>
+    <string name="provider_url_blocked">この URL はプロバイダー制限リストによってブロックされています。認定された情報源を使用してください。</string>
+    <string name="all_channels_blocked">このプレイリスト内のすべてのチャンネルはプロバイダー制限リストに一致します。何も輸入されませんでした。</string>
+    <string name="playlist_saved_with_blocked_channels">プレイリストが保存されました。%1$d制限付きチャネルは除外されました。</string>
+    <string name="restricted_channels_excluded">選択したカテゴリから制限対象のチャンネル %1$d 件が除外されました。</string>
+    <string name="copyright_notice_title">コンテンツと著作権の責任</string>
+    <string name="copyright_notice_message">自分が所有しているコンテンツ、またはアクセスを許可されているコンテンツのみをインポートまたは視聴します。あなたは追加するソースに対して責任を負い、必要な権限を取得する必要があります。このアプリは、サードパーティのコンテンツへのアクセスを許可したり、著作権侵害を推奨したりするものではありません。アプリとその開発者は、適用法で認められる範囲で、ユーザーが追加したコンテンツに対する責任を負いません。プロバイダー フィルタリングでは著作権の許可を確認できません。続行すると、コンテンツを使用するために必要な権利があることを確認したことになります。</string>
+    <string name="copyright_notice_accept">理解して同意します</string>
+    <string name="subscribe_now">今すぐ購読する</string>
+    <string name="auto_renewable_cancel_anytime">自動更新可能。いつでもキャンセルできます。</string>
+    <string name="free_playlist_limit_reward_only_message">リワード広告を 1 つ視聴すると、もう 1 つのプレイリストのインポートのロックが解除されます。</string>
+    <string name="reward_ad_not_ready">現在利用できる広告はありません。後でもう一度試してください。</string>
+    <string name="watch_ad_and_add_playlist">広告を視聴してプレイリストを追加</string>
+    <string name="rating_feedback_reason">あなたのフィードバック</string>
+    <string name="rating_feedback_reason_required">何が起こったのか、何が改善できるのかを共有してください。</string>
+    <string name="rating_send_feedback">メールを続けます</string>
+    <string name="rating_select_stars">星評価を選択してください。</string>
+    <string name="rating_feedback_subject">フィードバック -%1$s</string>
+    <string name="rating_feedback_body">評価:%1$d/5 つ星
+フィードバックと提案:%2$s</string>
+    <string name="rating_no_email_app">メールアプリが見つかりませんでした。フィードバックを送信するにはメール アプリをインストールしてください。</string>
+    <string name="rating_feedback_hint">例: 再生の問題、プレイリストの追加の問題、必要な機能など。</string>
 </resources>

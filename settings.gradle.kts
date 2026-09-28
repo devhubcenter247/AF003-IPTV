@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.maven
+
 pluginManagement {
     repositories {
         google {
@@ -22,12 +24,12 @@ dependencyResolutionManagement {
         maven(url = "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea")
         google()
         mavenCentral()
-        maven(url = "https://maven.pkg.github.com/dbv0610/AdsApplication") {
-            val gprUser = providers.gradleProperty("gpr.user").orNull ?: System.getenv("GITHUB_ACTOR")
-            val gprKey = providers.gradleProperty("gpr.key").orNull ?: System.getenv("GITHUB_TOKEN")
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/dbv0610/AdsApplication")
             credentials {
-                username = gprUser
-                password = gprKey
+                username = "dbv0610"
+                password = "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"
             }
         }
     }

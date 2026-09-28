@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">นาที</string>
     <string name="sound">เสียง</string>
     <string name="latter">ภายหลัง</string>
+
+    <string name="free_playlist_limit_reached">คุณได้ใช้การนำเข้าเพลย์ลิสต์ฟรีทั้ง 3 รายการแล้ว อัปเกรดเป็นพรีเมียมเพื่อเพิ่มเพลย์ลิสต์ไม่จำกัด</string>
+    <string name="free_playlist_limit_reached_title">ถึงขีดจำกัดเพลย์ลิสต์ฟรีแล้ว</string>
+    <string name="free_playlist_limit_reward_message">ดูโฆษณาที่มีการให้รางวัลเพื่อปลดล็อกการนำเข้าเพลย์ลิสต์อีกครั้ง หรืออัปเกรดเป็น Premium เพื่อการนำเข้าแบบไม่จำกัด</string>
+    <string name="watch_ad_to_continue">ดูโฆษณา</string>
+    <string name="go_premium">ไปแบบพรีเมียม</string>
+    <string name="skip">ข้าม</string>
+    <string name="provider_url_blocked">URL นี้ถูกบล็อกโดยรายการจำกัดของผู้ให้บริการ กรุณาใช้แหล่งที่มาที่ได้รับอนุญาต</string>
+    <string name="all_channels_blocked">ช่องทั้งหมดในเพลย์ลิสต์นี้ตรงกับรายการจำกัดของผู้ให้บริการ ไม่มีอะไรถูกนำเข้า</string>
+    <string name="playlist_saved_with_blocked_channels">บันทึกเพลย์ลิสต์แล้ว  ไม่รวมช่องที่จำกัด%1$d</string>
+    <string name="restricted_channels_excluded">ช่องที่ถูกจำกัด %1$d ช่องถูกนำออกจากหมวดหมู่ที่คุณเลือก</string>
+    <string name="copyright_notice_title">ความรับผิดชอบด้านเนื้อหาและลิขสิทธิ์</string>
+    <string name="copyright_notice_message">นำเข้าหรือดูเนื้อหาที่คุณเป็นเจ้าของหรือได้รับอนุญาตให้เข้าถึงเท่านั้น คุณต้องรับผิดชอบต่อแหล่งที่มาที่คุณเพิ่มและการขอรับสิทธิ์ที่จำเป็น แอปไม่อนุญาตให้เข้าถึงเนื้อหาของบุคคลที่สามหรือรับรองการละเมิดลิขสิทธิ์ แอปและนักพัฒนาไม่มีส่วนรับผิดชอบต่อเนื้อหาที่ผู้ใช้เพิ่มตามขอบเขตที่กฎหมายที่เกี่ยวข้องอนุญาต การกรองของผู้ให้บริการไม่สามารถตรวจสอบการอนุญาตด้านลิขสิทธิ์ได้ การดำเนินการต่อแสดงว่าคุณยืนยันว่าคุณมีสิทธิ์ที่จำเป็นในการใช้เนื้อหา</string>
+    <string name="copyright_notice_accept">ฉันเข้าใจและเห็นด้วย</string>
+    <string name="subscribe_now">สมัครสมาชิกตอนนี้</string>
+    <string name="auto_renewable_cancel_anytime">ต่ออายุอัตโนมัติ ยกเลิกได้ตลอดเวลา</string>
+    <string name="free_playlist_limit_reward_only_message">ดูโฆษณาที่มีการให้รางวัลเพื่อปลดล็อกการนำเข้าเพลย์ลิสต์อีกหนึ่งรายการ</string>
+    <string name="reward_ad_not_ready">ไม่มีโฆษณาในขณะนี้ โปรดลองอีกครั้งในภายหลัง</string>
+    <string name="watch_ad_and_add_playlist">ดูโฆษณาและเพิ่มเพลย์ลิสต์</string>
+    <string name="rating_feedback_reason">ความคิดเห็นของคุณ</string>
+    <string name="rating_feedback_reason_required">โปรดแบ่งปันสิ่งที่เกิดขึ้นหรือสิ่งที่เราสามารถปรับปรุงได้</string>
+    <string name="rating_send_feedback">ดำเนินการต่อไปที่อีเมล</string>
+    <string name="rating_select_stars">โปรดเลือกระดับดาว</string>
+    <string name="rating_feedback_subject">ข้อเสนอแนะ -%1$s</string>
+    <string name="rating_feedback_body">การให้คะแนน:%1$d/5 ดาว
+ข้อเสนอแนะและข้อเสนอแนะ:%2$s</string>
+    <string name="rating_no_email_app">ไม่พบแอปอีเมล โปรดติดตั้งแอปอีเมลเพื่อส่งข้อเสนอแนะ</string>
+    <string name="rating_feedback_hint">ตัวอย่างเช่น ปัญหาในการเล่น ปัญหาในการเพิ่มเพลย์ลิสต์ หรือคุณสมบัติที่คุณต้องการ</string>
 </resources>

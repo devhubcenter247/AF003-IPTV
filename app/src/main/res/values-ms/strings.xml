@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Bunyi</string>
     <string name="latter">Nanti</string>
+
+    <string name="free_playlist_limit_reached">Anda telah menggunakan kesemua 3 import senarai main percuma. Tingkatkan kepada Premium untuk menambah senarai main tanpa had.</string>
+    <string name="free_playlist_limit_reached_title">Had senarai main percuma dicapai</string>
+    <string name="free_playlist_limit_reward_message">Tonton satu iklan ganjaran untuk membuka kunci satu lagi import senarai main atau tingkatkan kepada Premium untuk import tanpa had.</string>
+    <string name="watch_ad_to_continue">Tonton iklan</string>
+    <string name="go_premium">Pergi Premium</string>
+    <string name="skip">Langkau</string>
+    <string name="provider_url_blocked">URL ini disekat oleh senarai sekatan pembekal. Sila gunakan sumber yang dibenarkan.</string>
+    <string name="all_channels_blocked">Semua saluran dalam senarai main ini sepadan dengan senarai sekatan pembekal. Tiada apa-apa yang diimport.</string>
+    <string name="playlist_saved_with_blocked_channels">Senarai main disimpan.  Saluran terhad%1$dtelah dikecualikan.</string>
+    <string name="restricted_channels_excluded">%1$d saluran terhad telah dikecualikan daripada kategori pilihan anda.</string>
+    <string name="copyright_notice_title">Tanggungjawab kandungan dan hak cipta</string>
+    <string name="copyright_notice_message">Hanya import atau tonton kandungan yang anda miliki atau dibenarkan untuk mengakses. Anda bertanggungjawab ke atas sumber yang anda tambahkan dan untuk mendapatkan sebarang kebenaran yang diperlukan. Apl tidak membenarkan akses kepada kandungan pihak ketiga atau menyokong pelanggaran hak cipta. Apl dan pembangunnya menafikan tanggungjawab untuk kandungan yang ditambah pengguna setakat yang dibenarkan oleh undang-undang yang terpakai. Penapisan pembekal tidak boleh mengesahkan kebenaran hak cipta. Dengan meneruskan, anda mengesahkan bahawa anda mempunyai hak yang diperlukan untuk menggunakan kandungan tersebut.</string>
+    <string name="copyright_notice_accept">Saya faham dan bersetuju</string>
+    <string name="subscribe_now">Langgan sekarang</string>
+    <string name="auto_renewable_cancel_anytime">Auto boleh diperbaharui. Batalkan bila-bila masa.</string>
+    <string name="free_playlist_limit_reward_only_message">Tonton satu iklan ganjaran untuk membuka kunci satu lagi import senarai main.</string>
+    <string name="reward_ad_not_ready">Tiada iklan tersedia sekarang. Sila cuba lagi kemudian.</string>
+    <string name="watch_ad_and_add_playlist">Tonton iklan &amp; tambah senarai main</string>
+    <string name="rating_feedback_reason">Maklum balas anda</string>
+    <string name="rating_feedback_reason_required">Sila kongsi apa yang berlaku atau apa yang boleh kami perbaiki.</string>
+    <string name="rating_send_feedback">Teruskan email</string>
+    <string name="rating_select_stars">Sila pilih penilaian bintang.</string>
+    <string name="rating_feedback_subject">Maklum Balas -%1$s</string>
+    <string name="rating_feedback_body">Penilaian:%1$d/5 bintang
+Maklum balas dan cadangan:%2$s</string>
+    <string name="rating_no_email_app">Tiada apl e-mel ditemui. Sila pasang apl e-mel untuk menghantar maklum balas.</string>
+    <string name="rating_feedback_hint">Contohnya: isu main balik, masalah menambah senarai main atau ciri yang anda perlukan.</string>
 </resources>

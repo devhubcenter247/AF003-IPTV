@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,6 +24,8 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
@@ -51,7 +55,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.app.rateApp
+import com.dongbv.alf_03_iptv.app.sendFeedBack
 import com.dongbv.alf_03_iptv.base.AppDialog
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.RatingBar
@@ -375,7 +381,10 @@ fun RatingDialog(
 ) {
     val activity = LocalActivity.current
     val isPreview = LocalInspectionMode.current
-    var rating by remember { mutableIntStateOf(0) }
+    var rating by remember(isShowRate) { mutableIntStateOf(0) }
+    var reason by remember(isShowRate) { mutableStateOf("") }
+    var reasonError by remember(isShowRate) { mutableStateOf(false) }
+    var isSubmitting by remember(isShowRate) { mutableStateOf(false) }
     val titleRate by remember(rating) {
         mutableIntStateOf(
             when (rating) {
@@ -407,7 +416,9 @@ fun RatingDialog(
                     .backgroundResource(R.drawable.img_bg_app)
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(Modifier.height(16.dp))
@@ -434,36 +445,83 @@ fun RatingDialog(
 
                     RatingBar(
                         rating = rating,
-                        onRatingChanged = { rating = it }
+                        onRatingChanged = {
+                            if (!isSubmitting) {
+                                rating = it
+                                reasonError = false
+                            }
+                        }
                     )
+                    if (rating in 1..3) {
+                        SpaceH(12.Sdp)
+                        OutlinedTextField(
+                            value = reason,
+                            onValueChange = {
+                                reason = it
+                                reasonError = false
+                            },
+                            label = { Text(stringResource(R.string.rating_feedback_reason)) },
+                            placeholder = { Text(stringResource(R.string.rating_feedback_hint)) },
+                            isError = reasonError,
+                            supportingText = if (reasonError) {
+                                { Text(stringResource(R.string.rating_feedback_reason_required)) }
+                            } else null,
+                            minLines = 2,
+                            maxLines = 4,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = IptvTextPrimary,
+                                unfocusedTextColor = IptvTextPrimary,
+                                focusedBorderColor = IptvAccent,
+                                unfocusedBorderColor = colorSecondary,
+                                focusedLabelColor = IptvAccent,
+                                unfocusedLabelColor = colorSecondary,
+                                cursorColor = IptvAccent,
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                     Spacer(Modifier.height(18.Sdp))
                     DialogActionButton(
-                        text = if (rating >= 4) stringResource(R.string.rate_on_google_play) else stringResource(
-                            R.string.rate_us
-                        ),
+                        text = stringResource(when (rating) {
+                            4, 5 -> R.string.rate_on_google_play
+                            1, 2, 3 -> R.string.rating_send_feedback
+                            else -> R.string.rate_us
+                        }),
                         modifier = Modifier.fillMaxWidth(),
                         isPrimary = true
                     ) {
-                        if (isPreview) return@DialogActionButton
+                        if (isPreview || isSubmitting) return@DialogActionButton
                         when {
                             rating == 0 -> {
                                 Toast.makeText(
                                     activity,
-                                    activity?.getString(R.string.please_rate_us),
+                                    activity?.getString(R.string.rating_select_stars),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
 
                             rating >= 4 -> {
-                                activity?.rateApp {
+                                val owner = activity ?: return@DialogActionButton
+                                isSubmitting = true
+                                AppPreferences.isRatingApp.value = true
+                                owner.rateApp {
                                     rateApp()
                                 }
                                 onDismiss()
                             }
 
                             else -> {
-                                sendEmailFeedback()
-                                onDismiss()
+                                if (reason.isBlank()) {
+                                    reasonError = true
+                                } else {
+                                    val owner = activity ?: return@DialogActionButton
+                                    AppPreferences.isRatingApp.value = true
+                                    if (owner.sendFeedBack(rating, reason)) {
+                                        isSubmitting = true
+                                        sendEmailFeedback()
+                                        onDismiss()
+                                    }
+                                }
                             }
                         }
                     }
@@ -542,5 +600,66 @@ fun DialogQuitApp(isShowDialog: Boolean, onDismiss: () -> Unit = {}, onQuit: () 
                 }
             }
         }
+    }
+}
+
+
+@Composable
+fun CopyrightNoticeDialog(onAccept: () -> Unit, onCancel: () -> Unit) {
+    AppDialog(onDismiss = onCancel, dismissOutsize = false) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.Sdp))
+                .backgroundResource(R.drawable.img_bg_app)
+                .border(1.dp, IptvDivider, RoundedCornerShape(12.Sdp))
+                .padding(20.Sdp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AsyncImage(
+                model = R.drawable.ic_app_info,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.Sdp)
+                    .gradientContent(listOf(grdStart, grdEnd))
+            )
+            SpaceH(12.Sdp)
+            Text(
+                text = stringResource(R.string.copyright_notice_title),
+                style = headline700(fontSize = 16.Ssp, color = IptvTextPrimary),
+                textAlign = TextAlign.Center
+            )
+            SpaceH(12.Sdp)
+            Text(
+                text = stringResource(R.string.copyright_notice_message),
+                style = headline400(fontSize = 12.Ssp, color = colorSecondary),
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+            )
+            SpaceH(20.Sdp)
+            DialogActionButton(
+                text = stringResource(R.string.copyright_notice_accept),
+                isPrimary = true,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onAccept
+            )
+            SpaceH(10.Sdp)
+            DialogActionButton(
+                text = stringResource(R.string.cancel),
+                isPrimary = false,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onCancel
+            )
+        }
+    }
+}
+
+@Preview(device = PIXEL_4_XL)
+@Composable
+private fun CopyrightNoticeDialogPreview() {
+    AppViewTheme {
+        CopyrightNoticeDialog(onAccept = {}, onCancel = {})
     }
 }

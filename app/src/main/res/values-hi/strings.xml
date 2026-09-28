@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">मिन</string>
     <string name="sound">आवाज़</string>
     <string name="latter">बाद में</string>
+
+    <string name="free_playlist_limit_reached">आपने सभी 3 निःशुल्क प्लेलिस्ट आयातों का उपयोग कर लिया है। असीमित प्लेलिस्ट जोड़ने के लिए प्रीमियम में अपग्रेड करें।</string>
+    <string name="free_playlist_limit_reached_title">मुफ़्त प्लेलिस्ट की सीमा पूरी हो गई</string>
+    <string name="free_playlist_limit_reward_message">एक और प्लेलिस्ट आयात को अनलॉक करने के लिए, या असीमित आयात के लिए प्रीमियम में अपग्रेड करने के लिए एक पुरस्कृत विज्ञापन देखें।</string>
+    <string name="watch_ad_to_continue">विज्ञापन देखें</string>
+    <string name="go_premium">प्रीमियम के लिए जाएँ</string>
+    <string name="skip">छोडना</string>
+    <string name="provider_url_blocked">यह यूआरएल प्रदाता प्रतिबंध सूची द्वारा अवरुद्ध है। कृपया अधिकृत स्रोत का उपयोग करें।</string>
+    <string name="all_channels_blocked">इस प्लेलिस्ट के सभी चैनल प्रदाता प्रतिबंध सूची से मेल खाते हैं। कुछ भी आयात नहीं किया गया.</string>
+    <string name="playlist_saved_with_blocked_channels">प्लेलिस्ट सहेजी गई.%1$dप्रतिबंधित चैनलों को बाहर रखा गया।</string>
+    <string name="restricted_channels_excluded">आपकी चुनी गई श्रेणियों से %1$d प्रतिबंधित चैनल हटा दिए गए।</string>
+    <string name="copyright_notice_title">सामग्री और कॉपीराइट जिम्मेदारी</string>
+    <string name="copyright_notice_message">केवल वही सामग्री आयात करें या देखें जिसके स्वामी आप हैं या जिसके उपयोग के लिए आप अधिकृत हैं। आपके द्वारा जोड़े गए स्रोतों और किसी भी आवश्यक अनुमति प्राप्त करने के लिए आप जिम्मेदार हैं। ऐप तीसरे पक्ष की सामग्री तक पहुंच को अधिकृत नहीं करता है या कॉपीराइट उल्लंघन का समर्थन नहीं करता है। ऐप और उसके डेवलपर्स लागू कानून द्वारा अनुमत सीमा तक उपयोगकर्ता द्वारा जोड़ी गई सामग्री के लिए जिम्मेदारी से इनकार करते हैं। प्रदाता फ़िल्टरिंग कॉपीराइट अनुमतियों को सत्यापित नहीं कर सकता। जारी रखकर, आप पुष्टि करते हैं कि आपके पास सामग्री का उपयोग करने के लिए आवश्यक अधिकार हैं।</string>
+    <string name="copyright_notice_accept">मैं समझता हूं और सहमत हूं</string>
+    <string name="subscribe_now">अब सदस्यता लें</string>
+    <string name="auto_renewable_cancel_anytime">स्वतः नवीकरणीय। किसी भी समय रद्द करें.</string>
+    <string name="free_playlist_limit_reward_only_message">एक और प्लेलिस्ट आयात को अनलॉक करने के लिए एक पुरस्कृत विज्ञापन देखें।</string>
+    <string name="reward_ad_not_ready">अभी कोई विज्ञापन उपलब्ध नहीं है. कृपया बाद में पुन: प्रयास करें।</string>
+    <string name="watch_ad_and_add_playlist">विज्ञापन देखें और प्लेलिस्ट जोड़ें</string>
+    <string name="rating_feedback_reason">आपकी प्रतिक्रिया</string>
+    <string name="rating_feedback_reason_required">कृपया साझा करें कि क्या हुआ या हम क्या सुधार कर सकते हैं।</string>
+    <string name="rating_send_feedback">ईमेल करना जारी रखें</string>
+    <string name="rating_select_stars">कृपया एक स्टार रेटिंग चुनें.</string>
+    <string name="rating_feedback_subject">प्रतिक्रिया -%1$s</string>
+    <string name="rating_feedback_body">रेटिंग:%1$d/5 स्टार
+प्रतिक्रिया और सुझाव:%2$s</string>
+    <string name="rating_no_email_app">कोई ईमेल ऐप नहीं मिला. कृपया फीडबैक भेजने के लिए एक ईमेल ऐप इंस्टॉल करें।</string>
+    <string name="rating_feedback_hint">उदाहरण के लिए: प्लेबैक समस्या, प्लेलिस्ट जोड़ने में परेशानी, या कोई सुविधा जिसकी आपको आवश्यकता है।</string>
 </resources>

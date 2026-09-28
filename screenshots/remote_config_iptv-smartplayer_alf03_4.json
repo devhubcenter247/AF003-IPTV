@@ -1,0 +1,152 @@
+{
+  "parameters": {
+    "native_feature": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"other\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/1481140574\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/1533111466\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "onboarding_screen": {
+      "defaultValue": {
+        "value": "{\"screen_1\":true,\"screen_2\":true,\"screen_3\":true,\"screen_4\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "meta_ctr_low": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "valueType": "BOOLEAN"
+    },
+    "native_lang_dup_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_medium_media_left_cta_bottom\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/6178556180\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/8889796652\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "native_ob_full_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"other\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/1468057501\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/5961122271\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "app_open_config": {
+      "defaultValue": {
+        "value": "{\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/8315822873\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/2293340001\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "native_lang_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_medium_media_left_cta_bottom\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/2533993099\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/9346547523\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "banner_spalsh_config": {
+      "defaultValue": {
+        "value": "{\"is_collapsible\":true,\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/5982017580\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/7678242630\"}],\"time_reload_banner\":15000,\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "skip_inter_config": {
+      "defaultValue": {
+        "value": "{\"enable\":true,\"time_out_ms\":5000}"
+      },
+      "valueType": "JSON"
+    },
+    "native_ob_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_medium_media_left_cta_bottom\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/3249517818\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/3985695623\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "inter_all_config": {
+      "defaultValue": {
+        "value": "{\"time_interval_ms\":120000,\"time_steps\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/7142913794\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/4980794044\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "inter_slash_config": {
+      "defaultValue": {
+        "value": "{\"total_timeout_ms\":30000,\"list_ads\":[{\"enable_ad\":false,\"timeout_ms\":30000,\"adunit\":\"ca-app-pub-1713129912546517/8481663199\"},{\"enable_ad\":true,\"timeout_ms\":30000,\"adunit\":\"ca-app-pub-1713129912546517/7496823937\"}],\"enable\":true}"
+      },
+      "description": "inter splash",
+      "valueType": "JSON"
+    },
+    "banner_all_config": {
+      "defaultValue": {
+        "value": "{\"is_collapsible\":true,\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/8416609235\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/6473238102\"}],\"time_reload_banner\":15000,\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "update_mode": {
+      "defaultValue": {
+        "value": "SMOOTH"
+      },
+      "valueType": "STRING"
+    },
+    "native_medium_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_medium_cta_bottom\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/2222999302\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/1359532281\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "native_small_cta_right_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_small_cta_right\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/2163289552\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/9662882928\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "native_small_all_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_small_cta_bottom\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/8613915744\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/7594748084\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "reward_edit_config": {
+      "defaultValue": {
+        "value": "{\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/4733989876\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/1289568880\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "ad_enable": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "valueType": "BOOLEAN"
+    },
+    "native_splash": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_medium_media_left_cta_bottom\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/4378766656\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/7780627487\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "paywall_enabled": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "valueType": "BOOLEAN"
+    },
+    "native_media_left_config": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_medium_media_left_cta_right\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/2589567485\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/4376577866\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    },
+    "native_play_list": {
+      "defaultValue": {
+        "value": "{\"type_layout\":\"native_medium_media_left_cta_right_120\",\"list_ads\":[{\"enable_ad\":false,\"adunit\":\"ca-app-pub-1713129912546517/2589567485\"},{\"enable_ad\":true,\"adunit\":\"ca-app-pub-1713129912546517/4376577866\"}],\"enable\":true}"
+      },
+      "valueType": "JSON"
+    }
+  },
+  "version": {
+    "versionNumber": "4",
+    "updateTime": "2026-09-19T04:29:35.631716Z",
+    "updateUser": {
+      "email": "dong2k2.dev@gmail.com"
+    },
+    "updateOrigin": "CONSOLE",
+    "updateType": "INCREMENTAL_UPDATE"
+  }
+}

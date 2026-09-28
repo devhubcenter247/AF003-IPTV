@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Hang</string>
     <string name="latter">Később</string>
+
+    <string name="free_playlist_limit_reached">Felhasználtad mind a 3 ingyenes lejátszási lista importálást. Frissítsen Premiumra, hogy korlátlan számú lejátszási listát adjon hozzá.</string>
+    <string name="free_playlist_limit_reached_title">Elérte az ingyenes lejátszási listák korlátját</string>
+    <string name="free_playlist_limit_reward_message">Nézzen meg egy jutalommal járó hirdetést, hogy még egy lejátszási listát importálhasson, vagy frissítsen Premiumra a korlátlan importálás érdekében.</string>
+    <string name="watch_ad_to_continue">Nézze meg a hirdetést</string>
+    <string name="go_premium">Menj Premium</string>
+    <string name="skip">Kihagyás</string>
+    <string name="provider_url_blocked">Ezt az URL-t letiltotta a szolgáltatói korlátozások listája. Kérjük, használjon hivatalos forrást.</string>
+    <string name="all_channels_blocked">A lejátszási listán szereplő összes csatorna megegyezik a szolgáltatói korlátozások listájával. Semmit sem importáltak.</string>
+    <string name="playlist_saved_with_blocked_channels">Lejátszási lista mentve.  Az%1$dkorlátozott csatornák kizárva.</string>
+    <string name="restricted_channels_excluded">%1$d korlátozott csatorna ki lett zárva a kiválasztott kategóriákból.</string>
+    <string name="copyright_notice_title">Tartalmi és szerzői jogi felelősség</string>
+    <string name="copyright_notice_message">Csak olyan tartalmat importáljon vagy nézzen meg, amely a tulajdonában van, vagy amelynek hozzáférésére jogosult. Ön felelős a hozzáadott forrásokért és a szükséges engedélyek beszerzéséért. Az alkalmazás nem engedélyez hozzáférést harmadik féltől származó tartalmakhoz, és nem támogatja a szerzői jogok megsértését. Az alkalmazás és fejlesztői elhárítják a felelősséget a felhasználók által hozzáadott tartalmakért a vonatkozó jogszabályok által megengedett mértékig. A szolgáltatói szűrés nem tudja ellenőrizni a szerzői jogi engedélyeket. A folytatással megerősíti, hogy rendelkezik a tartalom használatához szükséges jogokkal.</string>
+    <string name="copyright_notice_accept">Megértem és egyetértek</string>
+    <string name="subscribe_now">Iratkozz fel most</string>
+    <string name="auto_renewable_cancel_anytime">Automatikusan megújuló. Bármikor lemondhatja.</string>
+    <string name="free_playlist_limit_reward_only_message">Egy jutalommal járó hirdetés megtekintése további lejátszási lista importálása érdekében.</string>
+    <string name="reward_ad_not_ready">Jelenleg nem érhető el hirdetés. Kérjük, próbálja újra később.</string>
+    <string name="watch_ad_and_add_playlist">Nézze meg a hirdetést és adjon hozzá lejátszási listát</string>
+    <string name="rating_feedback_reason">Az Ön visszajelzése</string>
+    <string name="rating_feedback_reason_required">Kérem, ossza meg, mi történt, vagy min javíthatnánk.</string>
+    <string name="rating_send_feedback">Tovább az e-mailre</string>
+    <string name="rating_select_stars">Kérjük, válasszon csillagos értékelést.</string>
+    <string name="rating_feedback_subject">Visszajelzés -%1$s</string>
+    <string name="rating_feedback_body">Értékelés:%1$d/5 csillag
+Visszajelzés és javaslatok:%2$s</string>
+    <string name="rating_no_email_app">Nem található e-mail alkalmazás. Kérjük, telepítsen egy e-mail alkalmazást a visszajelzés küldéséhez.</string>
+    <string name="rating_feedback_hint">Például: lejátszási probléma, probléma a lejátszási lista hozzáadásával vagy egy szükséges funkció.</string>
 </resources>

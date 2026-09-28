@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">minimo</string>
     <string name="sound">Suono</string>
     <string name="latter">Dopo</string>
+
+    <string name="free_playlist_limit_reached">Hai utilizzato tutte e 3 le importazioni gratuite di playlist. Passa a Premium per aggiungere playlist illimitate.</string>
+    <string name="free_playlist_limit_reached_title">È stato raggiunto il limite della playlist gratuita</string>
+    <string name="free_playlist_limit_reward_message">Guarda un annuncio con premio per sbloccare un\'altra importazione di playlist o passa a Premium per importazioni illimitate.</string>
+    <string name="watch_ad_to_continue">Guarda l\'annuncio</string>
+    <string name="go_premium">Passa a Premium</string>
+    <string name="skip">Saltare</string>
+    <string name="provider_url_blocked">Questo URL è bloccato dall\'elenco delle restrizioni del provider. Si prega di utilizzare una fonte autorizzata.</string>
+    <string name="all_channels_blocked">Tutti i canali in questa playlist corrispondono all\'elenco delle restrizioni del provider. Non è stato importato nulla.</string>
+    <string name="playlist_saved_with_blocked_channels">Playlist salvata.  Sono stati esclusi i canali con restrizioni%1$d.</string>
+    <string name="restricted_channels_excluded">%1$d canali soggetti a restrizioni sono stati esclusi dalle categorie selezionate.</string>
+    <string name="copyright_notice_title">Responsabilità sui contenuti e sul copyright</string>
+    <string name="copyright_notice_message">Importa o guarda solo i contenuti di tua proprietà o a cui sei autorizzato ad accedere. Sei responsabile delle fonti che aggiungi e dell\'ottenimento delle autorizzazioni richieste. L\'app non autorizza l\'accesso a contenuti di terze parti né approva la violazione del copyright. L\'app e i suoi sviluppatori declinano ogni responsabilità per i contenuti aggiunti dagli utenti nella misura consentita dalla legge applicabile. Il filtraggio dei fornitori non può verificare le autorizzazioni di copyright. Continuando confermi di avere i diritti necessari per utilizzare il contenuto.</string>
+    <string name="copyright_notice_accept">Capisco e sono d\'accordo</string>
+    <string name="subscribe_now">Iscriviti ora</string>
+    <string name="auto_renewable_cancel_anytime">Auto rinnovabile. Annulla in qualsiasi momento.</string>
+    <string name="free_playlist_limit_reward_only_message">Guarda un annuncio con premio per sbloccare un\'altra importazione di playlist.</string>
+    <string name="reward_ad_not_ready">Nessun annuncio è disponibile al momento. Per favore riprova più tardi.</string>
+    <string name="watch_ad_and_add_playlist">Guarda l\'annuncio e aggiungi playlist</string>
+    <string name="rating_feedback_reason">Il tuo feedback</string>
+    <string name="rating_feedback_reason_required">Per favore condividi cosa è successo o cosa potremmo migliorare.</string>
+    <string name="rating_send_feedback">Continua a inviare e-mail</string>
+    <string name="rating_select_stars">Seleziona una valutazione in stelle.</string>
+    <string name="rating_feedback_subject">Risposte-%1$s</string>
+    <string name="rating_feedback_body">Valutazione:%1$d/5 stelle
+Feedback e suggerimenti:%2$s</string>
+    <string name="rating_no_email_app">Nessuna app di posta elettronica trovata. Installa un\'app di posta elettronica per inviare feedback.</string>
+    <string name="rating_feedback_hint">Ad esempio: un problema di riproduzione, problemi nell\'aggiunta di una playlist o una funzionalità di cui hai bisogno.</string>
 </resources>

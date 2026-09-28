@@ -8,6 +8,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -154,7 +156,8 @@ fun AppNeonButton(
     outerRadius: Dp = 16.dp,
     outerSpread: Dp = 1.dp,
     innerRadius: Dp = 0.dp,
-    innerSpread: Dp = 0.dp
+    innerSpread: Dp = 0.dp,
+    badge: String? = null
 ) {
     require(colors.size >= 2)
 
@@ -222,15 +225,30 @@ fun AppNeonButton(
             .padding(paddingValues),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = text,
-            color = Color.White.copy(alpha = if (enabled) 1f else 0.45f),
-            style = textStyle.copy(
-                platformStyle = PlatformTextStyle(
-                    includeFontPadding = false
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.Sdp, Alignment.CenterHorizontally)
+        ) {
+            badge?.let {
+                Text(
+                    text = it,
+                    color = Color.White.copy(alpha = if (enabled) 1f else 0.45f),
+                    style = textStyle.copy(fontSize = 9.Ssp),
+                    modifier = Modifier
+                        .border(1.dp, Color.White.copy(alpha = if (enabled) 0.8f else 0.3f), RoundedCornerShape(3.Sdp))
+                        .padding(horizontal = 4.Sdp, vertical = 1.Sdp)
+                )
+            }
+            Text(
+                text = text,
+                color = Color.White.copy(alpha = if (enabled) 1f else 0.45f),
+                style = textStyle.copy(
+                    platformStyle = PlatformTextStyle(
+                        includeFontPadding = false
+                    )
                 )
             )
-        )
+        }
     }
 }
 

@@ -193,4 +193,31 @@
     <string name="sleep_timer_minute_label">Мин</string>
     <string name="sound">Звук</string>
     <string name="latter">касније</string>
+
+    <string name="free_playlist_limit_reached">Искористили сте сва 3 бесплатна увоза плејлиста. Надоградите на Премиум да бисте додали неограничене листе за репродукцију.</string>
+    <string name="free_playlist_limit_reached_title">Достигнуто је ограничење бесплатне плејлисте</string>
+    <string name="free_playlist_limit_reward_message">Гледајте један оглас за награђивање да бисте откључали још један увоз плејлисте или надоградите на Премиум за неограничен увоз.</string>
+    <string name="watch_ad_to_continue">Погледајте оглас</string>
+    <string name="go_premium">Иди Премиум</string>
+    <string name="skip">Скип</string>
+    <string name="provider_url_blocked">Ову УРЛ адресу блокира листа ограничења добављача. Молимо користите овлашћени извор.</string>
+    <string name="all_channels_blocked">Сви канали на овој листи за репродукцију одговарају листи ограничења провајдера. Ништа није увезено.</string>
+    <string name="playlist_saved_with_blocked_channels">Плејлиста је сачувана.  Ограничени канали ТОКЕН_0 су искључени.</string>
+    <string name="restricted_channels_excluded">Из изабраних категорија искључено је ограничених канала: %1$d.</string>
+    <string name="copyright_notice_title">Одговорност за садржај и ауторска права</string>
+    <string name="copyright_notice_message">Увозите или гледајте само садржај који поседујете или имате овлашћење за приступ. Ви сте одговорни за изворе које додате и за добијање свих потребних дозвола. Апликација не дозвољава приступ садржају трећих страна нити одобрава кршење ауторских права. Апликација и њени програмери се одричу одговорности за садржај који је додао корисник у мери у којој је то дозвољено важећим законом. Филтрирање добављача не може да потврди дозволе за ауторска права. Ако наставите, потврђујете да имате потребна права за коришћење садржаја.</string>
+    <string name="copyright_notice_accept">Разумем и слажем се</string>
+    <string name="subscribe_now">Претплатите се сада</string>
+    <string name="auto_renewable_cancel_anytime">Ауто реневабле. Откажите било када.</string>
+    <string name="free_playlist_limit_reward_only_message">Погледајте један оглас за награђивање да бисте откључали још један увоз плејлисте.</string>
+    <string name="reward_ad_not_ready">Тренутно није доступан ниједан оглас. Покушајте поново касније.</string>
+    <string name="watch_ad_and_add_playlist">Погледајте оглас и додајте плејлисту</string>
+    <string name="rating_feedback_reason">Ваше повратне информације</string>
+    <string name="rating_feedback_reason_required">Молимо вас да поделите шта се десило или шта бисмо могли да побољшамо.</string>
+    <string name="rating_send_feedback">Наставите да шаљете е-пошту</string>
+    <string name="rating_select_stars">Изаберите оцену у звездицама.</string>
+    <string name="rating_feedback_subject">Повратне информације - ТОКЕН_0</string>
+    <string name="rating_feedback_body">Оцена: ТОКЕН_0 /5 звездица\н\нПовратне информације и предлози:\н ТОКЕН_1</string>
+    <string name="rating_no_email_app">Није пронађена ниједна апликација за е-пошту. Инсталирајте апликацију за е-пошту да бисте послали повратне информације.</string>
+    <string name="rating_feedback_hint">На пример: проблем са репродукцијом, проблем са додавањем листе песама или функција која вам је потребна.</string>
 </resources>

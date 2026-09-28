@@ -27,22 +27,30 @@ val viewModelModule = module {
     viewModelOf(::FavoriteViewModel)
     viewModelOf(::PlayViewModel)
     viewModel { params -> PlayListViewModel(params.get(), get()) }
-    viewModel { PersonalizationViewModel(androidApplication(), get()) }
+    viewModel { PersonalizationViewModel(androidApplication(), get(), get()) }
     viewModel { WatchNowViewModel(androidApplication(), get(), get()) }
 }
 
 val dataModule = module {
    single { SharedPreference(androidContext()) }
     single {
-        Room.databaseBuilder(
+            Room.databaseBuilder(
                 androidContext(),
                 AppDatabase::class.java,
                 "iptv_database"
-            ).fallbackToDestructiveMigration(false).build()
+            )
+                .addMigrations(AppDatabase.MIGRATION_2_3)
+                .fallbackToDestructiveMigration(false)
+                .build()
     }
     single { get<AppDatabase>().playlistDao() }
     single { get<AppDatabase>().channelDao() }
-    single { AppRepository(get(), get()) }
+    single { AppRepository(get(), get(), get()) }
+    single {
+        com.dongbv.alf_03_iptv.utils.BlockedProviderPolicy(
+            androidContext().resources.getStringArray(com.dongbv.alf_03_iptv.R.array.blocked_provider_keywords).toList()
+        )
+    }
     single {
         SimpleCache(
             File(androidContext().cacheDir, "stream_cache"),

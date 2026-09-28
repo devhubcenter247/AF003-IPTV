@@ -1,17 +1,20 @@
 package com.dongbv.alf_03_iptv.viewmodel
 
+import com.dongbv.alf_03_iptv.app.remote.remoteConfig
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.data.local.entity.MediaModel
 import com.dongbv.alf_03_iptv.data.local.entity.PlaylistEntity
 import com.dongbv.alf_03_iptv.data.local.entity.SourceType
 import com.dongbv.alf_03_iptv.data.repository.AppRepository
 import com.dongbv.alf_03_iptv.utils.M3uParser
+import com.lib.ads.gma.ads.billing.AppPurchase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +24,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
+class AddItemViewModel(
+    private val repository: AppRepository,
+    private val providerPolicy: com.dongbv.alf_03_iptv.utils.BlockedProviderPolicy,
+) : ViewModel() {
+
+    private var pendingRetry: (() -> Unit)? = null
+
+    fun cancelPendingImport() {
+        pendingRetry = null
+    }
+
+    fun retryPendingImport() {
+        val retry = pendingRetry
+        pendingRetry = null
+        retry?.invoke()
+    }
 
     private val _galleryMedia = MutableStateFlow<List<MediaModel?>>(listOf(null))
     val galleryMedia: StateFlow<List<MediaModel?>> = _galleryMedia.asStateFlow()
@@ -31,8 +49,16 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
 
     sealed class SaveState {
         data object Loading : SaveState()
-        data class Success(val playlistId: Long) : SaveState()
+        data class Success(val playlistId: Long, val blockedCount: Int = 0) : SaveState()
         data class Error(@StringRes val messageResId: Int) : SaveState()
+        data object RewardRequired : SaveState()
+    }
+
+    private fun canImport(rewardGranted: Boolean): Boolean =
+        rewardGranted || AppPurchase.getInstance().isPurchased() || !remoteConfig.rewarEditConfig.enable
+
+    private fun registerImport(source: String) {
+        AppPreferences.registerImportedPlaylist(source.trim().lowercase())
     }
 
     fun addGalleryMedia(mediaList: List<MediaModel>) {
@@ -60,7 +86,8 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
         _galleryMedia.value = listOf(null)
     }
 
-    fun saveGalleryPlaylist(playlistName: String) {
+    fun saveGalleryPlaylist(playlistName: String, rewardGranted: Boolean = false) {
+        if (pendingRetry != null) return
         viewModelScope.launch {
             _saveState.emit(SaveState.Loading)
 
@@ -76,7 +103,13 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
             }
 
             try {
-               
+                val source = mediaList.joinToString("|") { it.path }.trim().lowercase()
+                if (!canImport(rewardGranted)) {
+                    pendingRetry = { saveGalleryPlaylist(playlistName, rewardGranted = true) }
+                    _saveState.emit(SaveState.RewardRequired)
+                    return@launch
+                }
+
                 val playlist = PlaylistEntity(
                     name = playlistName.trim(),
                     source = "gallery_${System.currentTimeMillis()}",
@@ -98,6 +131,8 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
 
                
                 val playlistId = repository.insertPlaylistWithChannels(playlist, channels)
+                registerImport(source)
+                AppPreferences.requestRateAfterPlaylistImport()
                 _saveState.emit(SaveState.Success(playlistId))
 
             } catch (e: Exception) {
@@ -141,7 +176,8 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
         _selectedSuggestionUrl.value = null
     }
 
-    fun saveFilePlaylist(playlistName: String, context: Context) {
+    fun saveFilePlaylist(playlistName: String, context: Context, rewardGranted: Boolean = false) {
+        if (pendingRetry != null) return
         viewModelScope.launch {
             _saveState.emit(SaveState.Loading)
 
@@ -157,12 +193,23 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
             }
 
             try {
-                val channels = withContext(Dispatchers.IO) {
+                if (!canImport(rewardGranted)) {
+                    pendingRetry = { saveFilePlaylist(playlistName, context.applicationContext, rewardGranted = true) }
+                    _saveState.emit(SaveState.RewardRequired)
+                    return@launch
+                }
+                val parsedChannels = withContext(Dispatchers.IO) {
                     M3uParser.parseFromUri(context, fileUri)
                 }
 
+                val channels = parsedChannels.filterNot {
+                    providerPolicy.isBlocked(it.name) || providerPolicy.isBlocked(it.url)
+                }
+                val blockedCount = parsedChannels.size - channels.size
                 if (channels.isEmpty()) {
-                    _saveState.emit(SaveState.Error(R.string.no_channels_found))
+                    _saveState.emit(SaveState.Error(
+                        if (blockedCount > 0) R.string.all_channels_blocked else R.string.no_channels_found
+                    ))
                     return@launch
                 }
 
@@ -176,8 +223,10 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
 
                
                 val playlistId = repository.insertPlaylistWithChannels(playlist, channels)
+                registerImport(fileUri.toString())
+                AppPreferences.requestRateAfterPlaylistImport()
                 clearSelectedFile()
-                _saveState.emit(SaveState.Success(playlistId))
+                _saveState.emit(SaveState.Success(playlistId, blockedCount))
 
             } catch (e: Exception) {
                 _saveState.emit(SaveState.Error(R.string.failed_to_parse_file))
@@ -185,7 +234,8 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
         }
     }
 
-    fun saveUrlPlaylist(playlistName: String, url: String, type: SourceType = SourceType.URL) {
+    fun saveUrlPlaylist(playlistName: String, url: String, type: SourceType = SourceType.URL, rewardGranted: Boolean = false) {
+        if (pendingRetry != null) return
         viewModelScope.launch {
             _saveState.emit(SaveState.Loading)
 
@@ -199,13 +249,29 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
                 return@launch
             }
 
+            if (providerPolicy.isBlocked(url)) {
+                _saveState.emit(SaveState.Error(R.string.provider_url_blocked))
+                return@launch
+            }
+
             try {
-                val channels = withContext(Dispatchers.IO) {
-                    M3uParser.parseFromUrl(url)
+                if (!canImport(rewardGranted)) {
+                    pendingRetry = { saveUrlPlaylist(playlistName, url, type, rewardGranted = true) }
+                    _saveState.emit(SaveState.RewardRequired)
+                    return@launch
+                }
+                val parsedChannels = withContext(Dispatchers.IO) {
+                    M3uParser.parseFromUrl(url.trim(), providerPolicy::isBlocked)
                 }
 
+                val channels = parsedChannels.filterNot {
+                    providerPolicy.isBlocked(it.name) || providerPolicy.isBlocked(it.url)
+                }
+                val blockedCount = parsedChannels.size - channels.size
                 if (channels.isEmpty()) {
-                    _saveState.emit(SaveState.Error(R.string.no_channels_found))
+                    _saveState.emit(SaveState.Error(
+                        if (blockedCount > 0) R.string.all_channels_blocked else R.string.no_channels_found
+                    ))
                     return@launch
                 }
                 val playlist = PlaylistEntity(
@@ -215,8 +281,12 @@ class AddItemViewModel(private val repository: AppRepository) : ViewModel() {
                     channelCount = channels.size
                 )
                 val playlistId = repository.insertPlaylistWithChannels(playlist, channels)
-                _saveState.emit(SaveState.Success(playlistId))
+                registerImport(url)
+                AppPreferences.requestRateAfterPlaylistImport()
+                _saveState.emit(SaveState.Success(playlistId, blockedCount))
 
+            } catch (e: com.dongbv.alf_03_iptv.utils.BlockedProviderUrlException) {
+                _saveState.emit(SaveState.Error(R.string.provider_url_blocked))
             } catch (e: Exception) {
                 _saveState.emit(SaveState.Error(R.string.failed_to_parse_url))
             }

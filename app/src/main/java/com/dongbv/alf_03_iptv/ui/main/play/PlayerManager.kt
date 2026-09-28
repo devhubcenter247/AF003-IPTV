@@ -19,11 +19,6 @@ import androidx.media3.ui.PlayerView
 object PlayerManager {
 
     private var player: ExoPlayer? = null
-    private val httpFactory = DefaultHttpDataSource.Factory()
-        .setUserAgent(BROWSER_UA)
-        .setConnectTimeoutMs(15_000)
-        .setReadTimeoutMs(15_000)
-        .setAllowCrossProtocolRedirects(true)
     private var currentUrl: String = ""
     private var currentChannelId: Long = 0
     private var currentChannelName: String = ""
@@ -53,7 +48,6 @@ object PlayerManager {
                 .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
                 .build()
             player = ExoPlayer.Builder(context.applicationContext)
-                .setMediaSourceFactory(DefaultMediaSourceFactory(httpFactory))
                 .build().apply {
                 setAudioAttributes(audioAttributes, true)
                 addListener(internalListener)
@@ -101,8 +95,15 @@ object PlayerManager {
                
                 it.setMediaSource(RtspMediaSource.Factory().createMediaSource(mediaItem))
             } else {
-                httpFactory.setDefaultRequestProperties(headers)
-                it.setMediaItem(mediaItem)
+                val httpFactory = DefaultHttpDataSource.Factory()
+                    .setUserAgent(BROWSER_UA)
+                    .setConnectTimeoutMs(15_000)
+                    .setReadTimeoutMs(15_000)
+                    .setAllowCrossProtocolRedirects(true)
+                    .setDefaultRequestProperties(headers)
+                it.setMediaSource(
+                    DefaultMediaSourceFactory(httpFactory).createMediaSource(mediaItem)
+                )
             }
             it.prepare()
             it.play()

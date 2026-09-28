@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">ਘੱਟੋ-ਘੱਟ</string>
     <string name="sound">ਧੁਨੀ</string>
     <string name="latter">ਬਾਅਦ ਵਿੱਚ</string>
+
+    <string name="free_playlist_limit_reached">ਤੁਸੀਂ ਸਾਰੇ 3 ​​ਮੁਫਤ ਪਲੇਲਿਸਟ ਆਯਾਤ ਦੀ ਵਰਤੋਂ ਕੀਤੀ ਹੈ। ਅਸੀਮਤ ਪਲੇਲਿਸਟਸ ਜੋੜਨ ਲਈ ਪ੍ਰੀਮੀਅਮ ਵਿੱਚ ਅੱਪਗ੍ਰੇਡ ਕਰੋ।</string>
+    <string name="free_playlist_limit_reached_title">ਮੁਫ਼ਤ ਪਲੇਲਿਸਟ ਸੀਮਾ ਪੂਰੀ ਹੋ ਗਈ ਹੈ</string>
+    <string name="free_playlist_limit_reward_message">ਇੱਕ ਹੋਰ ਪਲੇਲਿਸਟ ਆਯਾਤ ਨੂੰ ਅਨਲੌਕ ਕਰਨ ਲਈ ਇੱਕ ਇਨਾਮੀ ਵਿਗਿਆਪਨ ਦੇਖੋ, ਜਾਂ ਅਸੀਮਤ ਆਯਾਤ ਲਈ ਪ੍ਰੀਮੀਅਮ ਵਿੱਚ ਅੱਪਗ੍ਰੇਡ ਕਰੋ।</string>
+    <string name="watch_ad_to_continue">ਵਿਗਿਆਪਨ ਦੇਖੋ</string>
+    <string name="go_premium">ਪ੍ਰੀਮੀਅਮ \'ਤੇ ਜਾਓ</string>
+    <string name="skip">ਛੱਡੋ</string>
+    <string name="provider_url_blocked">ਇਹ URL ਪ੍ਰਦਾਤਾ ਪਾਬੰਦੀ ਸੂਚੀ ਦੁਆਰਾ ਬਲੌਕ ਕੀਤਾ ਗਿਆ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਅਧਿਕਾਰਤ ਸਰੋਤ ਦੀ ਵਰਤੋਂ ਕਰੋ।</string>
+    <string name="all_channels_blocked">ਇਸ ਪਲੇਲਿਸਟ ਦੇ ਸਾਰੇ ਚੈਨਲ ਪ੍ਰਦਾਤਾ ਪਾਬੰਦੀ ਸੂਚੀ ਨਾਲ ਮੇਲ ਖਾਂਦੇ ਹਨ। ਕੁਝ ਵੀ ਆਯਾਤ ਨਹੀਂ ਕੀਤਾ ਗਿਆ ਸੀ।</string>
+    <string name="playlist_saved_with_blocked_channels">ਪਲੇਲਿਸਟ ਸੁਰੱਖਿਅਤ ਕੀਤੀ ਗਈ।%1$dਪ੍ਰਤਿਬੰਧਿਤ ਚੈਨਲਾਂ ਨੂੰ ਬਾਹਰ ਰੱਖਿਆ ਗਿਆ ਸੀ।</string>
+    <string name="restricted_channels_excluded">ਤੁਹਾਡੀਆਂ ਚੁਣੀਆਂ ਸ਼੍ਰੇਣੀਆਂ ਵਿੱਚੋਂ %1$d ਪਾਬੰਦੀਸ਼ੁਦਾ ਚੈਨਲ ਬਾਹਰ ਰੱਖੇ ਗਏ।</string>
+    <string name="copyright_notice_title">ਸਮੱਗਰੀ ਅਤੇ ਕਾਪੀਰਾਈਟ ਜ਼ਿੰਮੇਵਾਰੀ</string>
+    <string name="copyright_notice_message">ਸਿਰਫ਼ ਉਸ ਸਮਗਰੀ ਨੂੰ ਆਯਾਤ ਕਰੋ ਜਾਂ ਦੇਖੋ ਜੋ ਤੁਹਾਡੇ ਕੋਲ ਹੈ ਜਾਂ ਤੁਸੀਂ ਉਸ ਤੱਕ ਪਹੁੰਚ ਕਰਨ ਲਈ ਅਧਿਕਾਰਤ ਹੋ। ਤੁਸੀਂ ਉਹਨਾਂ ਸਰੋਤਾਂ ਲਈ ਜਿੰਮੇਵਾਰ ਹੋ ਜੋ ਤੁਸੀਂ ਜੋੜਦੇ ਹੋ ਅਤੇ ਕੋਈ ਵੀ ਲੋੜੀਂਦੀਆਂ ਇਜਾਜ਼ਤਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ। ਐਪ ਤੀਜੀ-ਧਿਰ ਦੀ ਸਮੱਗਰੀ ਤੱਕ ਪਹੁੰਚ ਨੂੰ ਅਧਿਕਾਰਤ ਨਹੀਂ ਕਰਦਾ ਜਾਂ ਕਾਪੀਰਾਈਟ ਉਲੰਘਣਾ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ। ਐਪ ਅਤੇ ਇਸਦੇ ਡਿਵੈਲਪਰ ਲਾਗੂ ਕਾਨੂੰਨ ਦੁਆਰਾ ਇਜਾਜ਼ਤ ਦਿੱਤੀ ਗਈ ਹੱਦ ਤੱਕ ਉਪਭੋਗਤਾ ਦੁਆਰਾ ਸ਼ਾਮਲ ਕੀਤੀ ਸਮੱਗਰੀ ਲਈ ਜ਼ਿੰਮੇਵਾਰੀ ਤੋਂ ਇਨਕਾਰ ਕਰਦੇ ਹਨ। ਪ੍ਰਦਾਤਾ ਫਿਲਟਰਿੰਗ ਕਾਪੀਰਾਈਟ ਅਨੁਮਤੀਆਂ ਦੀ ਪੁਸ਼ਟੀ ਨਹੀਂ ਕਰ ਸਕਦੀ ਹੈ। ਜਾਰੀ ਰੱਖ ਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਹਾਡੇ ਕੋਲ ਸਮੱਗਰੀ ਦੀ ਵਰਤੋਂ ਕਰਨ ਦੇ ਲੋੜੀਂਦੇ ਅਧਿਕਾਰ ਹਨ।</string>
+    <string name="copyright_notice_accept">ਮੈਂ ਸਮਝਦਾ ਹਾਂ ਅਤੇ ਸਹਿਮਤ ਹਾਂ</string>
+    <string name="subscribe_now">ਹੁਣੇ ਸਬਸਕ੍ਰਾਈਬ ਕਰੋ</string>
+    <string name="auto_renewable_cancel_anytime">ਆਟੋ ਨਵਿਆਉਣਯੋਗ. ਕਿਸੇ ਵੀ ਸਮੇਂ ਰੱਦ ਕਰੋ।</string>
+    <string name="free_playlist_limit_reward_only_message">ਇੱਕ ਹੋਰ ਪਲੇਲਿਸਟ ਆਯਾਤ ਨੂੰ ਅਨਲੌਕ ਕਰਨ ਲਈ ਇੱਕ ਇਨਾਮੀ ਵਿਗਿਆਪਨ ਦੇਖੋ।</string>
+    <string name="reward_ad_not_ready">ਇਸ ਸਮੇਂ ਕੋਈ ਵਿਗਿਆਪਨ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
+    <string name="watch_ad_and_add_playlist">ਵਿਗਿਆਪਨ ਦੇਖੋ ਅਤੇ ਪਲੇਲਿਸਟ ਸ਼ਾਮਲ ਕਰੋ</string>
+    <string name="rating_feedback_reason">ਤੁਹਾਡਾ ਫੀਡਬੈਕ</string>
+    <string name="rating_feedback_reason_required">ਕਿਰਪਾ ਕਰਕੇ ਸਾਂਝਾ ਕਰੋ ਕਿ ਕੀ ਹੋਇਆ ਜਾਂ ਅਸੀਂ ਕੀ ਸੁਧਾਰ ਸਕਦੇ ਹਾਂ।</string>
+    <string name="rating_send_feedback">ਈਮੇਲ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ</string>
+    <string name="rating_select_stars">ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਟਾਰ ਰੇਟਿੰਗ ਚੁਣੋ।</string>
+    <string name="rating_feedback_subject">ਫੀਡਬੈਕ -%1$s</string>
+    <string name="rating_feedback_body">ਰੇਟਿੰਗ:%1$d/5 ਸਟਾਰ
+ਫੀਡਬੈਕ ਅਤੇ ਸੁਝਾਅ:%2$s</string>
+    <string name="rating_no_email_app">ਕੋਈ ਈਮੇਲ ਐਪ ਨਹੀਂ ਮਿਲੀ। ਕਿਰਪਾ ਕਰਕੇ ਫੀਡਬੈਕ ਭੇਜਣ ਲਈ ਇੱਕ ਈਮੇਲ ਐਪ ਸਥਾਪਿਤ ਕਰੋ।</string>
+    <string name="rating_feedback_hint">ਉਦਾਹਰਨ ਲਈ: ਇੱਕ ਪਲੇਬੈਕ ਸਮੱਸਿਆ, ਇੱਕ ਪਲੇਲਿਸਟ ਨੂੰ ਜੋੜਨ ਵਿੱਚ ਸਮੱਸਿਆ, ਜਾਂ ਤੁਹਾਨੂੰ ਲੋੜੀਂਦੀ ਵਿਸ਼ੇਸ਼ਤਾ।</string>
 </resources>

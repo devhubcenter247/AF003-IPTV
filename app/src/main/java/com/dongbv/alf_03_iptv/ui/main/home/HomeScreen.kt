@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.main.home
 
+import com.dongbv.alf_03_iptv.app.remote.remoteConfig
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,6 +69,10 @@ import com.dongbv.alf_03_iptv.widget.grdStart
 import com.dongbv.alf_03_iptv.widget.headline600
 import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.mainColor
+import com.lib.ads.gma.ads.billing.AppPurchase
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdHolderConfig
+import com.dongbv.alf_03_iptv.ads.wrapper.native.NativePlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.native.view.NativeComposeView
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
@@ -76,9 +82,12 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onWatchNow: () -> Unit = {},
     onAddPlaylist: () -> Unit = {},
+    onOpenSub: () -> Unit = {},
     onOpenChannel: (HomeChannelItem) -> Unit = {},
     onHowToAddChannel: () -> Unit = {},
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    nativeAdHolder: NativeAdHolderConfig? = null,
+    nativePlacement: NativePlacement = NativePlacement.NativeSmallCtaRight,
 ) {
     val listHomeChannel by viewModel.listHomeChannelItem.collectAsStateWithLifecycle(emptyList())
     val currentSelectedType by viewModel.contentType.collectAsStateWithLifecycle(ContentType.ALL)
@@ -86,14 +95,20 @@ fun HomeScreen(
         modifier = modifier,
         currentSelectedType = currentSelectedType,
         listHomeChannel = listHomeChannel,
-        filterChanner = { type -> viewModel.selectContent(type) },
+        filterChanner = { type ->
+            viewModel.selectContent(type)
+            nativeAdHolder?.reload()
+        },
         onWatchNow = onWatchNow,
+        onOpenSub = onOpenSub,
         onAddPlaylist = onAddPlaylist,
         onOpenChannel = { homeChannelItem ->
             onOpenChannel(homeChannelItem)
         },
         onHowToAddChannel = onHowToAddChannel,
-        onBack = onBack
+        onBack = onBack,
+        nativeAdHolder = nativeAdHolder,
+        nativePlacement = nativePlacement,
     )
 }
 
@@ -105,81 +120,70 @@ fun HomeScreenContent(
     filterChanner: (ContentType) -> Unit = {},
     onWatchNow: () -> Unit = {},
     onAddPlaylist: () -> Unit = {},
+    onOpenSub: () -> Unit = {},
     onOpenChannel: (HomeChannelItem) -> Unit = {},
     onHowToAddChannel: () -> Unit = {},
     onBack: () -> Unit = {},
+    nativeAdHolder: NativeAdHolderConfig? = null,
+    nativePlacement: NativePlacement = NativePlacement.NativeSmallCtaRight,
 ) {
     ColumnParentContent(
-        onBack = onBack,
-        modifier = modifier
+        onBack = onBack, modifier = modifier.statusBarPadding()
     ) {
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            val isTablet = maxWidth >= 600.dp
-            Column(modifier = Modifier.fillMaxSize()) {
-                HomeHeader(
-                    isTablet = isTablet,
-                    gotoInfo = onHowToAddChannel,
-                    modifier = Modifier
-                )
-
-                if (isTablet) {
-                    ExpandedHomeContent(
-                        modifier = Modifier.weight(1f),
-                        currentSelectedType = currentSelectedType,
-                        listHomeChannel = listHomeChannel,
-                        filterChannel = filterChanner,
-                        onWatchNow = onWatchNow,
-                        onAddPlaylist = onAddPlaylist,
-                        onOpenChannel = onOpenChannel,
-                        onHowToAddChannel = onHowToAddChannel
-                    )
-                } else {
-                    CompactHomeContent(
-                        modifier = Modifier.weight(1f),
-                        isTablet = isTablet,
-                        currentSelectedType = currentSelectedType,
-                        listHomeChannel = listHomeChannel,
-                        filterChannel = filterChanner,
-                        onWatchNow = onWatchNow,
-                        onAddPlaylist = onAddPlaylist,
-                        onOpenChannel = onOpenChannel,
-                        onHowToAddChannel = onHowToAddChannel
-                    )
-                }
-            }
+        Column(modifier = Modifier.fillMaxSize()) {
+            HomeHeader(
+                gotoInfo = onHowToAddChannel, onOpenSub = onOpenSub, modifier = Modifier
+            )
+            CompactHomeContent(
+                modifier = Modifier.weight(1f),
+                currentSelectedType = currentSelectedType,
+                listHomeChannel = listHomeChannel,
+                filterChannel = filterChanner,
+                onWatchNow = onWatchNow,
+                onAddPlaylist = onAddPlaylist,
+                onOpenChannel = onOpenChannel,
+                onHowToAddChannel = onHowToAddChannel,
+                nativeAdHolder = nativeAdHolder,
+                nativePlacement = nativePlacement,
+            )
         }
     }
 }
 
 @Composable
 private fun HomeHeader(
-    modifier: Modifier = Modifier,
-    isTablet: Boolean,
-    gotoInfo: () -> Unit
+    modifier: Modifier = Modifier, onOpenSub: () -> Unit = {}, gotoInfo: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = if (isTablet) 24.dp else 12.Sdp).then(modifier),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 12.Sdp)
+            .then(modifier), verticalAlignment = Alignment.CenterVertically
     ) {
         TextView(
             stringResource(R.string.app_name),
             textAlign = TextAlign.Left,
             color = IptvTextPrimary,
             font = R.font.ss_700,
-            textSize = if (isTablet) 20.Ssp else 18.Ssp,
+            textSize = 18.Ssp,
             modifier = Modifier.weight(1f)
         )
+
+        if (remoteConfig.paywallEnabled && !AppPurchase.getInstance().isPurchased()) {
+            IconView(
+                item = R.drawable.ic_app_premium,
+                icSize = 20.Sdp,
+                modifier = Modifier.size(28.Sdp),
+                tint = Color.Unspecified,
+                onclick = onOpenSub
+            )
+        }
+
         IconView(
             item = R.drawable.ic_app_help,
             icSize = 20.Sdp,
-            modifier = Modifier.size(if (isTablet) 36.dp else 28.Sdp),
+            modifier = Modifier.size(28.Sdp),
             tint = white,
             onclick = gotoInfo
         )
@@ -189,116 +193,49 @@ private fun HomeHeader(
 @Composable
 private fun CompactHomeContent(
     modifier: Modifier,
-    isTablet: Boolean,
     currentSelectedType: ContentType,
     listHomeChannel: List<HomeChannelItem>,
     filterChannel: (ContentType) -> Unit,
     onWatchNow: () -> Unit,
     onAddPlaylist: () -> Unit,
     onOpenChannel: (HomeChannelItem) -> Unit,
-    onHowToAddChannel: () -> Unit = {}
+    onHowToAddChannel: () -> Unit = {},
+    nativeAdHolder: NativeAdHolderConfig? = null,
+    nativePlacement: NativePlacement = NativePlacement.NativeSmallCtaRight,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         HomeBanner(
             onWatchNow = onWatchNow,
-            modifier = if (isTablet) {
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 24.dp, vertical = 16.dp)
-                    .widthIn(max = 720.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(HOME_BANNER_ASPECT_RATIO)
-            } else {
-                Modifier
-                    .padding(horizontal = 12.Sdp)
-                    .paddingTop(10.dp)
-                    .fillMaxWidth()
-                    .height(180.dp)
-            }
+            modifier = Modifier
+                .padding(horizontal = 12.Sdp)
+                .paddingTop(10.dp)
+                .fillMaxWidth()
+                .height(180.dp)
         )
 
         HomeActionBar(
             currentSelectedType = currentSelectedType,
-            stacked = isTablet,
             filterChannel = filterChannel,
             onAddPlaylist = onAddPlaylist,
             modifier = Modifier.padding(
-                top = if (isTablet) 10.Sdp else 12.Sdp,
-                start = if (isTablet) 24.dp else 12.Sdp,
-                end = if (isTablet) 24.dp else 0.dp,
-                bottom = if (isTablet) 16.dp else 12.Sdp
+                top = 12.Sdp, start = 12.Sdp, end = 0.dp, bottom = 12.Sdp
             )
         )
 
         HomeChannelContent(
             modifier = Modifier.weight(1f),
             listHomeChannel = listHomeChannel,
-            useGrid = isTablet,
             onOpenChannel = onOpenChannel,
-            onHowToAddChannel = onHowToAddChannel
+            onHowToAddChannel = onHowToAddChannel,
+            nativeAdHolder = nativeAdHolder,
+            nativePlacement = nativePlacement,
         )
     }
 }
 
 @Composable
-private fun ExpandedHomeContent(
-    modifier: Modifier,
-    currentSelectedType: ContentType,
-    listHomeChannel: List<HomeChannelItem>,
-    filterChannel: (ContentType) -> Unit,
-    onWatchNow: () -> Unit,
-    onAddPlaylist: () -> Unit,
-    onOpenChannel: (HomeChannelItem) -> Unit,
-    onHowToAddChannel: () -> Unit = {}
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = 24.dp, top = 16.dp, end = 24.dp),
-        horizontalArrangement = Arrangement.spacedBy(24.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(0.82f)
-                .fillMaxHeight()
-        ) {
-            HomeBanner(
-                onWatchNow = onWatchNow,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(HOME_BANNER_ASPECT_RATIO)
-            )
-            Spacer(Modifier.height(20.dp))
-            HomeActionBar(
-                currentSelectedType = currentSelectedType,
-                stacked = true,
-                filterChannel = filterChannel,
-                onAddPlaylist = onAddPlaylist
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .weight(1.18f)
-                .fillMaxHeight()
-        ) {
-            PlaylistSectionHeader(itemCount = listHomeChannel.size)
-            Spacer(Modifier.height(12.dp))
-            HomeChannelContent(
-                modifier = Modifier.weight(1f),
-                listHomeChannel = listHomeChannel,
-                useGrid = true,
-                onOpenChannel = onOpenChannel,
-                onHowToAddChannel = onHowToAddChannel
-            )
-        }
-    }
-}
-
-@Composable
 private fun HomeBanner(
-    onWatchNow: () -> Unit,
-    modifier: Modifier = Modifier
+    onWatchNow: () -> Unit, modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -313,14 +250,9 @@ private fun HomeBanner(
             contentDescription = null
         )
         AppNeonButton(
-            text = stringResource(R.string.watch_now),
-            onClick = onWatchNow,
-            textStyle = TextStyle(
-                fontFamily = FontFamily(Font(R.font.ss_600)),
-                fontSize = 12.Ssp
-            ),
-            shape = CircleShape,
-            modifier = Modifier
+            text = stringResource(R.string.watch_now), onClick = onWatchNow, textStyle = TextStyle(
+                fontFamily = FontFamily(Font(R.font.ss_600)), fontSize = 12.Ssp
+            ), shape = CircleShape, modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(10.Sdp)
 
@@ -331,65 +263,25 @@ private fun HomeBanner(
 @Composable
 private fun HomeActionBar(
     currentSelectedType: ContentType,
-    stacked: Boolean,
     filterChannel: (ContentType) -> Unit,
     onAddPlaylist: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (stacked) {
-        FlowRow (
-            modifier = modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            ButtonAction(
-                icon = R.drawable.ic_app_add,
-                isAdded = true,
-                label = stringResource(R.string.add_new),
-                modifier = Modifier.wrapContentWidth(),
-                onClick = onAddPlaylist
-            )
-            ButtonAction(
-                icon = R.drawable.ic_app_all,
-                isSelect = currentSelectedType == ContentType.ALL,
-                label = stringResource(R.string.all),
-                modifier = Modifier.wrapContentWidth()
-            ) { filterChannel(ContentType.ALL) }
-            ButtonAction(
-                icon = R.drawable.ic_app_url,
-                isSelect = currentSelectedType == ContentType.URL,
-                label = stringResource(R.string.url),
-                modifier = Modifier.wrapContentWidth()
-            ) { filterChannel(ContentType.URL) }
-            ButtonAction(
-                icon = R.drawable.ic_app_file,
-                isSelect = currentSelectedType == ContentType.FILE,
-                label = stringResource(R.string.file),
-                modifier = Modifier.wrapContentWidth()
-            ) { filterChannel(ContentType.FILE) }
-            ButtonAction(
-                icon = R.drawable.ic_app_video,
-                isSelect = currentSelectedType == ContentType.GALLERY,
-                label = stringResource(R.string.storage),
-                modifier = Modifier.wrapContentWidth()
-            ) { filterChannel(ContentType.GALLERY) }
-        }
-    } else {
-        Row(modifier = modifier.fillMaxWidth()) {
-            ButtonAction(
-                icon = R.drawable.ic_app_add,
-                isAdded = true,
-                label = stringResource(R.string.add_new),
-                modifier = Modifier.wrapContentWidth(),
-                onClick = onAddPlaylist
-            )
-            HomeFilterButtons(
-                currentSelectedType = currentSelectedType,
-                filterChannel = filterChannel,
-                modifier = Modifier
-                    .weight(1f)
-                    .paddingStart(12.Sdp)
-            )
-        }
+    Row(modifier = modifier.fillMaxWidth()) {
+        ButtonAction(
+            icon = R.drawable.ic_app_add,
+            isAdded = true,
+            label = stringResource(R.string.add_new),
+            modifier = Modifier.wrapContentWidth(),
+            onClick = onAddPlaylist
+        )
+        HomeFilterButtons(
+            currentSelectedType = currentSelectedType,
+            filterChannel = filterChannel,
+            modifier = Modifier
+                .weight(1f)
+                .paddingStart(12.Sdp)
+        )
     }
 }
 
@@ -434,8 +326,7 @@ private fun HomeFilterButtons(
 @Composable
 private fun PlaylistSectionHeader(itemCount: Int) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = stringResource(R.string.playlists),
@@ -456,33 +347,25 @@ private fun PlaylistSectionHeader(itemCount: Int) {
 private fun HomeChannelContent(
     modifier: Modifier,
     listHomeChannel: List<HomeChannelItem>,
-    useGrid: Boolean,
     onOpenChannel: (HomeChannelItem) -> Unit,
+    nativeAdHolder: NativeAdHolderConfig? = null,
+    nativePlacement: NativePlacement = NativePlacement.NativeSmallCtaRight,
     onHowToAddChannel: () -> Unit = {}
 ) {
     if (listHomeChannel.isEmpty()) {
         EmptyChannel(modifier = modifier, openHowUse = onHowToAddChannel)
-    } else if (useGrid) {
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 280.dp),
-            modifier = modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(bottom = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            itemsIndexed(
-                items = listHomeChannel,
-                key = { _, item -> item.id }
-            ) { index, item ->
-                HomeChannelView(
-                    homeChannel = item,
-                    index = index,
-                    isTablet = true,
-                    modifier = Modifier.onClick { onOpenChannel(item) }
-                )
-            }
-        }
     } else {
+        NativeComposeView(
+            nativePreloadConfig = nativeAdHolder to nativePlacement,
+            nativeModifier = Modifier,
+            modifier = Modifier
+                .paddingBottom(8.Sdp)
+                .padding(vertical = 4.dp)
+                .paddingHorizontal(10.Sdp)
+                .clip(
+                    RoundedCornerShape(10.Sdp)
+                )
+        )
         LazyColumn(
             modifier = modifier.fillMaxWidth(),
             state = rememberLazyListState(),
@@ -490,14 +373,11 @@ private fun HomeChannelContent(
             verticalArrangement = Arrangement.spacedBy(12.Sdp)
         ) {
             itemsIndexed(
-                items = listHomeChannel,
-                key = { _, item -> item.id }
-            ) { index, item ->
+                items = listHomeChannel, key = { _, item -> item.id }) { index, item ->
                 HomeChannelView(
                     homeChannel = item,
                     index = index,
-                    modifier = Modifier.onClick { onOpenChannel(item) }
-                )
+                    modifier = Modifier.onClick { onOpenChannel(item) })
             }
             item {
                 Spacer(modifier = Modifier.heightPercent(10f))
@@ -532,8 +412,7 @@ fun HomeChannelView(
             Modifier
                 .size(if (isTablet) 20.Sdp else 22.Sdp)
                 .background(IptvAccent, CircleShape)
-                .border(1.dp, white, CircleShape),
-            contentAlignment = Alignment.Center
+                .border(1.dp, white, CircleShape), contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "${index + 1}",
@@ -568,12 +447,10 @@ fun HomeChannelView(
 
 @Composable
 fun EmptyChannel(
-    modifier: Modifier = Modifier,
-    openHowUse: () -> Unit = {}
+    modifier: Modifier = Modifier, openHowUse: () -> Unit = {}
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier = Modifier
@@ -586,9 +463,7 @@ fun EmptyChannel(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconView(
-                item = R.drawable.ic_app_how_use,
-                tint = white,
-                icSize = 28.Sdp
+                item = R.drawable.ic_app_how_use, tint = white, icSize = 28.Sdp
             )
             Text(
                 text = stringResource(R.string.how_to_add_new_channel),
@@ -602,33 +477,30 @@ fun EmptyChannel(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
-            contentAlignment = Alignment.Center
+                .weight(1f), contentAlignment = Alignment.Center
         ) {
             val artworkSize = (maxWidth * 0.55f).coerceAtMost(260.dp)
             Box(
-                modifier = Modifier.size(artworkSize),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.size(artworkSize), contentAlignment = Alignment.Center
             ) {
                 BlurView(
                     brush = Brush.radialGradient(
                         listOf(IptvAccent, transparent),
-                    ),
-                    shape = CircleShape
+                    ), shape = CircleShape
                 )
                 IconView(
-                    item = R.drawable.ic_nav_channel,
-                    icSize = 120.Sdp,
-                    tint = white
+                    item = R.drawable.ic_nav_channel, icSize = 120.Sdp, tint = white
+                )
+                Text(
+                    text = stringResource(R.string.no_current_playlist),
+                    style = headline400(color = white),
+                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
+
+
         }
 
-        Text(
-            text = stringResource(R.string.no_current_playlist),
-            style = headline400(color = white),
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
     }
 }
 
@@ -660,16 +532,13 @@ fun ButtonAction(
             .onClick {
                 onClick()
             },
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         IconView(
-            item = icon,
-            tint = white,
-            icSize = 20.Sdp,
-            modifier = Modifier.gradientContent(
+            item = icon, tint = white, icSize = 20.Sdp, modifier = Modifier.gradientContent(
                 if (isSelect) listOf(
-                    grdStart,
-                    grdEnd
+                    grdStart, grdEnd
                 ) else {
                     if (isAdded) {
                         listOf(white, white)
@@ -693,7 +562,12 @@ fun ButtonAction(
 @Composable
 fun HomeScreenMainPreview() {
     AppViewTheme {
-        HomeScreenContent(listHomeChannel = listDemoContent, modifier = Modifier.backgroundResource(R.drawable.img_bg_app).paddingTop(28.Sdp))
+        HomeScreenContent(
+            listHomeChannel = listDemoContent,
+            modifier = Modifier
+                .backgroundResource(R.drawable.img_bg_app)
+                .paddingTop(28.Sdp)
+        )
     }
 }
 

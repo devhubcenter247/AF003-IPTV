@@ -26,6 +26,9 @@ interface ChannelDao {
     @Query("UPDATE channels SET is_favorite = :isFavorite WHERE id = :channelId")
     suspend fun updateFavoriteStatus(channelId: Long, isFavorite: Boolean)
 
+    @Query("UPDATE channels SET is_favorite = CASE WHEN is_favorite = 1 THEN 0 ELSE 1 END WHERE id = :channelId")
+    suspend fun toggleFavorite(channelId: Long)
+
     @Query("UPDATE channels SET last_watched = :timestamp, watch_position = :position WHERE id = :channelId")
     suspend fun updateWatchProgress(
           channelId: Long,

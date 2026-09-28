@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.main.play
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
 import android.annotation.SuppressLint
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -66,11 +67,13 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.base.BaseActivity
+import com.dongbv.alf_03_iptv.ads.wrapper.interstitial.InterstitialAdConfig
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.ResponsivePreview
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.opacity
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.ChannelListItem
 import com.dongbv.alf_03_iptv.ui.component.ChannelSearchBar
@@ -90,6 +93,8 @@ import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChannelHorActivity : BaseActivity() {
+    override val analyticsScreen = AppScreen.PLAY_CHANNEL_LANDSCAPE
+
 
     private val viewModel: PlayViewModel by viewModel()
 
@@ -143,7 +148,7 @@ class ChannelHorActivity : BaseActivity() {
     }
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
+    override fun ContentView() {
         val channels by viewModel.channels.collectAsStateWithLifecycle()
         val currentChannel by viewModel.currentChannel.collectAsStateWithLifecycle()
         val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
@@ -166,6 +171,7 @@ class ChannelHorActivity : BaseActivity() {
                 }
 
                 override fun onBack() {
+                    InterstitialAdConfig.recordPlayerClosed()
                     finish()
                 }
 
@@ -204,7 +210,6 @@ class ChannelHorActivity : BaseActivity() {
         }
 
         ChannelHorScreen(
-            statusBarHeight = statusBarHeight,
             channels = channels,
             currentChannelId = currentChannel?.id ?: channelId,
             currentChannelName = currentChannel?.name ?: channelName,
@@ -324,7 +329,6 @@ interface ChannelHorActions {
 @SuppressLint("ClickableViewAccessibility")
 @Composable
 fun ChannelHorScreen(
-    statusBarHeight: Dp,
     channels: List<ChannelEntity>,
     currentChannelId: Long,
     currentChannelName: String,
@@ -441,7 +445,7 @@ fun ChannelHorScreen(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = statusBarHeight)
+                        .statusBarPadding()
                         .padding(horizontal = 16.Sdp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -663,7 +667,6 @@ private fun ChannelHorScreenPreview() {
 
     AppViewTheme {
         ChannelHorScreen(
-            statusBarHeight = 0.dp,
             channels = channels,
             currentChannelId = currentChannel.id,
             currentChannelName = currentChannel.name,

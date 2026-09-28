@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">最小</string>
     <string name="sound">声音</string>
     <string name="latter">之后</string>
+
+    <string name="free_playlist_limit_reached">您已使用全部 3 个免费播放列表导入。升级到高级版可添加无限的播放列表。</string>
+    <string name="free_playlist_limit_reached_title">已达到免费播放列表限制</string>
+    <string name="free_playlist_limit_reward_message">观看一则激励广告即可解锁另一份播放列表导入，或升级至高级版以无限导入。</string>
+    <string name="watch_ad_to_continue">观看广告</string>
+    <string name="go_premium">升级至高级版</string>
+    <string name="skip">跳过</string>
+    <string name="provider_url_blocked">该 URL 被提供商限制列表阻止。请使用授权来源。</string>
+    <string name="all_channels_blocked">该播放列表中的所有频道均符合提供商限制列表。没有进口任何东西。</string>
+    <string name="playlist_saved_with_blocked_channels">播放列表已保存。%1$d限制通道被排除。</string>
+    <string name="restricted_channels_excluded">已从你选择的分类中排除 %1$d 个受限频道。</string>
+    <string name="copyright_notice_title">内容和版权责任</string>
+    <string name="copyright_notice_message">仅导入或观看您拥有或有权访问的内容。您对您添加的来源以及获取任何所需的权限负责。该应用程序不授权访问第三方内容或认可侵犯版权。在适用法律允许的范围内，该应用程序及其开发人员对用户添加的内容不承担任何责任。提供商过滤无法验证版权权限。通过继续，您确认您拥有使用该内容的必要权利。</string>
+    <string name="copyright_notice_accept">我理解并同意</string>
+    <string name="subscribe_now">立即订阅</string>
+    <string name="auto_renewable_cancel_anytime">自动再生。随时取消。</string>
+    <string name="free_playlist_limit_reward_only_message">观看一则激励广告即可解锁另一份播放列表导入。</string>
+    <string name="reward_ad_not_ready">目前没有广告。请稍后重试。</string>
+    <string name="watch_ad_and_add_playlist">观看广告并添加播放列表</string>
+    <string name="rating_feedback_reason">您的反馈</string>
+    <string name="rating_feedback_reason_required">请分享发生了什么或我们可以改进的地方。</string>
+    <string name="rating_send_feedback">继续发送电子邮件</string>
+    <string name="rating_select_stars">请选择星级。</string>
+    <string name="rating_feedback_subject">反馈 -%1$s</string>
+    <string name="rating_feedback_body">评级：%1$d/5 星
+反馈和建议：%2$s</string>
+    <string name="rating_no_email_app">找不到电子邮件应用程序。请安装电子邮件应用程序来发送反馈。</string>
+    <string name="rating_feedback_hint">例如：播放问题、添加播放列表时遇到问题或您需要的功能。</string>
 </resources>

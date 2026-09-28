@@ -10,8 +10,14 @@ import com.dongbv.alf_03_iptv.model.ContentType
 import com.dongbv.alf_03_iptv.model.HomeChannelItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import androidx.room.withTransaction
+import com.dongbv.alf_03_iptv.data.local.AppDatabase
 
-class AppRepository(private val channelDao: ChannelDao, private val playlistDao: PlaylistDao) {
+class AppRepository(
+    private val channelDao: ChannelDao,
+    private val playlistDao: PlaylistDao,
+    private val database: AppDatabase,
+) {
 
     fun getAllPlaylists(): Flow<List<PlaylistEntity>> = playlistDao.getAllPlaylists()
 
@@ -59,12 +65,12 @@ class AppRepository(private val channelDao: ChannelDao, private val playlistDao:
     suspend fun insertPlaylistWithChannels(
         playlist: PlaylistEntity,
         channels: List<ChannelEntity>
-    ): Long {
+    ): Long = database.withTransaction {
         val playlistId = playlistDao.insert(playlist)
         val channelsWithPlaylistId = channels.map { it.copy(playlistId = playlistId) }
         channelDao.insertAll(channelsWithPlaylistId)
         playlistDao.updateChannelCount(playlistId, channelsWithPlaylistId.size)
-        return playlistId
+        playlistId
     }
 
     suspend fun updatePlaylist(playlist: PlaylistEntity) =
@@ -110,19 +116,16 @@ class AppRepository(private val channelDao: ChannelDao, private val playlistDao:
         channelDao.getGroupsByPlaylist(playlistId)
 
     suspend fun insertChannels(channels: List<ChannelEntity>) {
-        channelDao.insertAll(channels)
-        channels.groupBy { it.playlistId }.forEach { (playlistId, _) ->
-            val count = channelDao.getChannelCount(playlistId)
-            playlistDao.updateChannelCount(playlistId, count)
+        database.withTransaction {
+            channelDao.insertAll(channels)
+            channels.groupBy { it.playlistId }.forEach { (playlistId, _) ->
+                val count = channelDao.getChannelCount(playlistId)
+                playlistDao.updateChannelCount(playlistId, count)
+            }
         }
     }
 
-    suspend fun toggleFavorite(channelId: Long) {
-        val channel = channelDao.getChannelByIdOnce(channelId)
-        channel?.let {
-            channelDao.updateFavoriteStatus(channelId, !it.isFavorite)
-        }
-    }
+    suspend fun toggleFavorite(channelId: Long) = channelDao.toggleFavorite(channelId)
     suspend fun renameChannel(channelId: Long, newName: String ) = channelDao.renameChannel(channelId,newName)
 
     suspend fun setFavorite(channelId: Long, isFavorite: Boolean) =
@@ -137,28 +140,28 @@ class AppRepository(private val channelDao: ChannelDao, private val playlistDao:
         channelDao.removeFromHistory(channelId)
 
     suspend fun deleteChannel(channelId: Long) {
-        val channel = channelDao.getChannelByIdOnce(channelId)
-        channelDao.deleteById(channelId)
-        channel?.let {
-            val count = channelDao.getChannelCount(it.playlistId)
-            if (count == 0) {
-                playlistDao.deleteById(it.playlistId)
-            } else {
-                playlistDao.updateChannelCount(it.playlistId, count)
-            }
+        database.withTransaction {
+            val channel = channelDao.getChannelByIdOnce(channelId) ?: return@withTransaction
+            channelDao.deleteById(channelId)
+            val count = channelDao.getChannelCount(channel.playlistId)
+            playlistDao.updateChannelCount(channel.playlistId, count)
         }
     }
 
     suspend fun deleteChannelsByPlaylist(playlistId: Long) {
-        channelDao.deleteByPlaylistId(playlistId)
-        playlistDao.updateChannelCount(playlistId, 0)
+        database.withTransaction {
+            channelDao.deleteByPlaylistId(playlistId)
+            playlistDao.updateChannelCount(playlistId, 0)
+        }
     }
 
     suspend fun refreshPlaylistChannels(playlistId: Long, channels: List<ChannelEntity>) {
-        channelDao.deleteByPlaylistId(playlistId)
-        val channelsWithPlaylistId = channels.map { it.copy(playlistId = playlistId) }
-        channelDao.insertAll(channelsWithPlaylistId)
-        playlistDao.updateChannelCount(playlistId, channelsWithPlaylistId.size)
+        database.withTransaction {
+            channelDao.deleteByPlaylistId(playlistId)
+            val channelsWithPlaylistId = channels.map { it.copy(playlistId = playlistId) }
+            channelDao.insertAll(channelsWithPlaylistId)
+            playlistDao.updateChannelCount(playlistId, channelsWithPlaylistId.size)
+        }
     }
 
     suspend fun getPlaylistCount(): Int = playlistDao.getPlaylistCount()

@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Tunog</string>
     <string name="latter">Mamaya</string>
+
+    <string name="free_playlist_limit_reached">Nagamit mo na ang lahat ng 3 libreng pag-import ng playlist. Mag-upgrade sa Premium para magdagdag ng walang limitasyong mga playlist.</string>
+    <string name="free_playlist_limit_reached_title">Naabot na ang limitasyon ng libreng playlist</string>
+    <string name="free_playlist_limit_reward_message">Manood ng isang reward na ad para mag-unlock ng isa pang pag-import ng playlist, o mag-upgrade sa Premium para sa walang limitasyong pag-import.</string>
+    <string name="watch_ad_to_continue">Manood ng ad</string>
+    <string name="go_premium">Pumunta sa Premium</string>
+    <string name="skip">Laktawan</string>
+    <string name="provider_url_blocked">Ang URL na ito ay hinarangan ng listahan ng paghihigpit ng provider. Mangyaring gumamit ng awtorisadong pinagmulan.</string>
+    <string name="all_channels_blocked">Ang lahat ng channel sa playlist na ito ay tumutugma sa listahan ng paghihigpit ng provider. Walang na-import.</string>
+    <string name="playlist_saved_with_blocked_channels">Na-save ang playlist.  Ang mga pinaghihigpitang channel ng%1$day hindi kasama.</string>
+    <string name="restricted_channels_excluded">%1$d restricted na channel ang hindi isinama mula sa mga napili mong kategorya.</string>
+    <string name="copyright_notice_title">Responsibilidad ng nilalaman at copyright</string>
+    <string name="copyright_notice_message">Mag-import o manood lamang ng nilalaman na pagmamay-ari mo o pinahintulutang i-access. Responsable ka para sa mga source na idinagdag mo at para sa pagkuha ng anumang kinakailangang pahintulot. Hindi pinapahintulutan ng app ang pag-access sa nilalaman ng third-party o nag-eendorso ng paglabag sa copyright. Tinatanggihan ng app at ng mga developer nito ang responsibilidad para sa content na idinagdag ng user sa lawak na pinapahintulutan ng naaangkop na batas. Hindi ma-verify ng pag-filter ng provider ang mga pahintulot sa copyright. Sa pagpapatuloy, kinukumpirma mo na mayroon kang mga kinakailangang karapatang gamitin ang nilalaman.</string>
+    <string name="copyright_notice_accept">Naiintindihan ko at sumasang-ayon ako</string>
+    <string name="subscribe_now">Mag-subscribe ngayon</string>
+    <string name="auto_renewable_cancel_anytime">Auto renewable. Kanselahin anumang oras.</string>
+    <string name="free_playlist_limit_reward_only_message">Manood ng isang rewarded ad para mag-unlock ng isa pang pag-import ng playlist.</string>
+    <string name="reward_ad_not_ready">Walang available na ad sa ngayon. Pakisubukang muli mamaya.</string>
+    <string name="watch_ad_and_add_playlist">Manood ng ad at magdagdag ng playlist</string>
+    <string name="rating_feedback_reason">Ang iyong feedback</string>
+    <string name="rating_feedback_reason_required">Mangyaring ibahagi kung ano ang nangyari o kung ano ang maaari naming pagbutihin.</string>
+    <string name="rating_send_feedback">Magpatuloy sa pag-email</string>
+    <string name="rating_select_stars">Mangyaring pumili ng star rating.</string>
+    <string name="rating_feedback_subject">Feedback -%1$s</string>
+    <string name="rating_feedback_body">Rating:%1$d/5 star
+Feedback at mungkahi:%2$s</string>
+    <string name="rating_no_email_app">Walang nakitang email app. Mangyaring mag-install ng email app upang magpadala ng feedback.</string>
+    <string name="rating_feedback_hint">Halimbawa: isang isyu sa pag-playback, problema sa pagdaragdag ng playlist, o isang feature na kailangan mo.</string>
 </resources>

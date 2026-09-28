@@ -1,5 +1,9 @@
 package com.dongbv.alf_03_iptv.ui.main.add
 
+import com.lib.ads.gma.ads.billing.AppPurchase
+import com.dongbv.alf_03_iptv.app.remote.remoteConfig
+import com.dongbv.alf_03_iptv.analytics.AppScreen
+import com.dongbv.alf_03_iptv.analytics.TrackScreen
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
@@ -45,6 +49,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,7 +64,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dongbv.alf_03_iptv.R
@@ -71,11 +75,12 @@ import com.dongbv.alf_03_iptv.style.SpaceH
 import com.dongbv.alf_03_iptv.style.SpaceW
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.dashedBorder
-import com.dongbv.alf_03_iptv.style.gradientContent
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.style.rememberToaster
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.style.white
+import com.dongbv.alf_03_iptv.ui.component.CopyrightNoticeDialog
 import com.dongbv.alf_03_iptv.ui.component.AppNeonButton
 import com.dongbv.alf_03_iptv.ui.component.backgroundState
 import com.dongbv.alf_03_iptv.ui.component.neonState
@@ -84,7 +89,6 @@ import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
 import com.dongbv.alf_03_iptv.widget.IptvDivider
 import com.dongbv.alf_03_iptv.widget.IptvError
-import com.dongbv.alf_03_iptv.widget.IptvPrimaryGradient
 import com.dongbv.alf_03_iptv.widget.IptvSuccess
 import com.dongbv.alf_03_iptv.widget.IptvSurface
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
@@ -94,8 +98,6 @@ import com.dongbv.alf_03_iptv.widget.IptvWarning
 import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.headline500
 import com.dongbv.alf_03_iptv.widget.headline600
-import com.dongbv.alf_03_iptv.widget.headline700
-import com.dongbv.alf_03_iptv.widget.mainColor
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
@@ -167,29 +169,51 @@ private val tabSubtitles = listOf(
 )
 
 @Composable
-fun AddSChanelcreen(
+fun AddSChanelScreen(
     viewModel: AddItemViewModel,
-    statusBarHeight: Dp,
     onBack: () -> Unit,
     onPickFile: () -> Unit,
+    onGoggleAd : @Composable ()-> Unit = {},
     onPickGallery: () -> Unit,
-    onShowLoading: (Boolean) -> Unit
+    onShowLoading: (Boolean) -> Unit,
+    onWatchReward: () -> Unit,
+    onPlaylistSaved: (Long) -> Unit,
 ) {
     val context = LocalContext.current
     val toaster = rememberToaster()
+    var copyrightAccepted by rememberSaveable { mutableStateOf(false) }
+    if (!copyrightAccepted) {
+        CopyrightNoticeDialog(
+            onAccept = { copyrightAccepted = true },
+            onCancel = onBack
+        )
+    }
     LaunchedEffect(Unit) {
         viewModel.saveState.collect { state ->
             when (state) {
                 is AddItemViewModel.SaveState.Loading -> onShowLoading(true)
                 is AddItemViewModel.SaveState.Success -> {
                     onShowLoading(false)
-                    toaster.show(R.string.playlist_saved_successfully)
-                    onBack()
+                    if (state.blockedCount > 0) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.playlist_saved_with_blocked_channels, state.blockedCount),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        toaster.show(R.string.playlist_saved_successfully)
+                    }
+                    onPlaylistSaved(state.playlistId)
                 }
 
                 is AddItemViewModel.SaveState.Error -> {
                     onShowLoading(false)
                     toaster.show(state.messageResId)
+                }
+
+                AddItemViewModel.SaveState.RewardRequired -> {
+                    onShowLoading(false)
+                    onWatchReward()
                 }
             }
         }
@@ -201,12 +225,12 @@ fun AddSChanelcreen(
     val galleryMedia by viewModel.galleryMedia.collectAsStateWithLifecycle()
 
     AddScreenContent(
-        statusBarHeight = statusBarHeight,
         selectedFileUri = selectedFileUri,
         selectedFileName = selectedFileName,
         selectedSuggestionUrl = selectedSuggestionUrl,
         galleryMedia = galleryMedia,
         onBack = onBack,
+        onGoggleAd = onGoggleAd,
         onPickFile = onPickFile,
         onPickGallery = onPickGallery,
         onClearSelectedFile = { viewModel.clearSelectedFile() },
@@ -222,13 +246,13 @@ fun AddSChanelcreen(
         },
         onSaveGalleryPlaylist = { viewModel.saveGalleryPlaylist(it) }
     )
+
 }
 
 // ── Stateless content ─────────────────────────────────────────────────────────
 
 @Composable
 fun AddScreenContent(
-    statusBarHeight: Dp,
     selectedFileUri: Uri?,
     selectedFileName: String?,
     selectedSuggestionUrl: String?,
@@ -236,6 +260,7 @@ fun AddScreenContent(
     onBack: () -> Unit,
     onPickFile: () -> Unit,
     onPickGallery: () -> Unit,
+    onGoggleAd : @Composable ()-> Unit = {},
     onClearSelectedFile: () -> Unit,
     onSetSelectedSuggestion: (String) -> Unit,
     onRemoveGalleryMedia: (MediaModel) -> Unit,
@@ -244,6 +269,13 @@ fun AddScreenContent(
     onSaveGalleryPlaylist: (String) -> Unit
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
+    TrackScreen(
+        when (selectedTab) {
+            0 -> AppScreen.ADD_CHANNEL_URL
+            1 -> AppScreen.ADD_CHANNEL_FILE
+            else -> AppScreen.ADD_CHANNEL_GALLERY
+        }
+    )
     var playlistName by remember { mutableStateOf("") }
     var urlInput by remember { mutableStateOf("") }
 
@@ -271,7 +303,7 @@ fun AddScreenContent(
         horizontalAlignment = Alignment.Start,
         onBack = onBack
     ) {
-        SpaceH(statusBarHeight)
+        Spacer(Modifier.statusBarPadding())
 
 
         AddHeader(title = stringResource(R.string.add_channel_to_playlist), onBack = onBack)
@@ -320,7 +352,8 @@ fun AddScreenContent(
                         (slideOutHorizontally(tween(200)) { -it * dir } + fadeOut(tween(150)))
             },
             label = "tab_content"
-        ) { tab ->
+        )
+        { tab ->
             when (tab) {
                 0 -> AddUrlTab(
                     playlistName = playlistName,
@@ -361,9 +394,11 @@ fun AddScreenContent(
                 .padding(horizontal = 12.Sdp)
                 .padding(top = 8.Sdp, bottom = 12.Sdp),
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        )
+        {
             AddButton(
-                label = stringResource(R.string.add_playlist),
+                label = stringResource(if (remoteConfig.rewarEditConfig.enable && !AppPurchase.getInstance().isPurchased()) R.string.watch_ad_and_add_playlist else R.string.add_playlist),
+                showAdBadge = remoteConfig.rewarEditConfig.enable && !AppPurchase.getInstance().isPurchased(),
                 isEnabled = isAddEnabled,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -395,6 +430,7 @@ fun AddScreenContent(
                 }
             }
         }
+        onGoggleAd()
     }
 }
 
@@ -1133,12 +1169,14 @@ private fun InputFieldWithIcon(
 @Composable
 private fun AddButton(
     label: String,
+    showAdBadge: Boolean,
     isEnabled: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     AppNeonButton(
         text = label,
+        badge = if (showAdBadge) stringResource(R.string.reward_ad_badge) else null,
         onClick = onClick,
         enabled = isEnabled,
         textStyle = headline600(fontSize = 13.Ssp, color = white),
@@ -1153,7 +1191,6 @@ private fun AddButton(
 private fun AddScreenPreview() {
     AppViewTheme {
         AddScreenContent(
-            statusBarHeight = 24.dp,
             selectedFileUri = null,
             selectedFileName = null,
             selectedSuggestionUrl = null,

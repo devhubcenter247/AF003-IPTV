@@ -23,9 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.ads.wrapper.native.NativePlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.native.view.NativeComposeView
 import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
@@ -35,9 +37,13 @@ import com.dongbv.alf_03_iptv.style.ResponsivePreview
 import com.dongbv.alf_03_iptv.style.TextView
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.paddingTop
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.ui.component.LanguageViewItem
 import com.dongbv.alf_03_iptv.ui.onboarding.IntroActivity
 import com.dongbv.alf_03_iptv.widget.colorSecondary
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdHolderConfig
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdPreloadHolderOptions
+import com.lib.ads.gma.ads.helper.adnative.preload.createNativeAdHolder
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
@@ -65,14 +71,23 @@ abstract class LanguageActivity : BaseActivity() {
     }
 
     abstract val screenType: LanguageScreenType
-
-    override fun initialize() {
-    }
+    open fun nativePlacement(): NativePlacement = NativePlacement.Language1
+    val nativeAdHolder: NativeAdHolderConfig by createNativeAdHolder(
+        enabled = nativePlacement().canShowAds,
+        scope = lifecycleScope,
+        tag = nativePlacement().tag,
+        options = NativeAdPreloadHolderOptions(
+            fallbackAdUnitIds = nativePlacement().listId,
+            lifecycleOwner = this@LanguageActivity,
+            autoReloadOnResume = false,
+            autoRequestOnStart = false
+        )
+    )
 
     override fun isFinishFirstFlow() = false
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
+    override fun ContentView() {
         val lazyListState = rememberLazyListState(
             initialFirstVisibleItemIndex = savedIndex,
             initialFirstVisibleItemScrollOffset = savedOffset
@@ -82,10 +97,13 @@ abstract class LanguageActivity : BaseActivity() {
                 languages = listLanguages,
                 selected = currentLanguage,
                 lazyListState = lazyListState,
-                nativeAd = {},
+                nativeAd = {
+                    NativeComposeView(
+                        nativePreloadConfig = (nativeAdHolder to nativePlacement())
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = statusBarHeight)
                     .weight(1f),
                 onSelect = {
                     currentLanguage = it
@@ -101,7 +119,7 @@ abstract class LanguageActivity : BaseActivity() {
                     AppPreferences.setLocale(code)
                     launchActivity<IntroActivity>()
                     finish()
-                }
+                },
             )
         }
     }
@@ -120,6 +138,11 @@ fun GreetingPreview() {
                     .paddingTop(28.Sdp),
             onSelect = {},
             onConfirm = {},
+            nativeAd = {
+                NativeComposeView(
+                    nativePreloadConfig = null
+                )
+            }
         )
     }
 }
@@ -137,6 +160,7 @@ fun LanguageScreen(
     Column(
         Modifier
             .backgroundResource(R.drawable.img_bg_app)
+            .statusBarPadding()
             .then(modifier)
     ) {
         Row(

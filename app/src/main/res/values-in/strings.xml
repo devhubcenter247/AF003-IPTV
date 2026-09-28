@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Minimal</string>
     <string name="sound">Suara</string>
     <string name="latter">Nanti</string>
+
+    <string name="free_playlist_limit_reached">Anda telah menggunakan ketiga impor playlist gratis. Tingkatkan ke Premium untuk menambahkan daftar putar tanpa batas.</string>
+    <string name="free_playlist_limit_reached_title">Batas playlist gratis telah tercapai</string>
+    <string name="free_playlist_limit_reward_message">Tonton satu iklan reward untuk membuka satu impor playlist lagi, atau tingkatkan ke Premium untuk impor tanpa batas.</string>
+    <string name="watch_ad_to_continue">Tonton iklan</string>
+    <string name="go_premium">Gunakan Premium</string>
+    <string name="skip">Melewati</string>
+    <string name="provider_url_blocked">URL ini diblokir oleh daftar batasan penyedia. Silakan gunakan sumber resmi.</string>
+    <string name="all_channels_blocked">Semua saluran dalam daftar putar ini sesuai dengan daftar batasan penyedia. Tidak ada yang diimpor.</string>
+    <string name="playlist_saved_with_blocked_channels">Daftar putar disimpan.  Saluran terbatas%1$ddikecualikan.</string>
+    <string name="restricted_channels_excluded">%1$d saluran yang dibatasi dikecualikan dari kategori yang Anda pilih.</string>
+    <string name="copyright_notice_title">Tanggung jawab konten dan hak cipta</string>
+    <string name="copyright_notice_message">Hanya impor atau tonton konten yang Anda miliki atau izinkan untuk Anda akses. Anda bertanggung jawab atas sumber yang Anda tambahkan dan untuk mendapatkan izin yang diperlukan. Aplikasi ini tidak mengizinkan akses ke konten pihak ketiga atau mendukung pelanggaran hak cipta. Aplikasi dan pengembangnya melepaskan tanggung jawab atas konten yang ditambahkan pengguna sejauh diizinkan oleh hukum yang berlaku. Pemfilteran penyedia tidak dapat memverifikasi izin hak cipta. Dengan melanjutkan, Anda mengonfirmasi bahwa Anda memiliki hak yang diperlukan untuk menggunakan konten tersebut.</string>
+    <string name="copyright_notice_accept">Saya mengerti dan setuju</string>
+    <string name="subscribe_now">Berlangganan sekarang</string>
+    <string name="auto_renewable_cancel_anytime">Dapat diperbarui secara otomatis. Batalkan kapan saja.</string>
+    <string name="free_playlist_limit_reward_only_message">Tonton satu iklan reward untuk membuka satu impor playlist lagi.</string>
+    <string name="reward_ad_not_ready">Tidak ada iklan yang tersedia saat ini. Silakan coba lagi nanti.</string>
+    <string name="watch_ad_and_add_playlist">Tonton iklan &amp; tambahkan daftar putar</string>
+    <string name="rating_feedback_reason">Tanggapan Anda</string>
+    <string name="rating_feedback_reason_required">Silakan bagikan apa yang terjadi atau apa yang dapat kami tingkatkan.</string>
+    <string name="rating_send_feedback">Lanjutkan ke email</string>
+    <string name="rating_select_stars">Silakan pilih peringkat bintang.</string>
+    <string name="rating_feedback_subject">Umpan Balik -%1$s</string>
+    <string name="rating_feedback_body">Peringkat:%1$d/5 bintang
+Masukan dan saran:%2$s</string>
+    <string name="rating_no_email_app">Tidak ada aplikasi email yang ditemukan. Silakan instal aplikasi email untuk mengirim masukan.</string>
+    <string name="rating_feedback_hint">Misalnya: masalah pemutaran, masalah saat menambahkan playlist, atau fitur yang Anda perlukan.</string>
 </resources>

@@ -7,11 +7,18 @@ import android.util.DisplayMetrics
 import android.util.Size
 import android.view.WindowManager
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
@@ -19,6 +26,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.layout.WindowMetricsCalculator
@@ -26,6 +34,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.Density
+import com.sdp.ssp.android.Sdp
 
 @Composable
 fun Space(w: Int = 0, h: Int = 0) {
@@ -102,12 +111,38 @@ fun getScreenSizeInInches(context: Context): Double {
     val heightInDp = heightInPixels / displayMetrics.density
     val screenWidthInInches = widthInDp / displayMetrics.densityDpi
     val screenHeightInInches = heightInDp / displayMetrics.densityDpi
-
     return sqrt(
         (screenWidthInInches * screenWidthInInches) +
                 (screenHeightInInches * screenHeightInInches).toDouble()
     )
 }
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun Modifier.systemBarPadding(
+    insets: WindowInsets,
+    side: WindowInsetsSides,
+    previewPadding: Modifier.() -> Modifier,
+): Modifier =
+    if (LocalInspectionMode.current) previewPadding()
+    else windowInsetsPadding(insets.only(side))
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun Modifier.statusBarPadding(): Modifier =
+    systemBarPadding(
+        insets = WindowInsets.statusBarsIgnoringVisibility,
+        side = WindowInsetsSides.Top,
+        previewPadding = { paddingTop(24.Sdp) },
+    )
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun Modifier.navigationBarPadding(): Modifier =
+    systemBarPadding(
+        insets = WindowInsets.navigationBarsIgnoringVisibility,
+        side = WindowInsetsSides.Bottom,
+        previewPadding = { paddingBottom(24.Sdp) },
+    )
 @Composable
 @Stable
 fun getScreenSize(): Size {

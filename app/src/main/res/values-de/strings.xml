@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Klang</string>
     <string name="latter">Später</string>
+
+    <string name="free_playlist_limit_reached">Du hast alle drei kostenlosen Playlist-Importe genutzt. Upgraden Sie auf Premium, um unbegrenzte Playlists hinzuzufügen.</string>
+    <string name="free_playlist_limit_reached_title">Limit für kostenlose Playlists erreicht</string>
+    <string name="free_playlist_limit_reward_message">Sehen Sie sich eine Anzeige mit Prämie an, um einen weiteren Playlist-Import freizuschalten, oder upgraden Sie auf Premium für unbegrenzte Importe.</string>
+    <string name="watch_ad_to_continue">Anzeige ansehen</string>
+    <string name="go_premium">Gehen Sie Premium</string>
+    <string name="skip">Überspringen</string>
+    <string name="provider_url_blocked">Diese URL ist durch die Anbietereinschränkungsliste blockiert. Bitte verwenden Sie eine autorisierte Quelle.</string>
+    <string name="all_channels_blocked">Alle Kanäle in dieser Playlist entsprechen der Anbietereinschränkungsliste. Es wurde nichts importiert.</string>
+    <string name="playlist_saved_with_blocked_channels">Playlist gespeichert.%1$d-beschränkte Kanäle wurden ausgeschlossen.</string>
+    <string name="restricted_channels_excluded">%1$d eingeschränkte Kanäle wurden aus deinen ausgewählten Kategorien ausgeschlossen.</string>
+    <string name="copyright_notice_title">Inhaltliche und urheberrechtliche Verantwortung</string>
+    <string name="copyright_notice_message">Importieren oder sehen Sie sich nur Inhalte an, deren Eigentümer Sie sind oder zu deren Zugriff Sie berechtigt sind. Sie sind für die von Ihnen hinzugefügten Quellen und für die Einholung aller erforderlichen Berechtigungen verantwortlich. Die App gestattet keinen Zugriff auf Inhalte Dritter und befürwortet keine Urheberrechtsverletzungen. Die App und ihre Entwickler lehnen jede Verantwortung für vom Benutzer hinzugefügte Inhalte ab, soweit dies nach geltendem Recht zulässig ist. Durch die Anbieterfilterung können Urheberrechtsberechtigungen nicht überprüft werden. Indem Sie fortfahren, bestätigen Sie, dass Sie über die erforderlichen Rechte zur Nutzung der Inhalte verfügen.</string>
+    <string name="copyright_notice_accept">Ich verstehe und stimme zu</string>
+    <string name="subscribe_now">Jetzt abonnieren</string>
+    <string name="auto_renewable_cancel_anytime">Automatisch erneuerbar. Jederzeit kündbar.</string>
+    <string name="free_playlist_limit_reward_only_message">Sehen Sie sich eine Anzeige mit Prämie an, um einen weiteren Playlist-Import freizuschalten.</string>
+    <string name="reward_ad_not_ready">Im Moment ist keine Anzeige verfügbar. Bitte versuchen Sie es später noch einmal.</string>
+    <string name="watch_ad_and_add_playlist">Anzeige ansehen und Playlist hinzufügen</string>
+    <string name="rating_feedback_reason">Ihr Feedback</string>
+    <string name="rating_feedback_reason_required">Teilen Sie uns bitte mit, was passiert ist oder was wir verbessern könnten.</string>
+    <string name="rating_send_feedback">Weiter per E-Mail</string>
+    <string name="rating_select_stars">Bitte wählen Sie eine Sternebewertung aus.</string>
+    <string name="rating_feedback_subject">Rückmeldung -%1$s</string>
+    <string name="rating_feedback_body">Bewertung:%1$d/5 Sterne
+Feedback und Vorschläge:%2$s</string>
+    <string name="rating_no_email_app">Keine E-Mail-App gefunden. Bitte installieren Sie eine E-Mail-App, um Feedback zu senden.</string>
+    <string name="rating_feedback_hint">Zum Beispiel: ein Wiedergabeproblem, Probleme beim Hinzufügen einer Playlist oder eine Funktion, die Sie benötigen.</string>
 </resources>

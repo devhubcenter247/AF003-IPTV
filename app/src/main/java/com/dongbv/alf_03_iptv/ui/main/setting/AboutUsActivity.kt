@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.main.setting
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
@@ -21,6 +22,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dongbv.alf_03_iptv.BuildConfig
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.app.AppPreferences
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.style.IconView
 import com.dongbv.alf_03_iptv.style.SpaceH
@@ -50,7 +55,9 @@ import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.gradientContent
 import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.style.paddingTop
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.ui.component.neonState
+import com.dongbv.alf_03_iptv.ui.component.RatingDialog
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
@@ -60,10 +67,14 @@ import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
 class AboutUsActivity : BaseActivity() {
+    override val analyticsScreen = AppScreen.ABOUT_US
+
+    private var isShowRating by mutableStateOf(false)
+
     override fun initialize() = Unit
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
+    override fun ContentView() {
         BoxParentContent(
             onBack = { finish() },
             modifier = Modifier
@@ -71,10 +82,22 @@ class AboutUsActivity : BaseActivity() {
         ) {
             AboutUsScreen(
                 onBack = { finish() },
-                modifier = Modifier.paddingTop(statusBarHeight),
+                modifier = Modifier.statusBarPadding(),
                 onPrivacyPolicy = { openUrl(PRIVACY_POLICY_URL) },
                 onTermsOfService = { openUrl(TERMS_OF_SERVICE_URL) },
-                onShareApp = { shareApp() }
+                onShareApp = { shareApp() },
+                onRateApp = { isShowRating = true }
+            )
+            RatingDialog(
+                isShowRate = isShowRating,
+                onDismiss = { isShowRating = false },
+                rateApp = {
+                    isShowRating = false
+                    AppPreferences.isRatingApp.value = true
+                },
+                sendEmailFeedback = {
+                    isShowRating = false
+                }
             )
         }
     }
@@ -119,7 +142,8 @@ fun AboutUsScreen(
     modifier: Modifier = Modifier,
     onPrivacyPolicy: () -> Unit,
     onTermsOfService: () -> Unit,
-    onShareApp: () -> Unit
+    onShareApp: () -> Unit,
+    onRateApp: () -> Unit = {}
 ) {
     Column(
         Modifier
@@ -199,6 +223,12 @@ fun AboutUsScreen(
                     icon = R.drawable.ic_setting_share,
                     label = R.string.share_app,
                     onClick = onShareApp
+                )
+
+                AboutMenuItem(
+                    icon = R.drawable.ic_setting_rate,
+                    label = R.string.rate_us,
+                    onClick = onRateApp
                 )
             }
 

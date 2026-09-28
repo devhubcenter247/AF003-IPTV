@@ -1,5 +1,8 @@
 package com.dongbv.alf_03_iptv.base
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
+import com.dongbv.alf_03_iptv.analytics.ScreenAnalytics
+import com.dongbv.alf_03_iptv.ads.wrapper.interstitial.InterstitialAdConfig
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -52,29 +55,22 @@ import java.util.Locale
 
 abstract class BaseActivity : ComponentActivity() {
 
+    abstract val analyticsScreen: AppScreen
+
     open val lightStatus: Boolean = true
     var isShowDialogLoading by mutableStateOf(false)
     var isShowDialogInternet by mutableStateOf(false)
     abstract fun initialize()
 
-    val statusBarHeight: Int by lazy {
-        @SuppressLint("DiscouragedApi", "InternalInsetResource")
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
-    }
-
-    val navigationBarHeight: Int by lazy {
-        @SuppressLint("DiscouragedApi", "InternalInsetResource")
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
-    }
-
     @Composable
-    abstract fun ContentView(statusBarHeight: Dp)
+    abstract fun ContentView()
     open fun isFinishFirstFlow(): Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            ScreenAnalytics.track(this, analyticsScreen)
+        }
         window.setFullScreen()
         window.hideSystemBar()
         enableEdgeToEdge()
@@ -109,7 +105,7 @@ abstract class BaseActivity : ComponentActivity() {
                             detectTapGestures(onTap = { focusManager.clearFocus(force = true) })
                         }
                 ) {
-                    ContentView(statusBarHeight.pxToDp() + 2.Sdp)
+                    ContentView()
                 }
             }
             if (isShowDialogLoading) {
@@ -145,6 +141,17 @@ abstract class BaseActivity : ComponentActivity() {
                 onDismiss = { isShowDialogInternet = false },
                 tryAgain = { openWifiSettings() },
             )
+        }
+    }
+
+    private var navigationPending = false
+
+    protected fun navigateWithInterstitial(action: () -> Unit) {
+        if (navigationPending || InterstitialAdConfig.isShowingInterAll || isFinishing || isDestroyed) return
+        navigationPending = true
+        InterstitialAdConfig.showInterAll(this) {
+            if (!isFinishing && !isDestroyed) action()
+            window.decorView.post { navigationPending = false }
         }
     }
 
@@ -189,15 +196,6 @@ abstract class BaseActivity : ComponentActivity() {
                     }
             }
         }
-    }
-
-    fun openAppSettings() {
-        Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", packageName, null)
-        ).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }.also { startActivity(it) }
     }
 
     override fun attachBaseContext(newBase: Context?) {

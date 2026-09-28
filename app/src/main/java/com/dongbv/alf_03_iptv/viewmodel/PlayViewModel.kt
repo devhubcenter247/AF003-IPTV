@@ -7,6 +7,7 @@ import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.data.local.entity.filterBy
 import com.dongbv.alf_03_iptv.data.repository.AppRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,7 @@ class PlayViewModel(private val repository: AppRepository) : ViewModel() {
     val streamCheckResult: StateFlow<StreamCheckResult> = _streamCheckResult.asStateFlow()
 
     private var preloadJob: Job? = null
+    private var channelsJob: Job? = null
 
     private val _channels = MutableStateFlow<List<ChannelEntity>>(emptyList())
     val channels: StateFlow<List<ChannelEntity>> = _channels.asStateFlow()
@@ -45,7 +47,8 @@ class PlayViewModel(private val repository: AppRepository) : ViewModel() {
     private var pendingChannelId: Long? = null
 
     fun loadChannelsByPlaylist(playlistId: Long) {
-        viewModelScope.launch {
+        channelsJob?.cancel()
+        channelsJob = viewModelScope.launch {
             repository.getChannelsByPlaylist(playlistId).collect { list ->
                 allChannels = list
                 _channels.value = list.filterBy(_searchQuery)
@@ -119,6 +122,8 @@ class PlayViewModel(private val repository: AppRepository) : ViewModel() {
                 conn.disconnect()
                 Log.d(TAG, "preload OK  [${channel.id}] ${channel.name} → HTTP $code  url=${channel.url}")
                 _streamCheckResult.value = StreamCheckResult.Success(channel.id, code)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 val msg = "${e.javaClass.simpleName}: ${e.message}"
                 Log.e(TAG, "preload ERR [${channel.id}] ${channel.name} → $msg  url=${channel.url}", e)

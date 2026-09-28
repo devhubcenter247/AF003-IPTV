@@ -16,12 +16,12 @@ import com.google.android.play.core.review.ReviewManagerFactory
 
 object Aso {
     const val POLICY_LINK =
-        "https://docs.google.com/document/d/e/2PACX-1vSQHYNbCArUvIQlDc_JZH_LT4B7fv7JzAC9Q5N58aN5AkJeMB-7QJsNVVrDmwZmUuGQn_hGK0RjOIuR/pub"
+        "https://docs.google.com/document/d/e/2PACX-1vTtE7wku1uWM9XM-FQsxZzYRFH6UIDjFMrE_EWfO0KkWuR6PQWtr4H-ZFnKo7_xMQ/pub"
 
     const val TEAM_SERVICE =
-        "https://docs.google.com/document/d/e/2PACX-1vT8vcndQUSCnfHAzgwOVWfUV1jxDA-o4599GVQJQ-p52Hugoa2ec7o3BMdvpcmX6V2zfdJSXM4S38Tp/pub"
+        "https://docs.google.com/document/d/e/2PACX-1vQfRYn2prW_SefAtJXzzjFkV_EeJI5YE-KM3EHoMJI5kHR-7AvJgrF5QrKzPML_Iw/pub"
 
-    const val MAIL_SUPPORT = "huanbuihiti@gmail.com"
+    const val MAIL_SUPPORT = "dong2k2.dev@gmail.com"
 }
 
 fun Context.openUrl(url: String) {
@@ -62,24 +62,41 @@ fun Activity.rateApp(onFinish: () -> Unit) {
             }
         } else {
             Log.e("RateApp", "error: " + task.exception.toString())
+            openStoreRatingPage()
             onFinish()
         }
     }
 }
 
+private fun Activity.openStoreRatingPage() {
+    val marketIntent = Intent(Intent.ACTION_VIEW, "market://details?id=$packageName".toUri())
+    val webIntent = Intent(
+        Intent.ACTION_VIEW,
+        "https://play.google.com/store/apps/details?id=$packageName".toUri()
+    )
+    runCatching { startActivity(marketIntent) }
+        .recoverCatching { startActivity(webIntent) }
+}
 
-fun Activity.sendFeedBack() {
-    val emailIntent = Intent(Intent.ACTION_SENDTO)
-    emailIntent.data = Uri.parse("mailto:")
-    emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(Aso.MAIL_SUPPORT))
-    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
 
-    try {
-        startActivity(Intent.createChooser(emailIntent, "Feedback"))
-    } catch (e: ActivityNotFoundException) {
-        e.printStackTrace()
+fun Activity.sendFeedBack(rating: Int, reason: String): Boolean {
+    val subject = getString(R.string.rating_feedback_subject, getString(R.string.app_name))
+    val body = getString(R.string.rating_feedback_body, rating, reason.trim())
+    val emailUri = "mailto:${Aso.MAIL_SUPPORT}?subject=${Uri.encode(subject)}&body=${Uri.encode(body)}"
+    val emailIntent = Intent(Intent.ACTION_SENDTO, emailUri.toUri()).apply {
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(Aso.MAIL_SUPPORT))
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+    }
+    return try {
+        startActivity(emailIntent)
+        true
+    } catch (_: ActivityNotFoundException) {
+        toastShort(getString(R.string.rating_no_email_app))
+        false
     }
 }
+
 
 fun Context.shareApp() {
     val applicationID = this.packageName

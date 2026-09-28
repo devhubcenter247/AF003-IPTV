@@ -9,11 +9,28 @@ import java.net.URL
 
 object M3uParser {
 
-    fun parseFromUrl(url: String): List<ChannelEntity> {
-        val connection = URL(url).openConnection()
-        connection.connectTimeout = 10_000
-        connection.readTimeout = 10_000
-        return connection.getInputStream().use { parseStream(BufferedReader(InputStreamReader(it))) }
+    fun parseFromUrl(url: String, isBlocked: (String) -> Boolean = { false }): List<ChannelEntity> {
+        var target = URL(url)
+        repeat(6) {
+            if (isBlocked(target.toString())) throw BlockedProviderUrlException()
+            require(target.protocol == "http" || target.protocol == "https")
+            val connection = target.openConnection() as java.net.HttpURLConnection
+            connection.instanceFollowRedirects = false
+            connection.connectTimeout = 10_000
+            connection.readTimeout = 10_000
+            try {
+                if (connection.responseCode in listOf(301, 302, 303, 307, 308)) {
+                    val location = connection.getHeaderField("Location")
+                        ?: error("Missing redirect location")
+                    target = URL(target, location)
+                } else {
+                    return connection.inputStream.use { parseStream(BufferedReader(InputStreamReader(it))) }
+                }
+            } finally {
+                connection.disconnect()
+            }
+        }
+        error("Too many redirects")
     }
 
     fun parseFromAsset(context: Context, assetPath: String): List<ChannelEntity> {
@@ -80,3 +97,5 @@ object M3uParser {
         return match?.groupValues?.getOrNull(1) ?: ""
     }
 }
+
+class BlockedProviderUrlException : IllegalArgumentException("Blocked provider URL")

@@ -7,7 +7,7 @@ coreKtx = "1.19.0"
 kotlinxSerializationJson = "1.11.0"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
-composeBom = "2026.06.01"
+composeBom = "2026.09.00"
 lifecycleViewmodelCompose = "2.11.0"
 navigationCompose = "2.9.8"
 window="1.5.1"
@@ -26,7 +26,7 @@ reviewKtx = "2.0.2"
 constraintlayoutCompose ="1.1.2"
 firebaseCrashlytics = "20.1.0"
 googleFirebaseCrashlytics = "3.0.7"
-adlib = "1.0.0"
+adlib = "1.2.2"
 inappupdate = "1.0.1"
 [libraries]
 
@@ -83,4 +83,3 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
-

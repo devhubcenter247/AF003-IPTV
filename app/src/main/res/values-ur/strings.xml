@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">کم از کم</string>
     <string name="sound">آواز</string>
     <string name="latter">بعد میں</string>
+
+    <string name="free_playlist_limit_reached">آپ نے تمام 3 مفت پلے لسٹ درآمدات استعمال کر لی ہیں۔ لامحدود پلے لسٹس شامل کرنے کے لیے پریمیم میں اپ گریڈ کریں۔</string>
+    <string name="free_playlist_limit_reached_title">مفت پلے لسٹ کی حد پوری ہو گئی۔</string>
+    <string name="free_playlist_limit_reward_message">ایک اور پلے لسٹ درآمد کو غیر مقفل کرنے کے لیے ایک انعام یافتہ اشتہار دیکھیں، یا لامحدود درآمدات کے لیے پریمیم میں اپ گریڈ کریں۔</string>
+    <string name="watch_ad_to_continue">اشتہار دیکھیں</string>
+    <string name="go_premium">پریمیم جاؤ</string>
+    <string name="skip">چھوڑیں۔</string>
+    <string name="provider_url_blocked">اس URL کو فراہم کنندہ کی پابندی کی فہرست نے مسدود کر دیا ہے۔ براہ کرم ایک مجاز ذریعہ استعمال کریں۔</string>
+    <string name="all_channels_blocked">اس پلے لسٹ میں موجود تمام چینلز فراہم کنندہ کی پابندی کی فہرست سے مماثل ہیں۔ کچھ بھی درآمد نہیں کیا گیا۔</string>
+    <string name="playlist_saved_with_blocked_channels">پلے لسٹ محفوظ ہو گئی۔%1$dمحدود چینلز کو خارج کر دیا گیا تھا۔</string>
+    <string name="restricted_channels_excluded">آپ کی منتخب کردہ کیٹیگریز سے %1$d محدود چینلز خارج کر دیے گئے۔</string>
+    <string name="copyright_notice_title">مواد اور کاپی رائٹ کی ذمہ داری</string>
+    <string name="copyright_notice_message">صرف وہ مواد درآمد کریں یا دیکھیں جو آپ کے مالک ہیں یا آپ تک رسائی کے مجاز ہیں۔ آپ ان ذرائع کے ذمہ دار ہیں جو آپ شامل کرتے ہیں اور کسی بھی مطلوبہ اجازت کے حصول کے لیے۔ ایپ تھرڈ پارٹی مواد تک رسائی کی اجازت نہیں دیتی ہے یا کاپی رائٹ کی خلاف ورزی کی توثیق نہیں کرتی ہے۔ ایپ اور اس کے ڈویلپرز قابل اطلاق قانون کی طرف سے اجازت کی حد تک صارف کے شامل کردہ مواد کی ذمہ داری سے دستبرداری کرتے ہیں۔ فراہم کنندہ کی فلٹرنگ کاپی رائٹ کی اجازتوں کی تصدیق نہیں کر سکتی۔ جاری رکھ کر، آپ تصدیق کرتے ہیں کہ آپ کے پاس مواد استعمال کرنے کے ضروری حقوق ہیں۔</string>
+    <string name="copyright_notice_accept">میں سمجھتا ہوں اور متفق ہوں۔</string>
+    <string name="subscribe_now">ابھی سبسکرائب کریں۔</string>
+    <string name="auto_renewable_cancel_anytime">خودکار قابل تجدید۔ کسی بھی وقت منسوخ کریں۔</string>
+    <string name="free_playlist_limit_reward_only_message">ایک اور پلے لسٹ درآمد کو غیر مقفل کرنے کے لیے ایک انعام یافتہ اشتہار دیکھیں۔</string>
+    <string name="reward_ad_not_ready">ابھی کوئی اشتہار دستیاب نہیں ہے۔ براہ کرم بعد میں دوبارہ کوشش کریں۔</string>
+    <string name="watch_ad_and_add_playlist">اشتہار دیکھیں اور پلے لسٹ شامل کریں۔</string>
+    <string name="rating_feedback_reason">آپ کی رائے</string>
+    <string name="rating_feedback_reason_required">براہ کرم شیئر کریں کہ کیا ہوا یا ہم کیا بہتر کر سکتے ہیں۔</string>
+    <string name="rating_send_feedback">ای میل کرنا جاری رکھیں</string>
+    <string name="rating_select_stars">براہ کرم ستارہ کی درجہ بندی منتخب کریں۔</string>
+    <string name="rating_feedback_subject">تاثرات -%1$s</string>
+    <string name="rating_feedback_body">درجہ بندی:%1$d/5 stars
+تاثرات اور تجاویز:%2$s</string>
+    <string name="rating_no_email_app">کوئی ای میل ایپ نہیں ملی۔ فیڈ بیک بھیجنے کے لیے براہ کرم ایک ای میل ایپ انسٹال کریں۔</string>
+    <string name="rating_feedback_hint">مثال کے طور پر: پلے بیک کا مسئلہ، پلے لسٹ شامل کرنے میں دشواری، یا کوئی خصوصیت جس کی آپ کو ضرورت ہے۔</string>
 </resources>

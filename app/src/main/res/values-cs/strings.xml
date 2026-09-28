@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Zvuk</string>
     <string name="latter">Později</string>
+
+    <string name="free_playlist_limit_reached">Použili jste všechny 3 bezplatné importy seznamů skladeb. Upgradujte na Premium a přidejte neomezené seznamy skladeb.</string>
+    <string name="free_playlist_limit_reached_title">Bylo dosaženo limitu bezplatného seznamu skladeb</string>
+    <string name="free_playlist_limit_reward_message">Sledujte jednu reklamu s odměnou a odemkněte si další import seznamu skladeb nebo upgradujte na Premium a importujte neomezený počet.</string>
+    <string name="watch_ad_to_continue">Sledujte reklamu</string>
+    <string name="go_premium">Přejít Premium</string>
+    <string name="skip">Přeskočit</string>
+    <string name="provider_url_blocked">Tato adresa URL je blokována seznamem omezení poskytovatele. Použijte prosím autorizovaný zdroj.</string>
+    <string name="all_channels_blocked">Všechny kanály v tomto seznamu stop odpovídají seznamu omezení poskytovatele. Nic nebylo dovezeno.</string>
+    <string name="playlist_saved_with_blocked_channels">Seznam skladeb byl uložen.  Omezené kanály%1$dbyly vyloučeny.</string>
+    <string name="restricted_channels_excluded">Z vybraných kategorií bylo vyřazeno %1$d omezených kanálů.</string>
+    <string name="copyright_notice_title">Odpovědnost za obsah a autorská práva</string>
+    <string name="copyright_notice_message">Importujte nebo sledujte pouze obsah, který vlastníte nebo k němu máte oprávnění. Jste odpovědní za zdroje, které přidáte, a za získání všech požadovaných oprávnění. Aplikace neopravňuje přístup k obsahu třetích stran ani neschvaluje porušení autorských práv. Aplikace a její vývojáři se zříkají odpovědnosti za obsah přidaný uživateli v rozsahu povoleném platnými zákony. Filtrování poskytovatele nemůže ověřit autorská práva. Pokračováním potvrzujete, že máte potřebná práva k použití obsahu.</string>
+    <string name="copyright_notice_accept">rozumím a souhlasím</string>
+    <string name="subscribe_now">Přihlaste se k odběru</string>
+    <string name="auto_renewable_cancel_anytime">Automaticky obnovitelné. Kdykoli zrušit.</string>
+    <string name="free_playlist_limit_reward_only_message">Sledujte jednu reklamu s nabídkou odměny a odemkněte další import seznamu videí.</string>
+    <string name="reward_ad_not_ready">Momentálně není k dispozici žádná reklama. Zkuste to znovu později.</string>
+    <string name="watch_ad_and_add_playlist">Sledujte reklamu a přidejte seznam videí</string>
+    <string name="rating_feedback_reason">Vaše zpětná vazba</string>
+    <string name="rating_feedback_reason_required">Podělte se prosím o to, co se stalo nebo co bychom mohli zlepšit.</string>
+    <string name="rating_send_feedback">Pokračujte na email</string>
+    <string name="rating_select_stars">Vyberte prosím hodnocení hvězdičkami.</string>
+    <string name="rating_feedback_subject">Zpětná vazba –%1$s</string>
+    <string name="rating_feedback_body">Hodnocení:%1$d/5 hvězdiček
+Zpětná vazba a návrhy:%2$s</string>
+    <string name="rating_no_email_app">Nebyla nalezena žádná e-mailová aplikace. Chcete-li odeslat zpětnou vazbu, nainstalujte si e-mailovou aplikaci.</string>
+    <string name="rating_feedback_hint">Například: problém s přehráváním, potíže s přidáním seznamu skladeb nebo funkce, kterou potřebujete.</string>
 </resources>

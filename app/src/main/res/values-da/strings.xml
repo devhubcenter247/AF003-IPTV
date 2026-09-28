@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Sund</string>
     <string name="latter">Senere</string>
+
+    <string name="free_playlist_limit_reached">Du har brugt alle 3 gratis import af spillelister. Opgrader til Premium for at tilføje ubegrænsede afspilningslister.</string>
+    <string name="free_playlist_limit_reached_title">Grænsen for gratis afspilningsliste nået</string>
+    <string name="free_playlist_limit_reward_message">Se én belønnet annonce for at låse op for endnu en playlisteimport, eller opgrader til Premium for ubegrænset import.</string>
+    <string name="watch_ad_to_continue">Se annonce</string>
+    <string name="go_premium">Gå til Premium</string>
+    <string name="skip">Springe</string>
+    <string name="provider_url_blocked">Denne URL er blokeret af listen over udbyderbegrænsninger. Brug venligst en autoriseret kilde.</string>
+    <string name="all_channels_blocked">Alle kanaler på denne afspilningsliste matcher listen med udbyderbegrænsninger. Intet blev importeret.</string>
+    <string name="playlist_saved_with_blocked_channels">Afspilningslisten er gemt.%1$d-begrænsede kanaler blev ekskluderet.</string>
+    <string name="restricted_channels_excluded">%1$d begrænsede kanaler blev udeladt fra dine valgte kategorier.</string>
+    <string name="copyright_notice_title">Ansvar for indhold og ophavsret</string>
+    <string name="copyright_notice_message">Importer eller se kun indhold, som du ejer eller har tilladelse til at få adgang til. Du er ansvarlig for de kilder, du tilføjer, og for at indhente eventuelle nødvendige tilladelser. Appen tillader ikke adgang til tredjepartsindhold eller godkender krænkelse af ophavsret. Appen og dens udviklere fralægger sig ansvaret for brugertilføjet indhold i det omfang, det er tilladt i henhold til gældende lovgivning. Udbyderfiltrering kan ikke bekræfte ophavsretlige tilladelser. Ved at fortsætte bekræfter du, at du har de nødvendige rettigheder til at bruge indholdet.</string>
+    <string name="copyright_notice_accept">Jeg forstår og er enig</string>
+    <string name="subscribe_now">Tilmeld dig nu</string>
+    <string name="auto_renewable_cancel_anytime">Automatisk fornyelig. Annuller når som helst.</string>
+    <string name="free_playlist_limit_reward_only_message">Se én belønnet annonce for at låse op for endnu en import af playlister.</string>
+    <string name="reward_ad_not_ready">Ingen annonce er tilgængelig lige nu. Prøv venligst igen senere.</string>
+    <string name="watch_ad_and_add_playlist">Se annoncen og tilføj afspilningsliste</string>
+    <string name="rating_feedback_reason">Din feedback</string>
+    <string name="rating_feedback_reason_required">Del venligst, hvad der skete, eller hvad vi kunne forbedre.</string>
+    <string name="rating_send_feedback">Fortsæt til e-mail</string>
+    <string name="rating_select_stars">Vælg venligst en stjernebedømmelse.</string>
+    <string name="rating_feedback_subject">Feedback -%1$s</string>
+    <string name="rating_feedback_body">Bedømmelse:%1$d/5 stjerner
+Feedback og forslag:%2$s</string>
+    <string name="rating_no_email_app">Ingen e-mail-app fundet. Installer venligst en e-mail-app for at sende feedback.</string>
+    <string name="rating_feedback_hint">For eksempel: et afspilningsproblem, problemer med at tilføje en afspilningsliste eller en funktion, du har brug for.</string>
 </resources>

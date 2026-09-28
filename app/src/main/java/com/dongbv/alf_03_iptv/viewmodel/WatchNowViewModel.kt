@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -111,6 +112,7 @@ class WatchNowViewModel(
    
    
     private val retryCount = mutableMapOf<ExoPlayer, Int>()
+    private val retryJobs = mutableMapOf<ExoPlayer, Job>()
 
     private fun isRetryableError(error: PlaybackException): Boolean {
         val causeClass = error.cause?.javaClass?.simpleName ?: ""
@@ -143,16 +145,21 @@ class WatchNowViewModel(
                         retryCount[player] = count + 1
                         val delayMs = 2_000L * (count + 1)  
                         Log.w(TAG, "retryable error — retry ${count+1}/$MAX_RETRIES in ${delayMs}ms  slot=$slot  page=$page")
-                        viewModelScope.launch {
+                        retryJobs[player]?.cancel()
+                        retryJobs[player] = viewModelScope.launch {
                             delay(delayMs)
-                           
-                            if (_pagePlayerMap.value[page] !== player) return@launch
+                            val retryPage = page ?: return@launch
+                            if (_pagePlayerMap.value[retryPage] !== player) return@launch
                             Log.d(TAG, "retrying  slot=$slot  page=$page")
                             val source = mediaSourceFor(rawUrl)
                             player.setMediaSource(source)
                             player.prepare()
                             if (player === _pagePlayerMap.value[currentIndex.value]) {
                                 player.playWhenReady = true
+                            }
+                        }.also { job ->
+                            job.invokeOnCompletion {
+                                if (retryJobs[player] === job) retryJobs.remove(player)
                             }
                         }
                         return
@@ -182,6 +189,7 @@ class WatchNowViewModel(
 
                     if (state == Player.STATE_READY) {
                         retryCount.remove(player) 
+                        retryJobs.remove(player)?.cancel()
                     }
 
                     if (state == Player.STATE_IDLE) {
@@ -222,6 +230,7 @@ class WatchNowViewModel(
             current.remove(pos)?.also { p ->
                 Log.d(TAG, "evict  page=$pos  slot=${playerPool.indexOf(p)}")
                 retryCount.remove(p)
+                retryJobs.remove(p)?.cancel()
                 p.stop()
                 p.clearMediaItems()
                 freePool.addLast(p)
@@ -292,6 +301,8 @@ class WatchNowViewModel(
     }
 
     override fun onCleared() {
+        retryJobs.values.forEach { it.cancel() }
+        retryJobs.clear()
         playerPool.forEach { it.release() }
         super.onCleared()
     }

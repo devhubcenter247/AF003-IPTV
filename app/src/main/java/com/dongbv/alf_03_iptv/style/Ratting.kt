@@ -20,7 +20,7 @@ fun RatingBar(
     rating: Int,
     onRatingChanged: (Int) -> Unit,
     stars: Int = 5,
-    starSize: Dp = 32.dp,
+    starSize: Dp = 36.dp,
     ) {
     val starFill: Int = R.drawable.ic_rate_5
     val starDefault: Int = R.drawable.ic_rate_def

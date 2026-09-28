@@ -187,10 +187,38 @@
     <string name="add_playlist_from_home_tab_to_get_started">הוסף רשימת השמעה מהכרטיסייה בית כדי להתחיל</string>
     <string name="time_just_now">זֶה עַתָה</string>
     <string name="time_minutes_ago">לפני %dמ\'</string>
-    <string name="time_hours_ago">לפני 0⟧ שעות</string>
+    <string name="time_hours_ago">%dh ago</string>
     <string name="time_days_ago">לפני %dד</string>
     <string name="sleep_timer_hour_label">שָׁעָה</string>
     <string name="sleep_timer_minute_label">מינימום</string>
     <string name="sound">קוֹל</string>
     <string name="latter">מְאוּחָר יוֹתֵר</string>
+
+    <string name="free_playlist_limit_reached">השתמשת בכל 3 הייבוא ​​של רשימות השמעה בחינם. שדרג ל-Premium כדי להוסיף רשימות השמעה ללא הגבלה.</string>
+    <string name="free_playlist_limit_reached_title">הגעת למגבלת הפלייליסט בחינם</string>
+    <string name="free_playlist_limit_reward_message">צפה במודעה אחת מתגמלת כדי לפתוח עוד ייבוא ​​של פלייליסטים, או שדרג ל-Premium לייבוא ​​בלתי מוגבל.</string>
+    <string name="watch_ad_to_continue">צפו במודעה</string>
+    <string name="go_premium">עבור לפרימיום</string>
+    <string name="skip">לְדַלֵג</string>
+    <string name="provider_url_blocked">כתובת האתר הזו חסומה על ידי רשימת ההגבלות של הספקים. אנא השתמש במקור מורשה.</string>
+    <string name="all_channels_blocked">כל הערוצים בפלייליסט זה תואמים לרשימת ההגבלות של הספקים. שום דבר לא יובא.</string>
+    <string name="playlist_saved_with_blocked_channels">הפלייליסט נשמר.  ערוצים מוגבלים של%1$dלא נכללו.</string>
+    <string name="restricted_channels_excluded">%1$d ערוצים מוגבלים הוחרגו מהקטגוריות שבחרת.</string>
+    <string name="copyright_notice_title">אחריות על תוכן וזכויות יוצרים</string>
+    <string name="copyright_notice_message">ייבא או צפה רק בתוכן שבבעלותך או שאתה מורשה לגשת אליו. אתה אחראי למקורות שאתה מוסיף ולקבלת כל ההרשאות הנדרשות. האפליקציה אינה מאשרת גישה לתוכן של צד שלישי או תומכת בהפרת זכויות יוצרים. האפליקציה והמפתחים שלה מתנערים מאחריות לתכנים שנוספו על ידי משתמשים במידה שהחוק החל. סינון ספק אינו יכול לאמת הרשאות זכויות יוצרים. על ידי המשך, אתה מאשר כי יש לך את הזכויות הדרושות לשימוש בתוכן.</string>
+    <string name="copyright_notice_accept">אני מבין ומסכים</string>
+    <string name="subscribe_now">הירשם עכשיו</string>
+    <string name="auto_renewable_cancel_anytime">מתחדש אוטומטי. בטל בכל עת.</string>
+    <string name="free_playlist_limit_reward_only_message">צפה במודעה אחת מתגמלת כדי לבטל את הנעילה של ייבוא ​​פלייליסט אחד נוסף.</string>
+    <string name="reward_ad_not_ready">אין מודעה זמינה כרגע. אנא נסה שוב מאוחר יותר.</string>
+    <string name="watch_ad_and_add_playlist">צפה במודעה והוסף פלייליסט</string>
+    <string name="rating_feedback_reason">המשוב שלך</string>
+    <string name="rating_feedback_reason_required">אנא שתפו מה קרה או מה נוכל לשפר.</string>
+    <string name="rating_send_feedback">המשך לשלוח מייל</string>
+    <string name="rating_select_stars">אנא בחר דירוג כוכבים.</string>
+    <string name="rating_feedback_subject">משוב -%1$s</string>
+    <string name="rating_feedback_body">דירוג:%1$d/5 כוכבים
+משוב והצעות:%2$s</string>
+    <string name="rating_no_email_app">לא נמצאה אפליקציית אימייל. אנא התקן אפליקציית אימייל כדי לשלוח משוב.</string>
+    <string name="rating_feedback_hint">לדוגמה: בעיית השמעה, בעיה בהוספת רשימת השמעה או תכונה שאתה צריך.</string>
 </resources>

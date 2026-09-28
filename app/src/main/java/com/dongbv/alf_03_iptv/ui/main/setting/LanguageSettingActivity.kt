@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.main.setting
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.style.paddingTop
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.LanguageViewItem
 import com.dongbv.alf_03_iptv.ui.language.LanguageItem
@@ -55,10 +57,12 @@ import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 
 class LanguageSettingActivity : BaseActivity() {
+    override val analyticsScreen = AppScreen.LANGUAGE_SETTING
+
     override fun initialize() = Unit
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
+    override fun ContentView() {
         val languages = remember { getLanguageArray().toList() }
         var selected by rememberSaveable {
             mutableStateOf(getLanguageArray().find { it ->
@@ -73,12 +77,14 @@ class LanguageSettingActivity : BaseActivity() {
                 modifier = Modifier
                     .backgroundResource(R.drawable.img_bg_app)
                     .fillMaxSize(1f)
-                    .padding(top = statusBarHeight),
+                    .statusBarPadding(),
                 onSelect = { selected = it },
                 onConfirm = {
                     val code = selected.code
-                    AppPreferences.setLocale(code)
-                    launchAndClearTask<MainActivity>()
+                    navigateWithInterstitial {
+                        AppPreferences.setLocale(code)
+                        launchAndClearTask<MainActivity>()
+                    }
                 }, onBack = {
                     finish()
                 }

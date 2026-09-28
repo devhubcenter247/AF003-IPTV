@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Мин</string>
     <string name="sound">Звук</string>
     <string name="latter">Позже</string>
+
+    <string name="free_playlist_limit_reached">Вы использовали все три бесплатных импорта плейлистов. Перейдите на Премиум, чтобы добавлять неограниченное количество плейлистов.</string>
+    <string name="free_playlist_limit_reached_title">Достигнут лимит бесплатного плейлиста</string>
+    <string name="free_playlist_limit_reward_message">Посмотрите одну рекламу с вознаграждением, чтобы разблокировать еще один импорт плейлистов, или перейдите на Премиум для неограниченного импорта.</string>
+    <string name="watch_ad_to_continue">Посмотреть рекламу</string>
+    <string name="go_premium">Перейти Премиум</string>
+    <string name="skip">Пропускать</string>
+    <string name="provider_url_blocked">Этот URL-адрес заблокирован списком ограничений провайдера. Пожалуйста, используйте авторизованный источник.</string>
+    <string name="all_channels_blocked">Все каналы в этом плейлисте соответствуют списку ограничений провайдера. Ничего не импортировалось.</string>
+    <string name="playlist_saved_with_blocked_channels">Плейлист сохранен.  Каналы с ограниченным доступом%1$dбыли исключены.</string>
+    <string name="restricted_channels_excluded">Из выбранных категорий исключено ограниченных каналов: %1$d.</string>
+    <string name="copyright_notice_title">Ответственность за содержание и авторские права</string>
+    <string name="copyright_notice_message">Импортируйте и просматривайте только тот контент, которым вы владеете или к которому у вас есть разрешение. Вы несете ответственность за добавляемые вами источники и за получение всех необходимых разрешений. Приложение не разрешает доступ к стороннему контенту и не поддерживает нарушение авторских прав. Приложение и его разработчики не несут ответственности за контент, добавляемый пользователями, в пределах, разрешенных действующим законодательством. Фильтрация поставщиков не может проверить разрешения на авторские права. Продолжая, вы подтверждаете, что у вас есть необходимые права на использование контента.</string>
+    <string name="copyright_notice_accept">Я понимаю и согласен</string>
+    <string name="subscribe_now">Подпишитесь сейчас</string>
+    <string name="auto_renewable_cancel_anytime">Автовозобновляемый. Отменить в любое время.</string>
+    <string name="free_playlist_limit_reward_only_message">Посмотрите одно объявление с вознаграждением, чтобы разблокировать еще один импорт плейлистов.</string>
+    <string name="reward_ad_not_ready">В данный момент объявления нет. Пожалуйста, повторите попытку позже.</string>
+    <string name="watch_ad_and_add_playlist">Посмотреть рекламу и добавить плейлист</string>
+    <string name="rating_feedback_reason">Ваш отзыв</string>
+    <string name="rating_feedback_reason_required">Расскажите, что произошло или что мы могли бы улучшить.</string>
+    <string name="rating_send_feedback">Продолжать писать по электронной почте</string>
+    <string name="rating_select_stars">Пожалуйста, выберите звездный рейтинг.</string>
+    <string name="rating_feedback_subject">Обратная связь -%1$s</string>
+    <string name="rating_feedback_body">Рейтинг:%1$d/5 звезд
+Отзывы и предложения:%2$s</string>
+    <string name="rating_no_email_app">Приложение электронной почты не найдено. Установите приложение электронной почты, чтобы отправлять отзывы.</string>
+    <string name="rating_feedback_hint">Например: проблема с воспроизведением, проблема с добавлением списка воспроизведения или нужная вам функция.</string>
 </resources>

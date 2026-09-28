@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">కనిష్ట</string>
     <string name="sound">ధ్వని</string>
     <string name="latter">తరువాత</string>
+
+    <string name="free_playlist_limit_reached">మీరు మొత్తం 3 ఉచిత ప్లేజాబితా దిగుమతులను ఉపయోగించారు. అపరిమిత ప్లేజాబితాలను జోడించడానికి Premiumకి అప్‌గ్రేడ్ చేయండి.</string>
+    <string name="free_playlist_limit_reached_title">ఉచిత ప్లేజాబితా పరిమితిని చేరుకున్నారు</string>
+    <string name="free_playlist_limit_reward_message">మరో ప్లేజాబితా దిగుమతిని అన్‌లాక్ చేయడానికి ఒక రివార్డ్ ప్రకటనను చూడండి లేదా అపరిమిత దిగుమతుల కోసం ప్రీమియంకు అప్‌గ్రేడ్ చేయండి.</string>
+    <string name="watch_ad_to_continue">ప్రకటన చూడండి</string>
+    <string name="go_premium">ప్రీమియంకు వెళ్లండి</string>
+    <string name="skip">దాటవేయి</string>
+    <string name="provider_url_blocked">ఈ URL ప్రొవైడర్ పరిమితి జాబితా ద్వారా బ్లాక్ చేయబడింది. దయచేసి అధీకృత మూలాన్ని ఉపయోగించండి.</string>
+    <string name="all_channels_blocked">ఈ ప్లేజాబితాలోని అన్ని ఛానెల్‌లు ప్రొవైడర్ పరిమితి జాబితాతో సరిపోలుతున్నాయి. ఏదీ దిగుమతి చేసుకోలేదు.</string>
+    <string name="playlist_saved_with_blocked_channels">ప్లేజాబితా సేవ్ చేయబడింది.%1$dనిరోధిత ఛానెల్‌లు మినహాయించబడ్డాయి.</string>
+    <string name="restricted_channels_excluded">మీరు ఎంచుకున్న వర్గాల నుండి %1$d పరిమిత ఛానెల్‌లు మినహాయించబడ్డాయి.</string>
+    <string name="copyright_notice_title">కంటెంట్ మరియు కాపీరైట్ బాధ్యత</string>
+    <string name="copyright_notice_message">మీకు స్వంతమైన లేదా యాక్సెస్ చేయడానికి అధికారం ఉన్న కంటెంట్‌ను మాత్రమే దిగుమతి చేయండి లేదా చూడండి. మీరు జోడించే మూలాధారాలకు మరియు అవసరమైన అనుమతులను పొందేందుకు మీరు బాధ్యత వహిస్తారు. యాప్ థర్డ్-పార్టీ కంటెంట్‌కి యాక్సెస్‌ని అనుమతించదు లేదా కాపీరైట్ ఉల్లంఘనను ఆమోదించదు. యాప్ మరియు దాని డెవలపర్‌లు వర్తించే చట్టం ద్వారా అనుమతించబడిన మేరకు వినియోగదారు జోడించిన కంటెంట్‌కు బాధ్యతను నిరాకరిస్తారు. ప్రొవైడర్ ఫిల్టరింగ్ కాపీరైట్ అనుమతులను ధృవీకరించలేదు. కొనసాగించడం ద్వారా, కంటెంట్‌ని ఉపయోగించడానికి మీకు అవసరమైన హక్కులు ఉన్నాయని మీరు నిర్ధారిస్తారు.</string>
+    <string name="copyright_notice_accept">నేను అర్థం చేసుకున్నాను మరియు అంగీకరిస్తున్నాను</string>
+    <string name="subscribe_now">ఇప్పుడే సభ్యత్వం పొందండి</string>
+    <string name="auto_renewable_cancel_anytime">ఆటో పునరుత్పాదక. ఎప్పుడైనా రద్దు చేయండి.</string>
+    <string name="free_playlist_limit_reward_only_message">మరో ప్లేజాబితా దిగుమతిని అన్‌లాక్ చేయడానికి ఒక రివార్డ్ ప్రకటనను చూడండి.</string>
+    <string name="reward_ad_not_ready">ప్రస్తుతం ప్రకటన అందుబాటులో లేదు. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.</string>
+    <string name="watch_ad_and_add_playlist">ప్రకటనను చూడండి &amp; ప్లేజాబితాను జోడించండి</string>
+    <string name="rating_feedback_reason">మీ అభిప్రాయం</string>
+    <string name="rating_feedback_reason_required">దయచేసి ఏమి జరిగిందో లేదా మేము ఏమి మెరుగుపరచగలమో భాగస్వామ్యం చేయండి.</string>
+    <string name="rating_send_feedback">ఇమెయిల్‌కి కొనసాగించండి</string>
+    <string name="rating_select_stars">దయచేసి స్టార్ రేటింగ్‌ను ఎంచుకోండి.</string>
+    <string name="rating_feedback_subject">అభిప్రాయం -%1$s</string>
+    <string name="rating_feedback_body">రేటింగ్:%1$d/5 నక్షత్రాలు
+అభిప్రాయం మరియు సూచనలు:%2$s</string>
+    <string name="rating_no_email_app">ఇమెయిల్ యాప్ ఏదీ కనుగొనబడలేదు. దయచేసి అభిప్రాయాన్ని పంపడానికి ఇమెయిల్ యాప్‌ను ఇన్‌స్టాల్ చేయండి.</string>
+    <string name="rating_feedback_hint">ఉదాహరణకు: ప్లేబ్యాక్ సమస్య, ప్లేజాబితాను జోడించడంలో సమస్య లేదా మీకు అవసరమైన ఫీచర్.</string>
 </resources>

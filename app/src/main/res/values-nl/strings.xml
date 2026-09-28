@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Geluid</string>
     <string name="latter">Later</string>
+
+    <string name="free_playlist_limit_reached">Je hebt alle drie de gratis imports van afspeellijsten gebruikt. Upgrade naar Premium om onbeperkte afspeellijsten toe te voegen.</string>
+    <string name="free_playlist_limit_reached_title">Limiet voor gratis afspeellijst bereikt</string>
+    <string name="free_playlist_limit_reward_message">Bekijk één beloonde advertentie om nog een afspeellijstimport mogelijk te maken, of upgrade naar Premium voor onbeperkt importeren.</string>
+    <string name="watch_ad_to_continue">Advertentie bekijken</string>
+    <string name="go_premium">Ga voor Premium</string>
+    <string name="skip">Overslaan</string>
+    <string name="provider_url_blocked">Deze URL wordt geblokkeerd door de restrictielijst van de provider. Gebruik een geautoriseerde bron.</string>
+    <string name="all_channels_blocked">Alle kanalen in deze afspeellijst komen overeen met de restrictielijst van de provider. Er werd niets geïmporteerd.</string>
+    <string name="playlist_saved_with_blocked_channels">Afspeellijst opgeslagen.%1$d-beperkte kanalen waren uitgesloten.</string>
+    <string name="restricted_channels_excluded">%1$d beperkte kanalen zijn uitgesloten van je geselecteerde categorieën.</string>
+    <string name="copyright_notice_title">Inhoud en auteursrechtelijke verantwoordelijkheid</string>
+    <string name="copyright_notice_message">Importeer of bekijk alleen inhoud waarvan u de eigenaar bent of waarvoor u toegang heeft. U bent verantwoordelijk voor de bronnen die u toevoegt en voor het verkrijgen van de benodigde toestemmingen. De app geeft geen toegang tot inhoud van derden en keurt geen inbreuk op het auteursrecht goed. De app en zijn ontwikkelaars wijzen de verantwoordelijkheid af voor door gebruikers toegevoegde inhoud, voor zover toegestaan ​​door de toepasselijke wetgeving. Providerfiltering kan de auteursrechtmachtigingen niet verifiëren. Door verder te gaan, bevestigt u dat u over de noodzakelijke rechten beschikt om de inhoud te gebruiken.</string>
+    <string name="copyright_notice_accept">Ik begrijp het en ben het ermee eens</string>
+    <string name="subscribe_now">Abonneer je nu</string>
+    <string name="auto_renewable_cancel_anytime">Automatisch hernieuwbaar. Annuleer op elk gewenst moment.</string>
+    <string name="free_playlist_limit_reward_only_message">Bekijk één beloonde advertentie om nog een afspeellijstimport mogelijk te maken.</string>
+    <string name="reward_ad_not_ready">Er is momenteel geen advertentie beschikbaar. Probeer het later opnieuw.</string>
+    <string name="watch_ad_and_add_playlist">Bekijk de advertentie en voeg een afspeellijst toe</string>
+    <string name="rating_feedback_reason">Jouw feedback</string>
+    <string name="rating_feedback_reason_required">Deel alstublieft wat er is gebeurd of wat we kunnen verbeteren.</string>
+    <string name="rating_send_feedback">Ga door met e-mailen</string>
+    <string name="rating_select_stars">Selecteer een sterbeoordeling.</string>
+    <string name="rating_feedback_subject">Feedback -%1$s</string>
+    <string name="rating_feedback_body">Beoordeling:%1$d/5 sterren
+Feedback en suggesties:%2$s</string>
+    <string name="rating_no_email_app">Geen e-mailapp gevonden. Installeer een e-mailapp om feedback te verzenden.</string>
+    <string name="rating_feedback_hint">Bijvoorbeeld: een afspeelprobleem, problemen bij het toevoegen van een afspeellijst of een functie die u nodig heeft.</string>
 </resources>

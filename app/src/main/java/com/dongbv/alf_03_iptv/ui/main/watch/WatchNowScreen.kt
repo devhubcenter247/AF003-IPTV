@@ -54,6 +54,8 @@ import androidx.media3.ui.PlayerView
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.ads.wrapper.native.NativePlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.native.view.NativeComposeFullView
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.GradientCircularProgressIndicator
@@ -63,6 +65,7 @@ import com.dongbv.alf_03_iptv.style.borderStart
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.opacity
 import com.dongbv.alf_03_iptv.style.paddingHorizontal
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.ChannelListItem
 import com.dongbv.alf_03_iptv.ui.component.borderState
@@ -78,9 +81,13 @@ import com.dongbv.alf_03_iptv.widget.headline600
 import com.dongbv.alf_03_iptv.widget.headline700
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
+import com.lib.ads.gma.ads.billing.AppPurchase
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdDisplayState
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdHolderConfig
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
@@ -109,8 +116,8 @@ fun WatchNowContent(
     modifier: Modifier = Modifier,
     pagePlayerMap: Map<Int, ExoPlayer>,
     autoNextEvent: SharedFlow<Int>? = null,
-    statusBarHeight: Dp,
     actions: WatchNowActions = WatchNowActions.None,
+    nativeFullAdHolder: NativeAdHolderConfig? = null,
 ) {
     if (channels.isEmpty()) {
         Box(
@@ -123,20 +130,54 @@ fun WatchNowContent(
         return
     }
 
-    val pagerState = rememberPagerState { channels.size }
+    val showNativeAds = nativeFullAdHolder != null &&
+        NativePlacement.OnboardingFull.canShowAds &&
+        NativePlacement.OnboardingFull.listId.any { it.isNotBlank() } &&
+        !AppPurchase.getInstance().isPurchased()
+    val displayPages = remember(channels, showNativeAds) {
+        if (!showNativeAds) {
+            channels.indices.map { it as Int? }
+        } else {
+            buildList {
+                channels.indices.forEachIndexed { index, channelIndex ->
+                    add(channelIndex)
+                    if ((index + 1) % 5 == 0 && index < channels.lastIndex) add(null)
+                }
+            }
+        }
+    }
+    val pagerState = rememberPagerState { displayPages.size }
 
-    LaunchedEffect(autoNextEvent) {
+    LaunchedEffect(autoNextEvent, displayPages) {
         autoNextEvent?.collect { nextPage ->
-            if (nextPage < channels.size) {
-                pagerState.animateScrollToPage(nextPage)
+            val targetPage = displayPages.indexOf(nextPage)
+            if (targetPage >= 0) {
+                pagerState.animateScrollToPage(targetPage)
             }
         }
     }
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(pagerState, displayPages, actions) {
         snapshotFlow { pagerState.settledPage }
             .distinctUntilChanged()
-            .collect { page -> actions.onPageSelected(page) }
+            .collect { page -> displayPages.getOrNull(page)?.let(actions::onPageSelected) }
+    }
+
+    LaunchedEffect(nativeFullAdHolder, pagerState, displayPages) {
+        val holder = nativeFullAdHolder ?: return@LaunchedEffect
+        combine(
+            holder.state,
+            snapshotFlow { pagerState.settledPage },
+        ) { adState, page -> adState to page }
+            .collect { (adState, page) ->
+                val adUnavailable = adState is NativeAdDisplayState.Error ||
+                    adState is NativeAdDisplayState.Cancelled
+                if (adUnavailable && page in displayPages.indices && displayPages[page] == null) {
+                    val nextChannelPage = ((page + 1)..displayPages.lastIndex)
+                        .firstOrNull { displayPages[it] != null }
+                    if (nextChannelPage != null) pagerState.scrollToPage(nextChannelPage)
+                }
+            }
     }
 
     BoxWithConstraints(
@@ -157,14 +198,21 @@ fun WatchNowContent(
                         beyondViewportPageCount = 2,
                         modifier = Modifier.fillMaxSize(),
                     ) { page ->
-                        ChannelReelPage(
-                            channel = channels[page],
-                            isShowBack = isShowBack,
-                            player = pagePlayerMap[page],
-                            isMuted = isMuted,
-                            statusBarHeight = statusBarHeight,
-                            actions = actions,
-                        )
+                        val channelIndex = displayPages[page]
+                        if (channelIndex == null) {
+                            NativeComposeFullView(
+                                nativePreloadConfig = nativeFullAdHolder,
+                                nativeModifier = Modifier.fillMaxSize(),
+                            )
+                        } else {
+                            ChannelReelPage(
+                                channel = channels[channelIndex],
+                                isShowBack = isShowBack,
+                                player = pagePlayerMap[channelIndex],
+                                isMuted = isMuted,
+                                actions = actions,
+                            )
+                        }
                     }
                 }
 
@@ -187,7 +235,8 @@ fun WatchNowContent(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(channels, key = { it.id }) { channel ->
-                            val isSelected = channels[pagerState.settledPage].id == channel.id
+                            val selectedChannelIndex = displayPages.getOrNull(pagerState.settledPage)
+                            val isSelected = selectedChannelIndex != null && channels[selectedChannelIndex].id == channel.id
                             ChannelListItem(
                                 channel = channel,
                                 isTablet = true,
@@ -196,7 +245,8 @@ fun WatchNowContent(
                                     val index = channels.indexOf(channel)
                                     if (index >= 0) {
                                         scope.launch {
-                                            pagerState.animateScrollToPage(index)
+                                            val targetPage = displayPages.indexOf(index)
+                                            if (targetPage >= 0) pagerState.animateScrollToPage(targetPage)
                                         }
                                     }
                                 }
@@ -211,14 +261,21 @@ fun WatchNowContent(
                 beyondViewportPageCount = 2,
                 modifier = Modifier.fillMaxSize(),
             ) { page ->
-                ChannelReelPage(
-                    channel = channels[page],
-                    isShowBack = isShowBack,
-                    player = pagePlayerMap[page],
-                    isMuted = isMuted,
-                    statusBarHeight = statusBarHeight,
-                    actions = actions,
-                )
+                val channelIndex = displayPages[page]
+                if (channelIndex == null) {
+                    NativeComposeFullView(
+                        nativePreloadConfig = nativeFullAdHolder,
+                        nativeModifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    ChannelReelPage(
+                        channel = channels[channelIndex],
+                        isShowBack = isShowBack,
+                        player = pagePlayerMap[channelIndex],
+                        isMuted = isMuted,
+                        actions = actions,
+                    )
+                }
             }
         }
     }
@@ -230,7 +287,6 @@ private fun ChannelReelPage(
     isShowBack: Boolean = true,
     player: ExoPlayer?,
     isMuted: Boolean,
-    statusBarHeight: Dp,
     actions: WatchNowActions,
 ) {
     var showControls by remember { mutableStateOf(value = true) }
@@ -319,7 +375,7 @@ private fun ChannelReelPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = statusBarHeight)
+                        .statusBarPadding()
                         .padding(horizontal = 16.Sdp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -486,7 +542,6 @@ private fun WatchNowContentPreview() {
             isMuted = false,
             modifier = Modifier.backgroundResource(R.drawable.img_bg_app),
             pagePlayerMap = emptyMap(),
-            statusBarHeight = 24.dp,
             actions = WatchNowActions.None
         )
     }

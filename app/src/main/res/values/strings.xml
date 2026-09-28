@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">StreamWave TV - IPTV Player</string>
+
+    <string name="fb_app_id" translatable="false">1111111111</string>
+    <string name="fb_client_token" translatable="false">2222222222222222222222</string>
+
     <string name="this_action_may_be_constant_adverting">This action may be constant adverting</string>
     <string name="language">Language</string>
     <string name="term_of_service">Term of Service</string>
@@ -7,19 +11,19 @@
     <string name="share_app">Share this app</string>
     <string name="check_out_this_amazing_app">Check out this amazing app: </string>
     <string name="share_via">Share via</string>
-    <string name="rate_us">Rate Us</string>
+    <string name="rate_us">Rate the app</string>
     <string name="rate_on_google_play">Rate on Google Play</string>
-    <string name="rating_title_0">Thank you for using the app!</string>
-    <string name="rating_title_1_2">Oh No!</string>
-    <string name="rating_title_3">Oh, unfortunately!</string>
-    <string name="rating_title_4">Thank you!</string>
-    <string name="rating_title_5">Wow, great!</string>
-    <string name="rating_description_0">We would appreciate your review!</string>
-    <string name="rating_description_1_2">We want to know what made you unsatisfied.</string>
-    <string name="rating_description_3">We look forward to receiving your feedback to improve.</string>
-    <string name="rating_description_4">We will do our best to provide an even better experience.</string>
-    <string name="rating_description_5">Your satisfaction is our greatest motivation!</string>
-    <string name="please_rate_us">Please rate us 5 star!</string>
+    <string name="rating_title_0">Help us improve</string>
+    <string name="rating_title_1_2">What went wrong?</string>
+    <string name="rating_title_3">What could work better?</string>
+    <string name="rating_title_4">Thank you for your feedback!</string>
+    <string name="rating_title_5">Thank you for your support!</string>
+    <string name="rating_description_0">How is your experience with StreamWave TV? Your feedback helps us decide what to improve next.</string>
+    <string name="rating_description_1_2">Tell us what happened and what you expected. Your feedback helps us understand the problem.</string>
+    <string name="rating_description_3">What would make the app more useful for you? Share a problem or a feature you would like to see.</string>
+    <string name="rating_description_4">Share what you enjoy and what could be better in a Google Play review. Every suggestion helps us improve.</string>
+    <string name="rating_description_5">Tell others what you enjoy about StreamWave TV on Google Play. Your suggestions are welcome too.</string>
+    <string name="please_rate_us">Please select a rating that reflects your experience.</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="are_you_sure_want_to_quit_app">Do you want to exit the app?</string>
@@ -149,6 +153,11 @@
     <string name="playlist_name">Playlist name</string>
     <string name="click_to_upload_file">Click to upload file</string>
     <string name="playlist_saved_successfully">Playlist saved successfully!</string>
+    <string name="free_playlist_limit_reached">You have used all 3 free playlist imports. Upgrade to Premium to add unlimited playlists.</string>
+    <string name="free_playlist_limit_reached_title">Free playlist limit reached</string>
+    <string name="free_playlist_limit_reward_message">Watch one rewarded ad to unlock one more playlist import, or upgrade to Premium for unlimited imports.</string>
+    <string name="watch_ad_to_continue">Watch ad</string>
+    <string name="go_premium">Go Premium</string>
     <string name="no_videos_selected">No videos selected</string>
     <string name="playlist_name_required">Playlist name is required</string>
     <string name="failed_to_save_playlist">Failed to save playlist</string>
@@ -200,4 +209,26 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Sound</string>
     <string name="latter">Later</string>
+    <string name="skip">Skip</string>
+    <string name="provider_url_blocked">This URL is blocked by the provider restriction list. Please use an authorized source.</string>
+    <string name="all_channels_blocked">All channels in this playlist match the provider restriction list. Nothing was imported.</string>
+    <string name="playlist_saved_with_blocked_channels">Playlist saved. %1$d restricted channels were excluded.</string>
+    <string name="restricted_channels_excluded">%1$d restricted channels were excluded from your selected categories.</string>
+    <string name="copyright_notice_title">Content and copyright responsibility</string>
+    <string name="copyright_notice_message">Only import or watch content that you own or are authorized to access. You are responsible for the sources you add and for obtaining any required permissions. The app does not authorize access to third-party content or endorse copyright infringement. The app and its developers disclaim responsibility for user-added content to the extent permitted by applicable law. Provider filtering cannot verify copyright permissions. By continuing, you confirm that you have the necessary rights to use the content.</string>
+    <string name="copyright_notice_accept">I understand and agree</string>
+    <string name="subscribe_now">Subscribe now</string>
+    <string name="auto_renewable_cancel_anytime">Auto renewable. Cancel anytime.</string>
+    <string name="free_playlist_limit_reward_only_message">Watch one rewarded ad to unlock one more playlist import.</string>
+    <string name="reward_ad_not_ready">No ad is available right now. Please try again later.</string>
+    <string name="watch_ad_and_add_playlist">Watch ad &amp; add playlist</string>
+    <string name="reward_ad_badge" translatable="false">AD</string>
+    <string name="rating_feedback_reason">Your feedback</string>
+    <string name="rating_feedback_reason_required">Please share what happened or what we could improve.</string>
+    <string name="rating_send_feedback">Continue to email</string>
+    <string name="rating_select_stars">Please select a star rating.</string>
+    <string name="rating_feedback_subject">Feedback - %1$s</string>
+    <string name="rating_feedback_body">Rating: %1$d/5 stars\n\nFeedback and suggestions:\n%2$s</string>
+    <string name="rating_no_email_app">No email app found. Please install an email app to send feedback.</string>
+    <string name="rating_feedback_hint">For example: a playback issue, trouble adding a playlist, or a feature you need.</string>
 </resources>

@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">മിനി</string>
     <string name="sound">ശബ്ദം</string>
     <string name="latter">പിന്നീട്</string>
+
+    <string name="free_playlist_limit_reached">നിങ്ങൾ 3 സൗജന്യ പ്ലേലിസ്റ്റ് ഇമ്പോർട്ടുകളും ഉപയോഗിച്ചു. അൺലിമിറ്റഡ് പ്ലേലിസ്റ്റുകൾ ചേർക്കാൻ Premium-ലേക്ക് അപ്ഗ്രേഡ് ചെയ്യുക.</string>
+    <string name="free_playlist_limit_reached_title">സൗജന്യ പ്ലേലിസ്റ്റ് പരിധി എത്തി</string>
+    <string name="free_playlist_limit_reward_message">ഒരു പ്ലേലിസ്റ്റ് ഇംപോർട്ട് കൂടി അൺലോക്ക് ചെയ്യാൻ ഒരു റിവാർഡ് പരസ്യം കാണുക, അല്ലെങ്കിൽ അൺലിമിറ്റഡ് ഇമ്പോർട്ടുകൾക്കായി Premium-ലേക്ക് അപ്‌ഗ്രേഡ് ചെയ്യുക.</string>
+    <string name="watch_ad_to_continue">പരസ്യം കാണുക</string>
+    <string name="go_premium">പ്രീമിയം പോകൂ</string>
+    <string name="skip">ഒഴിവാക്കുക</string>
+    <string name="provider_url_blocked">ദാതാവിൻ്റെ നിയന്ത്രണ ലിസ്റ്റ് ഈ URL തടഞ്ഞിരിക്കുന്നു. ദയവായി ഒരു അംഗീകൃത ഉറവിടം ഉപയോഗിക്കുക.</string>
+    <string name="all_channels_blocked">ഈ പ്ലേലിസ്റ്റിലെ എല്ലാ ചാനലുകളും ദാതാവിൻ്റെ നിയന്ത്രണ ലിസ്റ്റുമായി പൊരുത്തപ്പെടുന്നു. ഒന്നും ഇറക്കുമതി ചെയ്തില്ല.</string>
+    <string name="playlist_saved_with_blocked_channels">പ്ലേലിസ്റ്റ് സംരക്ഷിച്ചു.%1$dനിയന്ത്രിത ചാനലുകൾ ഒഴിവാക്കി.</string>
+    <string name="restricted_channels_excluded">നിങ്ങൾ തിരഞ്ഞെടുത്ത വിഭാഗങ്ങളിൽ നിന്ന് %1$d നിയന്ത്രിത ചാനലുകൾ ഒഴിവാക്കി.</string>
+    <string name="copyright_notice_title">ഉള്ളടക്കവും പകർപ്പവകാശ ഉത്തരവാദിത്തവും</string>
+    <string name="copyright_notice_message">നിങ്ങളുടെ ഉടമസ്ഥതയിലുള്ളതോ ആക്‌സസ് ചെയ്യാൻ അധികാരമുള്ളതോ ആയ ഉള്ളടക്കം മാത്രം ഇറക്കുമതി ചെയ്യുകയോ കാണുകയോ ചെയ്യുക. നിങ്ങൾ ചേർക്കുന്ന ഉറവിടങ്ങൾക്കും ആവശ്യമായ അനുമതികൾ നേടുന്നതിനും നിങ്ങൾ ഉത്തരവാദിയാണ്. ആപ്പ് മൂന്നാം കക്ഷി ഉള്ളടക്കത്തിലേക്കുള്ള ആക്‌സസ് അംഗീകരിക്കുകയോ പകർപ്പവകാശ ലംഘനത്തെ അംഗീകരിക്കുകയോ ചെയ്യുന്നില്ല. ആപ്പും അതിൻ്റെ ഡെവലപ്പർമാരും ബാധകമായ നിയമം അനുവദനീയമായ പരിധി വരെ ഉപയോക്താക്കൾ ചേർത്ത ഉള്ളടക്കത്തിൻ്റെ ഉത്തരവാദിത്തം നിരാകരിക്കുന്നു. ദാതാവിൻ്റെ ഫിൽട്ടറിംഗിന് പകർപ്പവകാശ അനുമതികൾ പരിശോധിക്കാൻ കഴിയില്ല. തുടരുന്നതിലൂടെ, ഉള്ളടക്കം ഉപയോഗിക്കുന്നതിന് ആവശ്യമായ അവകാശങ്ങൾ നിങ്ങൾക്കുണ്ടെന്ന് നിങ്ങൾ സ്ഥിരീകരിക്കുന്നു.</string>
+    <string name="copyright_notice_accept">ഞാൻ മനസ്സിലാക്കുകയും സമ്മതിക്കുകയും ചെയ്യുന്നു</string>
+    <string name="subscribe_now">ഇപ്പോൾ സബ്സ്ക്രൈബ് ചെയ്യുക</string>
+    <string name="auto_renewable_cancel_anytime">ഓട്ടോ റിന്യൂവബിൾ. എപ്പോൾ വേണമെങ്കിലും റദ്ദാക്കുക.</string>
+    <string name="free_playlist_limit_reward_only_message">ഒരു പ്ലേലിസ്റ്റ് ഇംപോർട്ട് കൂടി അൺലോക്ക് ചെയ്യാൻ ഒരു റിവാർഡ് പരസ്യം കാണുക.</string>
+    <string name="reward_ad_not_ready">ഇപ്പോൾ പരസ്യങ്ങളൊന്നും ലഭ്യമല്ല. ദയവായി പിന്നീട് വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="watch_ad_and_add_playlist">പരസ്യം കാണുക, പ്ലേലിസ്റ്റ് ചേർക്കുക</string>
+    <string name="rating_feedback_reason">നിങ്ങളുടെ ഫീഡ്ബാക്ക്</string>
+    <string name="rating_feedback_reason_required">എന്താണ് സംഭവിച്ചത് അല്ലെങ്കിൽ ഞങ്ങൾക്ക് മെച്ചപ്പെടുത്താൻ കഴിയുന്നത് പങ്കിടുക.</string>
+    <string name="rating_send_feedback">ഇമെയിലിൽ തുടരുക</string>
+    <string name="rating_select_stars">ഒരു നക്ഷത്ര റേറ്റിംഗ് തിരഞ്ഞെടുക്കുക.</string>
+    <string name="rating_feedback_subject">ഫീഡ്ബാക്ക് -%1$s</string>
+    <string name="rating_feedback_body">റേറ്റിംഗ്:%1$d/5 നക്ഷത്രങ്ങൾ
+ഫീഡ്‌ബാക്കും നിർദ്ദേശങ്ങളും:%2$s</string>
+    <string name="rating_no_email_app">ഇമെയിൽ ആപ്പൊന്നും കണ്ടെത്തിയില്ല. ഫീഡ്‌ബാക്ക് അയയ്‌ക്കാൻ ദയവായി ഒരു ഇമെയിൽ ആപ്പ് ഇൻസ്റ്റാൾ ചെയ്യുക.</string>
+    <string name="rating_feedback_hint">ഉദാഹരണത്തിന്: ഒരു പ്ലേബാക്ക് പ്രശ്‌നം, ഒരു പ്ലേലിസ്റ്റ് ചേർക്കുന്നതിൽ പ്രശ്‌നം അല്ലെങ്കിൽ നിങ്ങൾക്കാവശ്യമായ ഒരു ഫീച്ചർ.</string>
 </resources>

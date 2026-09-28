@@ -30,7 +30,6 @@ import com.dongbv.alf_03_iptv.style.backgroundResource
 @Composable
 fun ChannelScreen(
     @Suppress("UNUSED_PARAMETER") modifier: Modifier = Modifier,
-    statusBarHeight: Dp = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
     viewModel: WatchNowViewModel = koinViewModel(),
     onBack: () -> Unit = {}
 ) {
@@ -80,7 +79,6 @@ fun ChannelScreen(
         isShowBack = false,
         pagePlayerMap = pagePlayerMap,
         autoNextEvent = viewModel.autoNextEvent,
-        statusBarHeight = statusBarHeight,
         actions = actions
     )
 }
@@ -95,7 +93,6 @@ private fun ChannelScreenPreview() {
             isMuted = false,
             modifier = Modifier.backgroundResource(R.drawable.img_bg_app),
             pagePlayerMap = emptyMap(),
-            statusBarHeight = 24.dp,
             actions = WatchNowActions.None
         )
     }

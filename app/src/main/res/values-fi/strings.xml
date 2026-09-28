@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Ääni</string>
     <string name="latter">Myöhemmin</string>
+
+    <string name="free_playlist_limit_reached">Olet käyttänyt kaikki kolme ilmaista soittolistan tuontia. Päivitä Premiumiin lisätäksesi rajattomasti soittolistoja.</string>
+    <string name="free_playlist_limit_reached_title">Ilmaisten soittolistojen raja saavutettu</string>
+    <string name="free_playlist_limit_reward_message">Katso yksi palkkion tarjoava mainos avataksesi yhden soittolistan tuonnin, tai päivitä Premiumiin rajoittamattomasti tuontia varten.</string>
+    <string name="watch_ad_to_continue">Katso mainos</string>
+    <string name="go_premium">Siirry Premiumiin</string>
+    <string name="skip">Ohita</string>
+    <string name="provider_url_blocked">Palveluntarjoajan rajoitusluettelo on estänyt tämän URL-osoitteen. Käytä valtuutettua lähdettä.</string>
+    <string name="all_channels_blocked">Kaikki tämän soittolistan kanavat vastaavat palveluntarjoajan rajoitusluetteloa. Mitään ei tuotu.</string>
+    <string name="playlist_saved_with_blocked_channels">Soittolista tallennettu.%1$drajoitetut kanavat suljettiin pois.</string>
+    <string name="restricted_channels_excluded">%1$d rajoitettua kanavaa jätettiin pois valitsemistasi luokista.</string>
+    <string name="copyright_notice_title">Vastuu sisällöstä ja tekijänoikeuksista</string>
+    <string name="copyright_notice_message">Tuo tai katso vain sisältöä, jonka omistat tai sinulla on käyttöoikeus. Olet vastuussa lisäämistäsi lähteistä ja tarvittavien lupien hankkimisesta. Sovellus ei valtuuta pääsyä kolmannen osapuolen sisältöön tai tue tekijänoikeusrikkomuksia. Sovellus ja sen kehittäjät eivät ole vastuussa käyttäjien lisäämästä sisällöstä sovellettavan lain sallimissa rajoissa. Palveluntarjoajan suodatus ei voi vahvistaa tekijänoikeusoikeuksia. Jatkamalla vahvistat, että sinulla on tarvittavat oikeudet käyttää sisältöä.</string>
+    <string name="copyright_notice_accept">Ymmärrän ja olen samaa mieltä</string>
+    <string name="subscribe_now">Tilaa nyt</string>
+    <string name="auto_renewable_cancel_anytime">Automaattisesti uusiutuva. Peru milloin tahansa.</string>
+    <string name="free_playlist_limit_reward_only_message">Katso yksi palkkion tarjoava mainos avataksesi yhden soittolistan tuonnin.</string>
+    <string name="reward_ad_not_ready">Mitään mainosta ei ole tällä hetkellä saatavilla. Yritä myöhemmin uudelleen.</string>
+    <string name="watch_ad_and_add_playlist">Katso mainos ja lisää soittolista</string>
+    <string name="rating_feedback_reason">Palautteesi</string>
+    <string name="rating_feedback_reason_required">Kerro mitä tapahtui tai mitä voisimme parantaa.</string>
+    <string name="rating_send_feedback">Jatka sähköpostiin</string>
+    <string name="rating_select_stars">Valitse tähtiluokitus.</string>
+    <string name="rating_feedback_subject">Palaute -%1$s</string>
+    <string name="rating_feedback_body">Arvosana:%1$d/5 tähteä
+Palaute ja ehdotukset:%2$s</string>
+    <string name="rating_no_email_app">Sähköpostisovellusta ei löytynyt. Asenna sähköpostisovellus palautteen lähettämistä varten.</string>
+    <string name="rating_feedback_hint">Esimerkiksi: toisto-ongelma, ongelma soittolistan lisäämisessä tai tarvitsemasi ominaisuus.</string>
 </resources>

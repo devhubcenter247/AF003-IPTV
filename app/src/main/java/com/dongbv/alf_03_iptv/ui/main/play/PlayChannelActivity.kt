@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.main.play
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
 import android.annotation.SuppressLint
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -25,15 +26,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -46,11 +44,12 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalInspectionMode
+import com.dongbv.alf_03_iptv.ads.wrapper.native.NativePlacement
+import com.lib.ads.gma.ads.billing.AppPurchase
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -63,17 +62,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.ui.PlayerView
-import coil3.compose.AsyncImage
-import coil3.compose.AsyncImagePainter
 import com.dongbv.alf_03_iptv.R
 import com.dongbv.alf_03_iptv.base.BaseActivity
+import com.dongbv.alf_03_iptv.ads.wrapper.interstitial.InterstitialAdConfig
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.ResponsivePreview
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.onClick
 import com.dongbv.alf_03_iptv.style.opacity
-import com.dongbv.alf_03_iptv.style.paddingTop
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.ChannelListItem
 import com.dongbv.alf_03_iptv.ui.component.ChannelSearchBar
@@ -83,11 +81,8 @@ import com.dongbv.alf_03_iptv.ui.component.neonState
 import com.dongbv.alf_03_iptv.viewmodel.PlayViewModel
 import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgPrimary
-import com.dongbv.alf_03_iptv.widget.IptvDivider
 import com.dongbv.alf_03_iptv.widget.IptvSuccess
 import com.dongbv.alf_03_iptv.widget.IptvTextPrimary
-import com.dongbv.alf_03_iptv.widget.colorSecondary
-import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.headline600
 import com.dongbv.alf_03_iptv.widget.headline700
 import com.sdp.ssp.android.Sdp
@@ -97,9 +92,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.time.Duration.Companion.milliseconds
 
 class PlayChannelActivity : BaseActivity() {
+    override val analyticsScreen = AppScreen.PLAY_CHANNEL
+
 
     private val viewModel: PlayViewModel by viewModel()
-
     private var channelId: Long = 0
     private var channelName: String = ""
     private var channelUrl: String = ""
@@ -161,7 +157,7 @@ class PlayChannelActivity : BaseActivity() {
     }
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
+    override fun ContentView() {
         val channels by viewModel.channels.collectAsStateWithLifecycle()
         val currentChannel by viewModel.currentChannel.collectAsStateWithLifecycle()
         val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
@@ -185,6 +181,7 @@ class PlayChannelActivity : BaseActivity() {
                 }
 
                 override fun onBack() {
+                    InterstitialAdConfig.recordPlayerClosed()
                     finish()
                 }
 
@@ -223,12 +220,12 @@ class PlayChannelActivity : BaseActivity() {
         }
 
         PlayChannelScreen(
-            statusBarHeight = statusBarHeight,
             channels = channels,
             currentChannelId = currentChannel?.id ?: channelId,
             currentChannelName = currentChannel?.name ?: channelName,
             isFavorite = isFavorite,
-            actions = actions
+            actions = actions,
+            footer = { PlayChannelFooterBanner() }
         )
     }
 
@@ -351,13 +348,17 @@ interface PlayChannelActions {
 @SuppressLint("ClickableViewAccessibility")
 @Composable
 fun PlayChannelScreen(
-    statusBarHeight: Dp,
     channels: List<ChannelEntity>,
     currentChannelId: Long,
     currentChannelName: String,
     isFavorite: Boolean,
     actions: PlayChannelActions = PlayChannelActions.None,
+    footer: @Composable () -> Unit = {},
 ) {
+    val showChannelNativeAds = !LocalInspectionMode.current &&
+        NativePlacement.NativePlayList.canShowAds &&
+        NativePlacement.NativePlayList.listId.any { it.isNotBlank() } &&
+        !AppPurchase.getInstance().isPurchased()
     var isPlaying by remember { mutableStateOf(PlayerManager.isPlaying()) }
     var isBuffering by remember { mutableStateOf(false) }
     var showControls by remember { mutableStateOf(true) }
@@ -420,46 +421,105 @@ fun PlayChannelScreen(
         onPauseOrDispose { PlayerManager.setSleepTimerListener(null) }
     }
 
-    BoxWithConstraints(
-        Modifier
-            .fillMaxSize()
-            .backgroundResource(R.drawable.img_bg_app)
-    ) {
-        val isTablet = maxWidth >= 600.dp
+    Column(Modifier.fillMaxSize()) {
+        BoxWithConstraints(
+            Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .backgroundResource(R.drawable.img_bg_app)
+        ) {
+            val isTablet = maxWidth >= 600.dp
 
-        if (isTablet) {
-            Row(Modifier.fillMaxSize()) {
-                PlayerSurface(
-                    modifier = Modifier
-                        .weight(0.68f)
-                        .fillMaxHeight(),
-                    statusBarHeight = statusBarHeight,
-                    showControls = showControls,
-                    isLocked = isLocked,
-                    isPlaying = isPlaying,
-                    isBuffering = isBuffering,
-                    isFavorite = isFavorite,
-                    currentChannelName = currentChannelName,
-                    onToggleControls = { if (!isLocked) showControls = !showControls },
-                    onBack = actions::onBack,
-                    onPrevious = actions::onPrevious,
-                    onNext = actions::onNext,
-                    onToggleFavorite = actions::onToggleFavorite,
-                    onFullscreen = actions::onFullscreen,
-                    onCast = actions::onCast,
-                    onOpenSleepTimer = { showSleepTimerDialog = true },
-                    onLock = { isLocked = true; showControls = false },
-                    onUnlock = { isLocked = false; showControls = true },
-                    onPlayerViewReady = actions::onPlayerViewReady,
-                    onPlayerViewDisposed = actions::onPlayerViewDisposed
-                )
+            if (isTablet) {
+                Row(Modifier.fillMaxSize()) {
+                    PlayerSurface(
+                        modifier = Modifier
+                            .weight(0.68f)
+                            .fillMaxHeight(),
+                        showControls = showControls,
+                        isLocked = isLocked,
+                        isPlaying = isPlaying,
+                        isBuffering = isBuffering,
+                        isFavorite = isFavorite,
+                        currentChannelName = currentChannelName,
+                        onToggleControls = { if (!isLocked) showControls = !showControls },
+                        onBack = actions::onBack,
+                        onPrevious = actions::onPrevious,
+                        onNext = actions::onNext,
+                        onToggleFavorite = actions::onToggleFavorite,
+                        onFullscreen = actions::onFullscreen,
+                        onCast = actions::onCast,
+                        onOpenSleepTimer = { showSleepTimerDialog = true },
+                        onLock = { isLocked = true; showControls = false },
+                        onUnlock = { isLocked = false; showControls = true },
+                        onPlayerViewReady = actions::onPlayerViewReady,
+                        onPlayerViewDisposed = actions::onPlayerViewDisposed
+                    )
 
+                    Column(
+                        modifier = Modifier
+                            .weight(0.375f)
+                            .fillMaxHeight()
+
+                    ) {
+                        ChannelSearchBar(
+                            query = searchQuery,
+                            onQueryChanged = {
+                                searchQuery = it
+                                actions.onSearch(it)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.Sdp, vertical = 8.Sdp)
+                        )
+
+                        LazyColumn(
+                            state = rememberLazyListState(),
+                            contentPadding = PaddingValues(horizontal = 12.Sdp, vertical = 8.Sdp),
+                            verticalArrangement = Arrangement.spacedBy(8.Sdp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            playChannelItems(channels, showChannelNativeAds) { channel ->
+                                ChannelListItem(
+                                    channel = channel,
+                                    isTablet = true,
+                                    isSelected = channel.id == currentChannelId,
+                                    onClick = { actions.onPlayChannel(channel) }
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
                 Column(
-                    modifier = Modifier
-                        .weight(0.375f)
-                        .fillMaxHeight()
+                    Modifier
+                        .fillMaxSize()
 
                 ) {
+                    PlayerSurface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.325f),
+                        showControls = showControls,
+                        isLocked = isLocked,
+                        isPlaying = isPlaying,
+                        isBuffering = isBuffering,
+                        isFavorite = isFavorite,
+                        currentChannelName = currentChannelName,
+                        onToggleControls = { if (!isLocked) showControls = !showControls },
+                        onBack = actions::onBack,
+                        onPrevious = actions::onPrevious,
+                        onNext = actions::onNext,
+                        onToggleFavorite = actions::onToggleFavorite,
+                        onFullscreen = actions::onFullscreen,
+                        onCast = actions::onCast,
+                        onOpenSleepTimer = { showSleepTimerDialog = true },
+                        onLock = { isLocked = true; showControls = false },
+                        onUnlock = { isLocked = false; showControls = true },
+                        onPlayerViewReady = actions::onPlayerViewReady,
+                        onPlayerViewDisposed = actions::onPlayerViewDisposed
+                    )
+
                     ChannelSearchBar(
                         query = searchQuery,
                         onQueryChanged = {
@@ -473,14 +533,15 @@ fun PlayChannelScreen(
 
                     LazyColumn(
                         state = rememberLazyListState(),
-                        contentPadding = PaddingValues(horizontal = 12.Sdp, vertical = 8.Sdp),
-                        verticalArrangement = Arrangement.spacedBy(8.Sdp),
-                        modifier = Modifier.fillMaxSize()
+                        contentPadding = PaddingValues( bottom = 8.Sdp),
+                        verticalArrangement = Arrangement.spacedBy(4.Sdp),
+                        modifier = Modifier
+                            .fillMaxSize()
+
                     ) {
-                        items(channels, key = { it.id }) { channel ->
+                        playChannelItems(channels, showChannelNativeAds) { channel ->
                             ChannelListItem(
                                 channel = channel,
-                                isTablet = true,
                                 isSelected = channel.id == currentChannelId,
                                 onClick = { actions.onPlayChannel(channel) }
                             )
@@ -488,66 +549,8 @@ fun PlayChannelScreen(
                     }
                 }
             }
-        } else {
-            Column(
-                Modifier
-                    .fillMaxSize()
-
-            ) {
-                PlayerSurface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.325f),
-                    statusBarHeight = statusBarHeight,
-                    showControls = showControls,
-                    isLocked = isLocked,
-                    isPlaying = isPlaying,
-                    isBuffering = isBuffering,
-                    isFavorite = isFavorite,
-                    currentChannelName = currentChannelName,
-                    onToggleControls = { if (!isLocked) showControls = !showControls },
-                    onBack = actions::onBack,
-                    onPrevious = actions::onPrevious,
-                    onNext = actions::onNext,
-                    onToggleFavorite = actions::onToggleFavorite,
-                    onFullscreen = actions::onFullscreen,
-                    onCast = actions::onCast,
-                    onOpenSleepTimer = { showSleepTimerDialog = true },
-                    onLock = { isLocked = true; showControls = false },
-                    onUnlock = { isLocked = false; showControls = true },
-                    onPlayerViewReady = actions::onPlayerViewReady,
-                    onPlayerViewDisposed = actions::onPlayerViewDisposed
-                )
-
-                ChannelSearchBar(
-                    query = searchQuery,
-                    onQueryChanged = {
-                        searchQuery = it
-                        actions.onSearch(it)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.Sdp, vertical = 8.Sdp)
-                )
-
-                LazyColumn(
-                    state = rememberLazyListState(),
-                    contentPadding = PaddingValues( bottom = 8.Sdp),
-                    verticalArrangement = Arrangement.spacedBy(4.Sdp),
-                    modifier = Modifier
-                        .fillMaxSize()
-
-                ) {
-                    items(channels, key = { it.id }) { channel ->
-                        ChannelListItem(
-                            channel = channel,
-                            isSelected = channel.id == currentChannelId,
-                            onClick = { actions.onPlayChannel(channel) }
-                        )
-                    }
-                }
-            }
         }
+        footer()
     }
 
     SleepTimerDialog(
@@ -583,7 +586,6 @@ fun PlayChannelScreen(
 @Composable
 private fun PlayerSurface(
     modifier: Modifier,
-    statusBarHeight: Dp,
     showControls: Boolean,
     isLocked: Boolean,
     isPlaying: Boolean,
@@ -645,7 +647,7 @@ private fun PlayerSurface(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = statusBarHeight)
+                        .statusBarPadding()
                         .padding(horizontal = 8.Sdp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -802,7 +804,6 @@ fun PlayChannelScreenPreview() {
     val channels = ChannelEntity.fakeList()
     AppViewTheme {
         PlayChannelScreen(
-            statusBarHeight = 0.dp,
             channels = channels,
             currentChannelId = channels.first().id,
             currentChannelName = channels.first().name,
@@ -823,7 +824,6 @@ fun PlayChannelScreenTabletPreview() {
     val channels = ChannelEntity.fakeList()
     AppViewTheme {
         PlayChannelScreen(
-            statusBarHeight = 0.dp,
             channels = channels,
             currentChannelId = channels.first().id,
             currentChannelName = channels.first().name,

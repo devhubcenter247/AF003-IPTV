@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">ಕನಿಷ್ಠ</string>
     <string name="sound">ಧ್ವನಿ</string>
     <string name="latter">ನಂತರ</string>
+
+    <string name="free_playlist_limit_reached">ನೀವು ಎಲ್ಲಾ 3 ಉಚಿತ ಪ್ಲೇಪಟ್ಟಿ ಆಮದುಗಳನ್ನು ಬಳಸಿದ್ದೀರಿ. ಅನಿಯಮಿತ ಪ್ಲೇಪಟ್ಟಿಗಳನ್ನು ಸೇರಿಸಲು Premium ಗೆ ಅಪ್‌ಗ್ರೇಡ್ ಮಾಡಿ.</string>
+    <string name="free_playlist_limit_reached_title">ಉಚಿತ ಪ್ಲೇಪಟ್ಟಿ ಮಿತಿಯನ್ನು ತಲುಪಿದೆ</string>
+    <string name="free_playlist_limit_reward_message">ಇನ್ನೂ ಒಂದು ಪ್ಲೇಲಿಸ್ಟ್ ಆಮದು ಅನ್‌ಲಾಕ್ ಮಾಡಲು ಒಂದು ಬಹುಮಾನಿತ ಜಾಹೀರಾತನ್ನು ವೀಕ್ಷಿಸಿ ಅಥವಾ ಅನಿಯಮಿತ ಆಮದುಗಳಿಗಾಗಿ ಪ್ರೀಮಿಯಂಗೆ ಅಪ್‌ಗ್ರೇಡ್ ಮಾಡಿ.</string>
+    <string name="watch_ad_to_continue">ಜಾಹೀರಾತು ವೀಕ್ಷಿಸಿ</string>
+    <string name="go_premium">ಪ್ರೀಮಿಯಂಗೆ ಹೋಗಿ</string>
+    <string name="skip">ಬಿಟ್ಟುಬಿಡಿ</string>
+    <string name="provider_url_blocked">ಪೂರೈಕೆದಾರರ ನಿರ್ಬಂಧ ಪಟ್ಟಿಯಿಂದ ಈ URL ಅನ್ನು ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಅಧಿಕೃತ ಮೂಲವನ್ನು ಬಳಸಿ.</string>
+    <string name="all_channels_blocked">ಈ ಪ್ಲೇಪಟ್ಟಿಯಲ್ಲಿರುವ ಎಲ್ಲಾ ಚಾನಲ್‌ಗಳು ಪೂರೈಕೆದಾರರ ನಿರ್ಬಂಧ ಪಟ್ಟಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತವೆ. ಏನನ್ನೂ ಆಮದು ಮಾಡಿಕೊಂಡಿಲ್ಲ.</string>
+    <string name="playlist_saved_with_blocked_channels">ಪ್ಲೇಪಟ್ಟಿಯನ್ನು ಉಳಿಸಲಾಗಿದೆ.%1$dನಿರ್ಬಂಧಿತ ಚಾನಲ್‌ಗಳನ್ನು ಹೊರಗಿಡಲಾಗಿದೆ.</string>
+    <string name="restricted_channels_excluded">ನೀವು ಆಯ್ಕೆ ಮಾಡಿದ ವರ್ಗಗಳಿಂದ %1$d ನಿರ್ಬಂಧಿತ ಚಾನೆಲ್‌ಗಳನ್ನು ಹೊರಗಿಡಲಾಗಿದೆ.</string>
+    <string name="copyright_notice_title">ವಿಷಯ ಮತ್ತು ಹಕ್ಕುಸ್ವಾಮ್ಯ ಜವಾಬ್ದಾರಿ</string>
+    <string name="copyright_notice_message">ನೀವು ಹೊಂದಿರುವ ಅಥವಾ ಪ್ರವೇಶಿಸಲು ಅಧಿಕಾರ ಹೊಂದಿರುವ ವಿಷಯವನ್ನು ಮಾತ್ರ ಆಮದು ಮಾಡಿಕೊಳ್ಳಿ ಅಥವಾ ವೀಕ್ಷಿಸಿ. ನೀವು ಸೇರಿಸುವ ಮೂಲಗಳಿಗೆ ಮತ್ತು ಅಗತ್ಯವಿರುವ ಯಾವುದೇ ಅನುಮತಿಗಳನ್ನು ಪಡೆಯಲು ನೀವು ಜವಾಬ್ದಾರರಾಗಿರುತ್ತೀರಿ. ಅಪ್ಲಿಕೇಶನ್ ಮೂರನೇ ವ್ಯಕ್ತಿಯ ವಿಷಯಕ್ಕೆ ಪ್ರವೇಶವನ್ನು ಅನುಮತಿಸುವುದಿಲ್ಲ ಅಥವಾ ಹಕ್ಕುಸ್ವಾಮ್ಯ ಉಲ್ಲಂಘನೆಯನ್ನು ಅನುಮೋದಿಸುವುದಿಲ್ಲ. ಅಪ್ಲಿಕೇಶನ್ ಮತ್ತು ಅದರ ಡೆವಲಪರ್‌ಗಳು ಅನ್ವಯವಾಗುವ ಕಾನೂನಿನಿಂದ ಅನುಮತಿಸಲಾದ ಮಟ್ಟಿಗೆ ಬಳಕೆದಾರ-ಸೇರಿಸಿದ ವಿಷಯದ ಜವಾಬ್ದಾರಿಯನ್ನು ನಿರಾಕರಿಸುತ್ತಾರೆ. ಒದಗಿಸುವವರ ಫಿಲ್ಟರಿಂಗ್ ಹಕ್ಕುಸ್ವಾಮ್ಯ ಅನುಮತಿಗಳನ್ನು ಪರಿಶೀಲಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಮುಂದುವರಿಸುವ ಮೂಲಕ, ನೀವು ವಿಷಯವನ್ನು ಬಳಸಲು ಅಗತ್ಯವಾದ ಹಕ್ಕುಗಳನ್ನು ಹೊಂದಿರುವಿರಿ ಎಂದು ನೀವು ಖಚಿತಪಡಿಸುತ್ತೀರಿ.</string>
+    <string name="copyright_notice_accept">ನಾನು ಅರ್ಥಮಾಡಿಕೊಂಡಿದ್ದೇನೆ ಮತ್ತು ಒಪ್ಪುತ್ತೇನೆ</string>
+    <string name="subscribe_now">ಈಗ ಚಂದಾದಾರರಾಗಿ</string>
+    <string name="auto_renewable_cancel_anytime">ಸ್ವಯಂ ನವೀಕರಿಸಬಹುದಾದ. ಯಾವಾಗ ಬೇಕಾದರೂ ರದ್ದುಮಾಡಿ.</string>
+    <string name="free_playlist_limit_reward_only_message">ಇನ್ನೂ ಒಂದು ಪ್ಲೇಪಟ್ಟಿ ಆಮದು ಅನ್‌ಲಾಕ್ ಮಾಡಲು ಒಂದು ಬಹುಮಾನದ ಜಾಹೀರಾತನ್ನು ವೀಕ್ಷಿಸಿ.</string>
+    <string name="reward_ad_not_ready">ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ಜಾಹೀರಾತು ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.</string>
+    <string name="watch_ad_and_add_playlist">ಜಾಹೀರಾತು ವೀಕ್ಷಿಸಿ ಮತ್ತು ಪ್ಲೇಪಟ್ಟಿ ಸೇರಿಸಿ</string>
+    <string name="rating_feedback_reason">ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆ</string>
+    <string name="rating_feedback_reason_required">ಏನಾಯಿತು ಅಥವಾ ನಾವು ಏನನ್ನು ಸುಧಾರಿಸಬಹುದು ಎಂಬುದನ್ನು ದಯವಿಟ್ಟು ಹಂಚಿಕೊಳ್ಳಿ.</string>
+    <string name="rating_send_feedback">ಇಮೇಲ್‌ಗೆ ಮುಂದುವರಿಯಿರಿ</string>
+    <string name="rating_select_stars">ದಯವಿಟ್ಟು ಸ್ಟಾರ್ ರೇಟಿಂಗ್ ಆಯ್ಕೆಮಾಡಿ.</string>
+    <string name="rating_feedback_subject">ಪ್ರತಿಕ್ರಿಯೆ -%1$s</string>
+    <string name="rating_feedback_body">ರೇಟಿಂಗ್:%1$d/5 ನಕ್ಷತ್ರಗಳು
+ಪ್ರತಿಕ್ರಿಯೆ ಮತ್ತು ಸಲಹೆಗಳು:%2$s</string>
+    <string name="rating_no_email_app">ಯಾವುದೇ ಇಮೇಲ್ ಅಪ್ಲಿಕೇಶನ್ ಕಂಡುಬಂದಿಲ್ಲ. ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಕಳುಹಿಸಲು ಇಮೇಲ್ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಸ್ಥಾಪಿಸಿ.</string>
+    <string name="rating_feedback_hint">ಉದಾಹರಣೆಗೆ: ಪ್ಲೇಬ್ಯಾಕ್ ಸಮಸ್ಯೆ, ಪ್ಲೇಪಟ್ಟಿ ಸೇರಿಸುವಲ್ಲಿ ತೊಂದರೆ ಅಥವಾ ನಿಮಗೆ ಅಗತ್ಯವಿರುವ ವೈಶಿಷ್ಟ್ಯ.</string>
 </resources>

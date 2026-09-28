@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min.</string>
     <string name="sound">Ses</string>
     <string name="latter">Daha sonra</string>
+
+    <string name="free_playlist_limit_reached">Ücretsiz olarak içe aktarılan 3 oynatma listesinin tamamını kullandınız. Sınırsız çalma listesi eklemek için Premium\'a yükseltin.</string>
+    <string name="free_playlist_limit_reached_title">Ücretsiz oynatma listesi sınırına ulaşıldı</string>
+    <string name="free_playlist_limit_reward_message">Bir oynatma listesinin daha içe aktarılmasının kilidini açmak için bir ödüllü reklamı izleyin veya sınırsız içe aktarma için Premium\'a yükseltin.</string>
+    <string name="watch_ad_to_continue">Reklamı izle</string>
+    <string name="go_premium">Premium\'a Geçin</string>
+    <string name="skip">Atlamak</string>
+    <string name="provider_url_blocked">Bu URL sağlayıcı kısıtlama listesi tarafından engellendi. Lütfen yetkili bir kaynak kullanın.</string>
+    <string name="all_channels_blocked">Bu oynatma listesindeki tüm kanallar sağlayıcı kısıtlama listesiyle eşleşiyor. Hiçbir şey ithal edilmedi.</string>
+    <string name="playlist_saved_with_blocked_channels">Oynatma listesi kaydedildi.%1$dkısıtlı kanalları hariç tutuldu.</string>
+    <string name="restricted_channels_excluded">Seçtiğiniz kategorilerden %1$d kısıtlı kanal hariç tutuldu.</string>
+    <string name="copyright_notice_title">İçerik ve telif hakkı sorumluluğu</string>
+    <string name="copyright_notice_message">Yalnızca sahip olduğunuz veya erişim yetkisine sahip olduğunuz içerikleri içe aktarın veya izleyin. Eklediğiniz kaynaklardan ve gerekli izinleri almaktan siz sorumlusunuz. Uygulama, üçüncü taraf içeriğine erişime izin vermez veya telif hakkı ihlalini onaylamaz. Uygulama ve geliştiricileri, geçerli yasaların izin verdiği ölçüde, kullanıcı tarafından eklenen içeriklerin sorumluluğunu reddeder. Sağlayıcı filtrelemesi telif hakkı izinlerini doğrulayamaz. Devam ederek içeriği kullanmak için gerekli haklara sahip olduğunuzu onaylamış olursunuz.</string>
+    <string name="copyright_notice_accept">anlıyorum ve katılıyorum</string>
+    <string name="subscribe_now">Şimdi abone olun</string>
+    <string name="auto_renewable_cancel_anytime">Otomatik yenilenebilir. İstediğiniz zaman iptal edin.</string>
+    <string name="free_playlist_limit_reward_only_message">Bir oynatma listesinin daha içe aktarılmasının kilidini açmak için bir ödüllü reklamı izleyin.</string>
+    <string name="reward_ad_not_ready">Şu anda herhangi bir reklam mevcut değil. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="watch_ad_and_add_playlist">Reklamı izleyin ve oynatma listesi ekleyin</string>
+    <string name="rating_feedback_reason">Geri bildiriminiz</string>
+    <string name="rating_feedback_reason_required">Lütfen ne olduğunu veya neyi iyileştirebileceğimizi paylaşın.</string>
+    <string name="rating_send_feedback">E-posta göndermeye devam et</string>
+    <string name="rating_select_stars">Lütfen bir yıldız derecelendirmesi seçin.</string>
+    <string name="rating_feedback_subject">Geribildirim -%1$s</string>
+    <string name="rating_feedback_body">Derecelendirme:%1$d/5 yıldız
+Geri bildirim ve öneriler:%2$s</string>
+    <string name="rating_no_email_app">E-posta uygulaması bulunamadı. Geri bildirim göndermek için lütfen bir e-posta uygulaması yükleyin.</string>
+    <string name="rating_feedback_hint">Örneğin: bir oynatma sorunu, oynatma listesi ekleme sorunu veya ihtiyacınız olan bir özellik.</string>
 </resources>

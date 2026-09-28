@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Ελάχ</string>
     <string name="sound">Ήχος</string>
     <string name="latter">Αργότερα</string>
+
+    <string name="free_playlist_limit_reached">Έχετε χρησιμοποιήσει και τις 3 δωρεάν εισαγωγές playlist. Κάντε αναβάθμιση σε Premium για να προσθέσετε απεριόριστες λίστες αναπαραγωγής.</string>
+    <string name="free_playlist_limit_reached_title">Συμπληρώθηκε το όριο της δωρεάν λίστας αναπαραγωγής</string>
+    <string name="free_playlist_limit_reward_message">Παρακολουθήστε μία διαφήμιση με ανταμοιβή για να ξεκλειδώσετε μία ακόμη εισαγωγή playlist ή κάντε αναβάθμιση σε Premium για απεριόριστες εισαγωγές.</string>
+    <string name="watch_ad_to_continue">Παρακολουθήστε τη διαφήμιση</string>
+    <string name="go_premium">Go Premium</string>
+    <string name="skip">Παραλείπω</string>
+    <string name="provider_url_blocked">Αυτή η διεύθυνση URL έχει αποκλειστεί από τη λίστα περιορισμών παρόχου. Χρησιμοποιήστε μια εξουσιοδοτημένη πηγή.</string>
+    <string name="all_channels_blocked">Όλα τα κανάλια σε αυτήν τη λίστα αναπαραγωγής αντιστοιχούν στη λίστα περιορισμών παρόχου. Δεν εισήχθη τίποτα.</string>
+    <string name="playlist_saved_with_blocked_channels">Η λίστα αναπαραγωγής αποθηκεύτηκε.  Τα κανάλια περιορισμένης πρόσβασης%1$dεξαιρέθηκαν.</string>
+    <string name="restricted_channels_excluded">%1$d περιορισμένα κανάλια εξαιρέθηκαν από τις κατηγορίες που επιλέξατε.</string>
+    <string name="copyright_notice_title">Περιεχόμενο και ευθύνη πνευματικών δικαιωμάτων</string>
+    <string name="copyright_notice_message">Εισαγάγετε ή παρακολουθήστε μόνο περιεχόμενο που σας ανήκει ή έχετε εξουσιοδότηση πρόσβασης. Είστε υπεύθυνοι για τις πηγές που προσθέτετε και για τη λήψη τυχόν απαιτούμενων αδειών. Η εφαρμογή δεν εξουσιοδοτεί την πρόσβαση σε περιεχόμενο τρίτων ούτε υποστηρίζει την παραβίαση πνευματικών δικαιωμάτων. Η εφαρμογή και οι προγραμματιστές της αποποιούνται την ευθύνη για περιεχόμενο που προστίθεται από τον χρήστη στον βαθμό που επιτρέπεται από την ισχύουσα νομοθεσία. Το φιλτράρισμα του παρόχου δεν μπορεί να επαληθεύσει τα δικαιώματα πνευματικών δικαιωμάτων. Συνεχίζοντας, επιβεβαιώνετε ότι έχετε τα απαραίτητα δικαιώματα για τη χρήση του περιεχομένου.</string>
+    <string name="copyright_notice_accept">Καταλαβαίνω και συμφωνώ</string>
+    <string name="subscribe_now">Εγγραφείτε τώρα</string>
+    <string name="auto_renewable_cancel_anytime">Αυτόματο ανανεώσιμο. Ακύρωση ανά πάσα στιγμή.</string>
+    <string name="free_playlist_limit_reward_only_message">Παρακολουθήστε μία διαφήμιση με ανταμοιβή για να ξεκλειδώσετε μία ακόμη εισαγωγή playlist.</string>
+    <string name="reward_ad_not_ready">Δεν υπάρχει διαφήμιση αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.</string>
+    <string name="watch_ad_and_add_playlist">Παρακολούθηση διαφήμισης και προσθήκη λίστας αναπαραγωγής</string>
+    <string name="rating_feedback_reason">Τα σχόλιά σας</string>
+    <string name="rating_feedback_reason_required">Μοιραστείτε τι συνέβη ή τι θα μπορούσαμε να βελτιώσουμε.</string>
+    <string name="rating_send_feedback">Συνεχίστε να στέλνετε email</string>
+    <string name="rating_select_stars">Επιλέξτε μια βαθμολογία με αστέρια.</string>
+    <string name="rating_feedback_subject">Σχόλια -%1$s</string>
+    <string name="rating_feedback_body">Βαθμολογία:%1$d/5 αστέρια
+Σχόλια και προτάσεις:%2$s</string>
+    <string name="rating_no_email_app">Δεν βρέθηκε εφαρμογή email. Εγκαταστήστε μια εφαρμογή ηλεκτρονικού ταχυδρομείου για να στείλετε σχόλια.</string>
+    <string name="rating_feedback_hint">Για παράδειγμα: πρόβλημα αναπαραγωγής, πρόβλημα με την προσθήκη λίστας αναπαραγωγής ή μια δυνατότητα που χρειάζεστε.</string>
 </resources>

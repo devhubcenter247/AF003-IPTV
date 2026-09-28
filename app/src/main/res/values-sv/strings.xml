@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">Min</string>
     <string name="sound">Ljud</string>
     <string name="latter">Senare</string>
+
+    <string name="free_playlist_limit_reached">Du har använt alla tre gratis spellistimporter. Uppgradera till Premium för att lägga till obegränsade spellistor.</string>
+    <string name="free_playlist_limit_reached_title">Gränsen för gratis spellista har nåtts</string>
+    <string name="free_playlist_limit_reward_message">Titta på en belönad annons för att låsa upp ytterligare en spellistimport, eller uppgradera till Premium för obegränsad import.</string>
+    <string name="watch_ad_to_continue">Se annons</string>
+    <string name="go_premium">Gå Premium</string>
+    <string name="skip">Hoppa</string>
+    <string name="provider_url_blocked">Den här webbadressen är blockerad av listan över leverantörsbegränsningar. Använd en auktoriserad källa.</string>
+    <string name="all_channels_blocked">Alla kanaler i den här spellistan matchar listan över leverantörsbegränsningar. Ingenting importerades.</string>
+    <string name="playlist_saved_with_blocked_channels">Spellistan har sparats.%1$d-begränsade kanaler exkluderades.</string>
+    <string name="restricted_channels_excluded">%1$d begränsade kanaler exkluderades från dina valda kategorier.</string>
+    <string name="copyright_notice_title">Innehålls- och upphovsrättsansvar</string>
+    <string name="copyright_notice_message">Importera eller titta bara på innehåll som du äger eller har behörighet att komma åt. Du är ansvarig för de källor du lägger till och för att erhålla eventuella nödvändiga behörigheter. Appen godkänner inte åtkomst till innehåll från tredje part eller stöder upphovsrättsintrång. Appen och dess utvecklare frånsäger sig ansvaret för användartillagt innehåll i den utsträckning det är tillåtet enligt tillämplig lag. Providerfiltrering kan inte verifiera upphovsrättsbehörigheter. Genom att fortsätta bekräftar du att du har nödvändiga rättigheter att använda innehållet.</string>
+    <string name="copyright_notice_accept">Jag förstår och håller med</string>
+    <string name="subscribe_now">Prenumerera nu</string>
+    <string name="auto_renewable_cancel_anytime">Auto förnybar. Avbryt när som helst.</string>
+    <string name="free_playlist_limit_reward_only_message">Titta på en belönad annons för att låsa upp ytterligare en spellistimport.</string>
+    <string name="reward_ad_not_ready">Ingen annons är tillgänglig just nu. Försök igen senare.</string>
+    <string name="watch_ad_and_add_playlist">Se annons och lägg till spellista</string>
+    <string name="rating_feedback_reason">Din feedback</string>
+    <string name="rating_feedback_reason_required">Dela gärna vad som hände eller vad vi kan förbättra.</string>
+    <string name="rating_send_feedback">Fortsätt att mejla</string>
+    <string name="rating_select_stars">Välj ett stjärnbetyg.</string>
+    <string name="rating_feedback_subject">Feedback -%1$s</string>
+    <string name="rating_feedback_body">Betyg:%1$d/5 stjärnor
+Feedback och förslag:%2$s</string>
+    <string name="rating_no_email_app">Ingen e-postapp hittades. Installera en e-postapp för att skicka feedback.</string>
+    <string name="rating_feedback_hint">Till exempel: ett uppspelningsproblem, problem med att lägga till en spellista eller en funktion du behöver.</string>
 </resources>

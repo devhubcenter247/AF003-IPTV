@@ -193,4 +193,32 @@
     <string name="sleep_timer_minute_label">حداقل</string>
     <string name="sound">صدا</string>
     <string name="latter">بعدا</string>
+
+    <string name="free_playlist_limit_reached">شما از هر 3 واردات لیست پخش رایگان استفاده کرده اید. برای افزودن لیست پخش نامحدود، به Premium ارتقا دهید.</string>
+    <string name="free_playlist_limit_reached_title">به حد مجاز لیست پخش رایگان رسیده است</string>
+    <string name="free_playlist_limit_reward_message">برای باز کردن قفل یک وارد کردن لیست پخش دیگر، یک تبلیغ پاداش را تماشا کنید یا برای واردات نامحدود به Premium ارتقا دهید.</string>
+    <string name="watch_ad_to_continue">تماشای آگهی</string>
+    <string name="go_premium">برو پریمیوم</string>
+    <string name="skip">پرش کنید</string>
+    <string name="provider_url_blocked">این URL توسط لیست محدودیت ارائه دهنده مسدود شده است. لطفا از منبع مجاز استفاده کنید</string>
+    <string name="all_channels_blocked">همه کانال‌های موجود در این فهرست پخش با فهرست محدودیت ارائه‌دهنده مطابقت دارند. چیزی وارداتی نبود</string>
+    <string name="playlist_saved_with_blocked_channels">لیست پخش ذخیره شد.  کانال‌های محدود%1$dحذف شدند.</string>
+    <string name="restricted_channels_excluded">%1$d کانال محدودشده از دسته‌های انتخابی شما حذف شد.</string>
+    <string name="copyright_notice_title">مسئولیت محتوا و کپی رایت</string>
+    <string name="copyright_notice_message">فقط محتوایی را وارد یا تماشا کنید که مالک آن هستید یا مجاز به دسترسی به آن هستید. شما مسئول منابعی که اضافه می کنید و دریافت هر گونه مجوزهای لازم هستید. این برنامه اجازه دسترسی به محتوای شخص ثالث را نمی دهد یا نقض حق نسخه برداری را تأیید نمی کند. برنامه و توسعه دهندگان آن مسئولیت محتوای اضافه شده توسط کاربر را تا حدی که قانون قابل اجرا مجاز می داند، سلب می کند. فیلتر کردن ارائه دهنده نمی تواند مجوزهای حق نسخه برداری را تأیید کند. با ادامه، تأیید می‌کنید که حقوق لازم برای استفاده از محتوا را دارید.</string>
+    <string name="copyright_notice_accept">می فهمم و موافقم</string>
+    <string name="subscribe_now">اکنون مشترک شوید</string>
+    <string name="auto_renewable_cancel_anytime">قابل تمدید خودکار هر زمان خواستید لغو کنید.</string>
+    <string name="free_playlist_limit_reward_only_message">برای باز کردن قفل یک وارد کردن لیست پخش دیگر، یک تبلیغ پاداش را تماشا کنید.</string>
+    <string name="reward_ad_not_ready">در حال حاضر هیچ تبلیغی در دسترس نیست. لطفاً بعداً دوباره امتحان کنید.</string>
+    <string name="watch_ad_and_add_playlist">تماشای آگهی و افزودن لیست پخش</string>
+    <string name="rating_feedback_reason">بازخورد شما</string>
+    <string name="rating_feedback_reason_required">لطفا به اشتراک بگذارید که چه اتفاقی افتاده یا چه چیزی را می توانیم بهبود دهیم.</string>
+    <string name="rating_send_feedback">به ایمیل ادامه دهید</string>
+    <string name="rating_select_stars">لطفاً یک رتبه ستاره انتخاب کنید.</string>
+    <string name="rating_feedback_subject">بازخورد -%1$s</string>
+    <string name="rating_feedback_body">رتبه:%1$d/ 5 ستاره
+بازخورد و پیشنهادات:%2$s</string>
+    <string name="rating_no_email_app">هیچ برنامه ایمیلی پیدا نشد لطفاً یک برنامه ایمیل برای ارسال بازخورد نصب کنید.</string>
+    <string name="rating_feedback_hint">به عنوان مثال: مشکل پخش، مشکل در افزودن لیست پخش، یا ویژگی مورد نیاز شما.</string>
 </resources>

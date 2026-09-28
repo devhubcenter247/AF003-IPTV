@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -19,43 +19,48 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.inappupdate.AppUpdateWrapper
 import com.app.inappupdate.InAppUpdateManager
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.ads.wrapper.banner.rememberBannerPlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.banner.BannerPlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.interstitial.InterstitialAdConfig
+import com.dongbv.alf_03_iptv.ads.wrapper.native.NativePlacement
+import com.dongbv.alf_03_iptv.analytics.AppScreen
+import com.dongbv.alf_03_iptv.analytics.TrackScreen
 import com.dongbv.alf_03_iptv.app.AppPreferences
-import com.dongbv.alf_03_iptv.app.remoteconfig.remoteConfig
+import com.dongbv.alf_03_iptv.app.remote.remoteConfig
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.model.listDemoContent
 import com.dongbv.alf_03_iptv.style.AppViewTheme
-import com.dongbv.alf_03_iptv.style.ConstraintParentContent
 import com.dongbv.alf_03_iptv.style.backgroundResource
 import com.dongbv.alf_03_iptv.style.paddingBottom
 import com.dongbv.alf_03_iptv.style.paddingTop
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.ui.component.DialogQuitApp
-import com.dongbv.alf_03_iptv.ui.component.borderState
 import com.dongbv.alf_03_iptv.ui.component.neonState
-import com.dongbv.alf_03_iptv.ui.main.home.ChannelScreen
-import com.dongbv.alf_03_iptv.ui.main.home.FavoriteScreen
-import com.dongbv.alf_03_iptv.ui.main.home.HomeScreen
-import com.dongbv.alf_03_iptv.ui.main.home.SettingScreen
+import com.dongbv.alf_03_iptv.ui.iap.IapActivity
 import com.dongbv.alf_03_iptv.ui.main.add.AddChannelActivity
 import com.dongbv.alf_03_iptv.ui.main.guide.HowToAddChannelActivity
+import com.dongbv.alf_03_iptv.ui.main.home.ChannelScreen
+import com.dongbv.alf_03_iptv.ui.main.home.FavoriteScreen
 import com.dongbv.alf_03_iptv.ui.main.home.FavoriteScreenContent
+import com.dongbv.alf_03_iptv.ui.main.home.HomeScreen
 import com.dongbv.alf_03_iptv.ui.main.home.HomeScreenContent
+import com.dongbv.alf_03_iptv.ui.main.home.SettingScreen
 import com.dongbv.alf_03_iptv.ui.main.play.PlayChannelActivity
 import com.dongbv.alf_03_iptv.ui.main.playlist.PlayListActivity
 import com.dongbv.alf_03_iptv.ui.main.setting.AboutUsActivity
@@ -65,15 +70,35 @@ import com.dongbv.alf_03_iptv.ui.main.watch.WatchNowActivity
 import com.dongbv.alf_03_iptv.ui.main.watch.WatchNowContent
 import com.dongbv.alf_03_iptv.viewmodel.HomeViewModel
 import com.dongbv.alf_03_iptv.widget.BottomNavigationBar
-import com.dongbv.alf_03_iptv.widget.IptvAccent
 import com.dongbv.alf_03_iptv.widget.IptvBgSecondary
 import com.dongbv.alf_03_iptv.widget.animComposable
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.lib.ads.gma.ads.billing.AppPurchase
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdHolderConfig
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdPreloadHolderOptions
+import com.lib.ads.gma.ads.helper.adnative.preload.createNativeAdHolder
+import com.lib.ads.gma.ads.helper.banner.params.BannerSize
+import com.lib.ads.gma.ads.helper.banner.preload.BannerAdCard
 import com.sdp.ssp.android.Sdp
 import org.koin.android.ext.android.inject
-import kotlin.getValue
 
 class MainActivity : BaseActivity() {
+    override val analyticsScreen = AppScreen.MAIN
+
+    private val nativeAdHolder: NativeAdHolderConfig by createNativeAdHolder(
+        enabled = !AppPurchase.getInstance()
+            .isPurchased() && NativePlacement.NativeSmallCtaRight.canShowAds,
+        scope = lifecycleScope,
+        tag = "main_list_native",
+        options = NativeAdPreloadHolderOptions(
+            fallbackAdUnitIds = NativePlacement.NativeSmallCtaRight.listId,
+            lifecycleOwner = this@MainActivity,
+            autoReloadOnResume = true,
+            autoRequestOnStart = false,
+        )
+    )
+
+
     private val updateManager by lazy {
         InAppUpdateManager(
             appUpdateWrapper = AppUpdateWrapper(AppUpdateManagerFactory.create(this))
@@ -84,6 +109,7 @@ class MainActivity : BaseActivity() {
     ) { result ->
         updateManager.onUpdateFlowResult(result.resultCode)
     }
+
     override fun initialize() {
         AppPreferences.isFinishFirstFlow = true
         lifecycle.addObserver(updateManager)
@@ -96,6 +122,17 @@ class MainActivity : BaseActivity() {
                 defaultDismissText = getString(R.string.latter),
             )
         )
+        InterstitialAdConfig.loadInterAll(this)
+        if (!AppPurchase.getInstance().isPurchased() && NativePlacement.NativeSmallAll.canShowAds) {
+            nativeAdHolder.request()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (InterstitialAdConfig.consumePendingAfterPlayer()) {
+            InterstitialAdConfig.showInterAll(this) {}
+        }
     }
 
     private val viewModel: HomeViewModel by inject()
@@ -124,12 +161,32 @@ class MainActivity : BaseActivity() {
     }
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
-        LaunchedEffect(Unit) {
-            requestNotificationPermissionIfNeeded()
+    override fun ContentView() {
+        val bannerConfig = rememberBannerPlacement(
+            BannerPlacement.BannerAll,
+            autoReloadOnResume = true,
+            bannerSize = BannerSize.InlineAdaptive()
+        )
+        val isCloseInter by InterstitialAdConfig.isCloseInterAdManager.collectAsStateWithLifecycle(
+            false
+        )
+        LaunchedEffect(Unit, isCloseInter) {
+            if (isCloseInter) {
+                requestNotificationPermissionIfNeeded()
+            }
         }
         var isShowQuitDialog by rememberSaveable { mutableStateOf(false) }
         val navController = rememberNavController()
+        val currentEntry by navController.currentBackStackEntryAsState()
+        val currentScreen = when (currentEntry?.destination?.route) {
+            ScreenRouter.MainScreen.HomeScreen.route -> AppScreen.HOME
+            ScreenRouter.MainScreen.ChannelScreen.route -> AppScreen.CHANNEL
+            ScreenRouter.MainScreen.FavoriteScreen.route -> AppScreen.FAVORITE
+            ScreenRouter.MainScreen.SettingScreen.route -> AppScreen.SETTING
+            else -> null
+        }
+        currentScreen?.let { TrackScreen(it) }
+
 
         ConstraintLayout(
             modifier =
@@ -141,7 +198,7 @@ class MainActivity : BaseActivity() {
             NavHost(
                 modifier = Modifier.constrainAs(layout) {
                     top.linkTo(parent.top)
-                    bottom.linkTo(nav.top,(-16).Sdp)
+                    bottom.linkTo(nav.top, (-16).Sdp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     height = Dimension.fillToConstraints
@@ -152,30 +209,34 @@ class MainActivity : BaseActivity() {
             {
                 animComposable(ScreenRouter.MainScreen.HomeScreen.route) {
                     HomeScreen(
-                        modifier = Modifier.paddingTop(statusBarHeight),
+                        modifier = Modifier,
                         viewModel = viewModel,
-                        onWatchNow = { launchActivity<WatchNowActivity>() },
-                        onOpenChannel = { item ->
-                            startActivity(
-                                PlayListActivity.newIntent(this@MainActivity, item.id.toLong())
-                            )
+                        nativeAdHolder = nativeAdHolder,
+                        nativePlacement = NativePlacement.NativeSmallCtaRight,
+                        onWatchNow = { navigateWithInterstitial { launchActivity<WatchNowActivity>() } },
+                        onOpenSub = {
+                            IapActivity.open(this@MainActivity)
                         },
-                        onAddPlaylist = { launchActivity<AddChannelActivity>() },
-                        onHowToAddChannel = { launchActivity<HowToAddChannelActivity>() }
-                    ) {
-                        isShowQuitDialog = true
-                    }
+                        onOpenChannel = { item ->
+                            navigateWithInterstitial {
+                                startActivity(
+                                    PlayListActivity.newIntent(this@MainActivity, item.id.toLong())
+                                )
+                            }
+                        },
+                        onAddPlaylist = { navigateWithInterstitial { launchActivity<AddChannelActivity>() } },
+                        onHowToAddChannel = { navigateWithInterstitial { launchActivity<HowToAddChannelActivity>() } },
+                        onBack = { isShowQuitDialog = true }
+                    )
                 }
                 animComposable(ScreenRouter.MainScreen.ChannelScreen.route) {
-                    ChannelScreen(
-                        statusBarHeight = statusBarHeight
-                    ) {
+                    ChannelScreen {
                         isShowQuitDialog = true
                     }
                 }
                 animComposable(ScreenRouter.MainScreen.FavoriteScreen.route) {
                     FavoriteScreen(
-                        modifier = Modifier.paddingTop(statusBarHeight),
+                        modifier = Modifier.statusBarPadding(),
                         onBack = { isShowQuitDialog = true },
                         openChanel = { cn ->
                             val newIntent = PlayChannelActivity.newIntent(
@@ -186,16 +247,16 @@ class MainActivity : BaseActivity() {
                                 cn.logo,
                                 cn.playlistId
                             )
-                            startActivity(newIntent)
+                            navigateWithInterstitial { startActivity(newIntent) }
                         })
 
                 }
                 animComposable(ScreenRouter.MainScreen.SettingScreen.route) {
                     SettingScreen(
-                        modifier = Modifier.paddingTop(statusBarHeight),
-                        gotoLangSetting = { launchActivity<LanguageSettingActivity>() },
-                        gotoAboutUs = { launchActivity<AboutUsActivity>() },
-                        gotoHowToAddChannel = { launchActivity<HowToAddChannelActivity>() }
+                        modifier = Modifier.statusBarPadding(),
+                        gotoLangSetting = { navigateWithInterstitial { launchActivity<LanguageSettingActivity>() } },
+                        gotoAboutUs = { navigateWithInterstitial { launchActivity<AboutUsActivity>() } },
+                        gotoHowToAddChannel = { navigateWithInterstitial { launchActivity<HowToAddChannelActivity>() } }
                     ) {
                         isShowQuitDialog = true
                     }
@@ -213,11 +274,31 @@ class MainActivity : BaseActivity() {
                     .fillMaxWidth()
                     .height(54.Sdp)
                     .neonState(true, shape = CircleShape, outerRadius = 6.Sdp)
-                    .background(IptvBgSecondary,CircleShape)
+                    .background(IptvBgSecondary, CircleShape)
             )
-            Box(Modifier.constrainAs(banner) {
-                bottom.linkTo(parent.bottom)
-            }) {}
+            if (bannerConfig != null || BannerPlacement.BannerAll.canShowAds) {
+                BannerAdCard(
+                    holder = bannerConfig,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .constrainAs(banner) {
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(0.dp)
+                        .constrainAs(banner) {
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+            }
         }
 
         DialogQuitApp(
@@ -242,7 +323,7 @@ private fun MainScreenPreviewScaffold(startSrc: String = ScreenRouter.MainScreen
         NavHost(
             modifier = Modifier.constrainAs(layout) {
                 top.linkTo(parent.top)
-                bottom.linkTo(nav.top,(-16).Sdp)
+                bottom.linkTo(nav.top, (-16).Sdp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 height = Dimension.fillToConstraints
@@ -252,7 +333,10 @@ private fun MainScreenPreviewScaffold(startSrc: String = ScreenRouter.MainScreen
         )
         {
             animComposable(ScreenRouter.MainScreen.HomeScreen.route) {
-                HomeScreenContent(listHomeChannel = listDemoContent, modifier = Modifier.paddingTop(28.Sdp))
+                HomeScreenContent(
+                    listHomeChannel = listDemoContent,
+                    modifier = Modifier.paddingTop(28.Sdp)
+                )
             }
             animComposable(ScreenRouter.MainScreen.ChannelScreen.route) {
                 WatchNowContent(
@@ -260,7 +344,6 @@ private fun MainScreenPreviewScaffold(startSrc: String = ScreenRouter.MainScreen
                     isMuted = false,
                     modifier = Modifier.backgroundResource(R.drawable.img_bg_app),
                     pagePlayerMap = emptyMap(),
-                    statusBarHeight = 24.dp,
                     actions = WatchNowActions.None
                 )
             }
@@ -293,7 +376,7 @@ private fun MainScreenPreviewScaffold(startSrc: String = ScreenRouter.MainScreen
                 .fillMaxWidth()
                 .height(54.Sdp)
                 .neonState(true, shape = CircleShape, outerRadius = 6.Sdp)
-                .background(IptvBgSecondary,CircleShape)
+                .background(IptvBgSecondary, CircleShape)
         )
         Box(Modifier.constrainAs(banner) {
             bottom.linkTo(parent.bottom)
@@ -313,9 +396,11 @@ private fun MainPreview1() {
 @Composable
 private fun MainPreview2() {
     AppViewTheme {
-        Surface { MainScreenPreviewScaffold(
-            ScreenRouter.MainScreen.ChannelScreen.route
-        ) }
+        Surface {
+            MainScreenPreviewScaffold(
+                ScreenRouter.MainScreen.ChannelScreen.route
+            )
+        }
     }
 }
 
@@ -323,9 +408,11 @@ private fun MainPreview2() {
 @Composable
 private fun MainPreview3() {
     AppViewTheme {
-        Surface { MainScreenPreviewScaffold(
-            ScreenRouter.MainScreen.FavoriteScreen.route
-        ) }
+        Surface {
+            MainScreenPreviewScaffold(
+                ScreenRouter.MainScreen.FavoriteScreen.route
+            )
+        }
     }
 }
 

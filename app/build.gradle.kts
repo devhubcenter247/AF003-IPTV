@@ -16,8 +16,8 @@ android {
         applicationId = "com.dongbv.alf_03_iptv"
         minSdk = 26
         targetSdk = 37
-        versionCode = 2
-        versionName = "1.0.0"
+        versionCode = 5
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -77,14 +77,15 @@ android {
         create("dev") {
             applicationId = "com.dongbv.alf_03_iptv"
             manifestPlaceholders["ad_app_id"] = "ca-app-pub-3940256099942544~3347511713"
-
+            buildConfigField("boolean", "productId", "false")
             buildConfigField("boolean", "build_debug", "true")
         }
 
         create("product") {
             applicationId = "com.stream.itpv.live.m3u.smartplayer"
-            manifestPlaceholders["ad_app_id"] = "ca-app-pub-3940256099942544~3347511713"
+            manifestPlaceholders["ad_app_id"] = "ca-app-pub-1713129912546517~4944268084"
             buildConfigField("boolean", "build_debug", "false")
+            buildConfigField("boolean", "productId", "false")
         }
     }
     sourceSets {
@@ -109,6 +110,10 @@ kotlin {
 }
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
+}
+configurations.configureEach {
+    exclude(group = "com.google.android.gms", module = "play-services-ads")
+    exclude(group = "com.google.android.gms", module = "play-services-ads-lite")
 }
 dependencies {
     implementation(libs.androidx.core.ktx)

@@ -22,7 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,10 +45,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.ads.wrapper.native.NativePlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.native.view.NativeComposeView
 import com.dongbv.alf_03_iptv.data.local.entity.ChannelEntity
 import com.dongbv.alf_03_iptv.style.AppViewTheme
 import com.dongbv.alf_03_iptv.style.ResponsivePreview
@@ -75,6 +78,11 @@ import com.dongbv.alf_03_iptv.widget.headline600
 import com.dongbv.alf_03_iptv.widget.headline700
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
+import com.lib.ads.gma.ads.billing.AppPurchase
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdHolderConfig
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdPreloadHolderOptions
+import com.lib.ads.gma.ads.helper.adnative.preload.rememberNativeAdListHolders
+import com.lib.ads.gma.ads.helper.adnative.preload.rememberNativeAdPreload
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -86,6 +94,7 @@ fun PlayListScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
     onOpenChannel: (ChannelEntity) -> Unit = {},
+    nativePlacement: NativePlacement = NativePlacement.NativeMediumAll,
     viewModel: PlayListViewModel = koinViewModel(key = "playlist_$playlistId") {
         parametersOf(playlistId)
     }
@@ -110,7 +119,8 @@ fun PlayListScreen(
         onSearchQueryChanged = viewModel::setSearchQuery,
         onGroupSelected = viewModel::setGroupFilter,
         onToggleLayout = viewModel::toggleLayout,
-        onToggleFavorite = viewModel::toggleFavorite
+        onToggleFavorite = viewModel::toggleFavorite,
+        nativePlacement = nativePlacement
     )
 }
 
@@ -130,7 +140,8 @@ fun PlayListScreenContent(
     onSearchQueryChanged: (String) -> Unit = {},
     onGroupSelected: (String?) -> Unit = {},
     onToggleLayout: () -> Unit = {},
-    onToggleFavorite: (Long) -> Unit = {}
+    onToggleFavorite: (Long) -> Unit = {},
+    nativePlacement: NativePlacement = NativePlacement.OnboardingFull
 ) {
     val hasFilter = searchQuery.isNotBlank() || selectedGroup != null
 
@@ -142,7 +153,7 @@ fun PlayListScreenContent(
             modifier = Modifier
                 .backgroundResource(R.drawable.img_bg_app)
                 .fillMaxSize()
-                .then(if(isTablet) Modifier.paddingTop(12.Sdp) else modifier)
+                .then(if (isTablet) Modifier.paddingTop(12.Sdp) else modifier)
         ) {
 
             Row(
@@ -219,7 +230,8 @@ fun PlayListScreenContent(
                     isTablet = isTablet,
                     horizontalPadding = horizontalPadding,
                     onToggleFavorite = onToggleFavorite,
-                    onOpenChannel = onOpenChannel
+                    onOpenChannel = onOpenChannel,
+                    nativePlacement = nativePlacement
                 )
 
                 else -> PlayListChannelsList(
@@ -227,7 +239,8 @@ fun PlayListScreenContent(
                     isTablet = isTablet,
                     horizontalPadding = horizontalPadding,
                     onToggleFavorite = onToggleFavorite,
-                    onOpenChannel = onOpenChannel
+                    onOpenChannel = onOpenChannel,
+                    nativePlacement = nativePlacement
                 )
             }
         }
@@ -309,7 +322,8 @@ private fun PlayListChannelsGrid(
     isTablet: Boolean,
     horizontalPadding: Dp = 16.Sdp,
     onToggleFavorite: (Long) -> Unit,
-    onOpenChannel: (ChannelEntity) -> Unit
+    onOpenChannel: (ChannelEntity) -> Unit,
+    nativePlacement: NativePlacement
 ) {
     LazyVerticalGrid(
         columns = if (isTablet) GridCells.Fixed(4) else GridCells.Fixed(2),
@@ -323,13 +337,33 @@ private fun PlayListChannelsGrid(
         verticalArrangement = Arrangement.spacedBy(14.Sdp),
         modifier = Modifier.fillMaxSize()
     ) {
-        items(channels, key = { it.id }) { channel ->
-            PlayListChannelGridCard(
-                channel = channel,
-                isTablet = isTablet,
-                onToggleFavorite = { onToggleFavorite(channel.id) },
-                onOpenChannel = { onOpenChannel(channel) }
-            )
+        channels.forEachIndexed { index, channel ->
+            item(key = channel.id) {
+                PlayListChannelGridCard(
+                    channel = channel,
+                    isTablet = isTablet,
+                    onToggleFavorite = { onToggleFavorite(channel.id) },
+                    onOpenChannel = { onOpenChannel(channel) }
+                )
+            }
+            if ((index + 1) % 4 == 0  && !AppPurchase.getInstance()
+                    .isPurchased()
+            ) {
+                item(key = "native_full_$index", span = { GridItemSpan(maxLineSpan) }) {
+                    val nativeInList = rememberNativeAdPreload(
+                        nativePlacement.tag,
+                        options = NativeAdPreloadHolderOptions(
+                            fallbackAdUnitIds = NativePlacement.NativeMediumAll.listId,
+                            autoReloadOnResume = true,
+                            autoRequestOnStart = false,
+                        )
+                    )
+                    NativeContentAd(
+                        nativePlacement = nativePlacement,
+                        nativeMediumAdHolder = nativeInList
+                    )
+                }
+            }
         }
     }
 }
@@ -345,7 +379,7 @@ private fun PlayListChannelGridCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(if(isTablet) (7f/5f) else (16f / 10f))
+                .aspectRatio(if (isTablet) (7f / 5f) else (16f / 10f))
                 .clip(RoundedCornerShape(14.Sdp))
                 .background(white.opacity(10))
                 .onClick(onClick = onOpenChannel)
@@ -382,7 +416,7 @@ private fun PlayListChannelGridCard(
                     painter = painterResource(if (channel.isFavorite) R.drawable.ic_app_favorite_minus else R.drawable.ic_app_favorite_add),
                     contentDescription = null,
                     tint = if (channel.isFavorite) Color.Red else Color(0xBFFFFFFF),
-                    modifier = Modifier.size( 13.Sdp)
+                    modifier = Modifier.size(13.Sdp)
                 )
             }
         }
@@ -402,13 +436,34 @@ private fun PlayListChannelGridCard(
 // ─── Channels list ────────────────────────────────────────────────────────────
 
 @Composable
+fun NativeContentAd(
+    nativePlacement: NativePlacement,
+    nativeMediumAdHolder: NativeAdHolderConfig?
+) {
+    NativeComposeView(
+        nativePreloadConfig = nativeMediumAdHolder to nativePlacement,
+        nativeModifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+    )
+    LifecycleResumeEffect(nativeMediumAdHolder) {
+        nativeMediumAdHolder?.request()
+        onPauseOrDispose {
+            nativeMediumAdHolder?.cancel()
+        }
+    }
+}
+
+@Composable
 private fun PlayListChannelsList(
     channels: List<ChannelEntity>,
     isTablet: Boolean,
     horizontalPadding: Dp = 16.Sdp,
     onToggleFavorite: (Long) -> Unit,
-    onOpenChannel: (ChannelEntity) -> Unit
+    onOpenChannel: (ChannelEntity) -> Unit,
+    nativePlacement: NativePlacement,
 ) {
+
+
     LazyVerticalGrid(
         columns = if (isTablet) GridCells.Adaptive(minSize = 300.dp) else GridCells.Fixed(1),
         contentPadding = PaddingValues(
@@ -421,13 +476,33 @@ private fun PlayListChannelsList(
         verticalArrangement = Arrangement.spacedBy(8.Sdp),
         modifier = Modifier.fillMaxSize()
     ) {
-        items(channels, key = { it.id }) { channel ->
-            PlayListChannelListRow(
-                channel = channel,
-                isTablet = isTablet,
-                onToggleFavorite = { onToggleFavorite(channel.id) },
-                onOpenChannel = { onOpenChannel(channel) }
-            )
+        channels.forEachIndexed { index, channel ->
+            item(key = channel.id) {
+                PlayListChannelListRow(
+                    channel = channel,
+                    isTablet = isTablet,
+                    onToggleFavorite = { onToggleFavorite(channel.id) },
+                    onOpenChannel = { onOpenChannel(channel) }
+                )
+            }
+            if ((index + 1) % 4 == 0  && !AppPurchase.getInstance()
+                    .isPurchased()
+            ) {
+                item(key = "native_full_list_$index", span = { GridItemSpan(maxLineSpan) }) {
+                    val nativeInList = rememberNativeAdPreload(
+                        nativePlacement.tag,
+                        options = NativeAdPreloadHolderOptions(
+                            fallbackAdUnitIds = NativePlacement.NativeMediumAll.listId,
+                            autoReloadOnResume = true,
+                            autoRequestOnStart = false,
+                        )
+                    )
+                    NativeContentAd(
+                        nativePlacement = nativePlacement,
+                        nativeMediumAdHolder =nativeInList
+                    )
+                }
+            }
         }
     }
 }
@@ -445,7 +520,7 @@ private fun PlayListChannelListRow(
             .fillMaxWidth()
             .background(white.opacity(5), RoundedCornerShape(12.Sdp))
             .border(1.dp, IptvDivider, RoundedCornerShape(12.Sdp))
-            .padding( if (isTablet) 8.Sdp else 12.Sdp),
+            .padding(if (isTablet) 8.Sdp else 12.Sdp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(if (isTablet) 6.Sdp else 12.Sdp)
     ) {

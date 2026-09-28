@@ -1,5 +1,6 @@
 package com.dongbv.alf_03_iptv.ui.personalization
 
+import com.dongbv.alf_03_iptv.analytics.AppScreen
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -33,7 +34,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.dongbv.alf_03_iptv.R
+import com.dongbv.alf_03_iptv.ads.AdPreloadManager
+import com.dongbv.alf_03_iptv.ads.wrapper.interstitial.InterstitialAdConfig
+import com.dongbv.alf_03_iptv.ads.wrapper.native.NativePlacement
+import com.dongbv.alf_03_iptv.ads.wrapper.native.view.NativeComposeView
+import com.dongbv.alf_03_iptv.app.remote.remoteConfig
 import com.dongbv.alf_03_iptv.base.BaseActivity
 import com.dongbv.alf_03_iptv.data.local.entity.CategoryModel
 import com.dongbv.alf_03_iptv.data.local.entity.listCategoryModel
@@ -47,6 +54,7 @@ import com.dongbv.alf_03_iptv.style.paddingBottom
 import com.dongbv.alf_03_iptv.style.paddingHorizontal
 import com.dongbv.alf_03_iptv.style.paddingTop
 import com.dongbv.alf_03_iptv.style.paddingVertical
+import com.dongbv.alf_03_iptv.style.statusBarPadding
 import com.dongbv.alf_03_iptv.style.transparent
 import com.dongbv.alf_03_iptv.style.white
 import com.dongbv.alf_03_iptv.ui.component.backgroundState
@@ -60,18 +68,45 @@ import com.dongbv.alf_03_iptv.widget.colorSecondary
 import com.dongbv.alf_03_iptv.widget.headline400
 import com.dongbv.alf_03_iptv.widget.headline600
 import com.dongbv.alf_03_iptv.widget.mainColor
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdHolderConfig
+import com.lib.ads.gma.ads.helper.adnative.preload.NativeAdPreloadHolderOptions
+import com.lib.ads.gma.ads.helper.adnative.preload.createNativeAdHolder
 import com.sdp.ssp.android.Sdp
 import com.sdp.ssp.android.Ssp
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 class PersonalizationActivity : BaseActivity() {
-
+    override val analyticsScreen = AppScreen.PERSONALIZATION
     private val viewModel: PersonalizationViewModel by viewModel()
+    val nativeAdHolder: NativeAdHolderConfig by createNativeAdHolder(
+        enabled = NativePlacement.NativeFeature.canShowAds,
+        scope = lifecycleScope,
+        tag = NativePlacement.NativeFeature.tag,
+        options = NativeAdPreloadHolderOptions(
+            fallbackAdUnitIds = NativePlacement.NativeFeature.listId,
+            lifecycleOwner = this@PersonalizationActivity,
+            autoReloadOnResume = false,
+            autoRequestOnStart = false
+        )
+    )
 
-    override fun initialize() {}
+    override fun initialize() {
+        nativeAdHolder.request()
+        InterstitialAdConfig.loadInterAll(this@PersonalizationActivity)
+    }
+
+    private var navigationCompleted = false
+
+    fun goNextPage() {
+        if (navigationCompleted || isFinishing || isDestroyed) return
+        navigationCompleted = true
+        launchActivity<MainActivity>()
+        finish()
+    }
 
     @Composable
-    override fun ContentView(statusBarHeight: Dp) {
+    override fun ContentView() {
         var listFeatureContent by remember {
             mutableStateOf(listCategoryModel.map { it.copy() })
         }
@@ -79,9 +114,18 @@ class PersonalizationActivity : BaseActivity() {
         val saveState by viewModel.saveState.collectAsStateWithLifecycle()
 
         LaunchedEffect(saveState) {
-            if (saveState is PersonalizationViewModel.SaveState.Success) {
-                launchActivity<MainActivity>()
-                finishAffinity()
+            val state = saveState
+            if (state is PersonalizationViewModel.SaveState.Success) {
+                if (state.blockedCount > 0) {
+                    Toast.makeText(
+                        this@PersonalizationActivity,
+                        getString(R.string.restricted_channels_excluded, state.blockedCount),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                InterstitialAdConfig.showInterAll(this@PersonalizationActivity) {
+                    goNextPage()
+                }
             }
         }
 
@@ -90,17 +134,21 @@ class PersonalizationActivity : BaseActivity() {
                 listFeatureContent = listFeatureContent,
                 isLoading = saveState is PersonalizationViewModel.SaveState.Loading,
                 modifier = Modifier
-                
-                    .fillMaxSize()
-                    .paddingTop(statusBarHeight),
+                    .weight(1f)
+                    .statusBarPadding(),
                 onNextAction = {
-                    viewModel.saveSelectedCategories(listFeatureContent.filter { it.select })
+                    viewModel.saveSelectedCategories(
+                        this@PersonalizationActivity,
+                        listFeatureContent.filter { it.select })
                 },
                 onSelectContent = { content ->
                     listFeatureContent = listFeatureContent.map {
                         if (it.index == content.index) it.copy(select = !it.select) else it
                     }
                 },
+            )
+            NativeComposeView(
+                nativePreloadConfig = (nativeAdHolder to NativePlacement.NativeFeature)
             )
         }
     }
@@ -256,11 +304,15 @@ fun ItemFeatureContent(
 fun GreetingPreview() {
     AppViewTheme {
         val listFeatureContent by remember { mutableStateOf(listCategoryModel.map { it.copy() }) }
-        FeatureScreen(
-            listFeatureContent = listFeatureContent,
-            modifier = Modifier
-                .fillMaxSize()
-                .paddingTop(28.Sdp)
-        )
+        Column(Modifier.fillMaxSize()) {
+            FeatureScreen(
+                listFeatureContent = listFeatureContent,
+                modifier = Modifier
+                    .weight(1f)
+                    .paddingTop(28.Sdp)
+            )
+            NativeComposeView()
+        }
+
     }
 }
